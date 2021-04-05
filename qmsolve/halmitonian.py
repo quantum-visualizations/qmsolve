@@ -11,6 +11,7 @@ k = 3.8099821161548593 # hbar**2 / (2*m_e) /(Å**2) / eV
 m_e = 1
 
 
+
 class Halmitonian:
     def __init__(self, N, extent):
         """
@@ -61,9 +62,7 @@ class Halmitonian:
         self.eigenstates = self.eigenstates.T.reshape(( max_states, *[self.N]*self.ndim) )
         print ("Took", time.time() - t0)
 
-        # Normalize eigenstates
-        for i in range(max_states):
-            mag = np.sqrt(np.sum(self.eigenstates[i]*self.eigenstates[i])*self.dx*self.dx)
-            self.eigenstates[i] = self.eigenstates[i]/mag
+        # Finish the normalization of the eigenstates
+        self.eigenstates = self.eigenstates/(self.dx**self.ndim)
 
         return self.energies, self.eigenstates

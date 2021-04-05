@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Halmitonian, visualize
+from qmsolve import Halmitonian, dynamic_visualize
 
 
 H = Halmitonian(N = 80, extent = 10)
@@ -23,4 +23,5 @@ H.add_potential(V)
 energies, eigenstates = H.solve(30)
 
 
-visualize(energies, eigenstates, 23)
+#visualize(energies, eigenstates, 23) #static version, only plots a eigenstate
+dynamic_visualize(energies, eigenstates)
