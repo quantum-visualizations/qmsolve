@@ -137,10 +137,20 @@ def animate(energies, eigenstates):
 
     animation_data = {'n': 0.0}
     def func_animation(*arg):
-        animation_data['n'] = (animation_data['n'] + 0.1) % len(energies)
+        animation_data['n'] = (animation_data['n'] + 0.03) % len(energies)
         state = int(animation_data['n'])
-        eigenstate_plot.set_data(eigenstates[int(state)])
-        line.set_ydata([energies[int(state)]/E0, energies[int(state)]/E0])
+        if (animation_data['n'] % 1.0) > 0.5:
+            transition_time = (animation_data['n'] - int(animation_data['n']) - 0.5)
+            eigenstate_plot.set_data(np.cos(np.pi*transition_time)*eigenstates[state] + 
+                                     np.sin(np.pi*transition_time)*
+                                     eigenstates[(state + 1) % len(energies)])
+            E_N = energies[state]/E0 
+            E_M = energies[(state + 1) % len(energies)]/E0
+            E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
+            line.set_ydata([E, E])
+        else:
+            line.set_ydata([energies[state]/E0, energies[state]/E0])
+            eigenstate_plot.set_data(eigenstates[int(state)])
         return eigenstate_plot, line
 
     a = animation.FuncAnimation(fig, func_animation,
