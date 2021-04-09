@@ -1,19 +1,11 @@
 import numpy as np
 from scipy.sparse.linalg import eigsh
 from scipy.sparse import diags
-from scipy.sparse import kron
-from scipy.sparse import eye
-
-import matplotlib.pyplot as plt
 import time
-
-k = 3.8099821161548593 # hbar**2 / (2*m_e) /(Å**2) / eV
-m_e = 1
-
 
 
 class Halmitonian:
-    def __init__(self, N, extent):
+    def __init__(self,particles, potential, N, extent, spatial_ndim):
         """
         N: number of grid points
         extent: spacial extent, measured in angstroms
@@ -23,46 +15,37 @@ class Halmitonian:
         self.N = N
         self.extent = extent
         self.dx = extent/N
-        self.ndim = 0
+        self.particle_system = particles
+        self.spatial_ndim = spatial_ndim 
+        self.ndim = 0 # total number of observables 
 
-    def add_particle(self, spatial_ndim, m = m_e, spin = None):
-        # prototype version. If we are going to solve for several particles, we should have a separate Particle class.
+        self.particle_system.get_observables(self)
+        self.T = self.particle_system.get_kinetic_matrix(self)
 
-        T_ =  diags([-2., 1., 1.], [0,-1, 1] , shape=(self.N, self.N))*-k/(m*self.dx**2)
-        I = eye(self.N)
+        self.potential = potential
+        self.V = self.get_potential_matrix()
 
-        if spatial_ndim ==1:
-            T = T_
-            self.ndim = 1
-
-        elif spatial_ndim ==2:
-            T =  (kron(T_,I) + kron(I,T_))
-            self.ndim = 2
-
-
-        elif spatial_ndim ==3:
-            T =  (kron(T_,I,I) + kron(I,T_,I) + kron(I,I,T_))
-            self.ndim = 3
-
-        self.T = T
         
-    def add_potential(self, V):
+    def get_potential_matrix(self):
 
-        self.V = V.reshape(self.N**self.ndim)
-        self.V = diags([self.V], [0])
-
-        self.H = self.V + self.T
+        V = self.potential(self.particle_system)
+        V = V.reshape(self.N**self.ndim)
+        V = diags([V], [0])
+        return V
 
     def solve(self, max_states):
 
         H = self.T + self.V
         print ("Computing...")
         t0 = time.time()
-        self.energies, self.eigenstates = eigsh(H, k = max_states, which='SA')
-        self.eigenstates = self.eigenstates.T.reshape(( max_states, *[self.N]*self.ndim) )
-        print ("Took", time.time() - t0)
+        eigenvalues, eigenvectors = eigsh(H, k = max_states, which='SA')
 
-        # Finish the normalization of the eigenstates
-        self.eigenstates = self.eigenstates/(self.dx**self.ndim)
+        """
+        the result of this method depends of the particle system. For example if the systems are two fermions, this method
+        makes the eigenstates antisymetric
+        """
+        self.energies, self.eigenstates = self.particle_system.get_energies_and_eigenstates(self, max_states, eigenvalues, eigenvectors)
+
+        print ("Took", time.time() - t0)
 
         return self.energies, self.eigenstates
