@@ -1,7 +1,7 @@
 from abc import abstractmethod 
 
 
-class Particle_system:
+class ParticleSystem:
     @abstractmethod
     def __init__(self):
         pass

@@ -2,11 +2,11 @@ import numpy as np
 from scipy.sparse import diags
 from scipy.sparse import kron
 from scipy.sparse import eye
-from .particle_system import Particle_system
+from .particle_system import ParticleSystem
 from ..util.constants import *
 
 
-class Single_particle(Particle_system):
+class SingleParticle(ParticleSystem):
     def __init__(self, m = m_e, spin = None):
         """
         N: number of grid points
@@ -39,7 +39,7 @@ class Single_particle(Particle_system):
     def get_kinetic_matrix(self, H):
 
         I = eye(H.N)
-        T_ =  diags([-2., 1., 1.], [0,-1, 1] , shape=(H.N, H.N))*-k/(self.m*H.dx**H.spatial_ndim)
+        T_ =  diags([-2., 1., 1.], [0,-1, 1] , shape=(H.N, H.N))*-k/(self.m*H.dx**2)
         if H.spatial_ndim ==1:
             T = T_
 

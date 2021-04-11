@@ -67,7 +67,7 @@ def dynamic_visualize(energies, eigenstates):
         ax1.set_aspect('equal')
         ax1.set_ylabel("[Å]")
         eigenstate_plot = ax1.imshow((eigenstates[1]), cmap ='seismic',  
-                                     interpolation = 'bilinear')
+                                     interpolation = 'bilinear', aspect ="equal",  extent = [-1,1,-1,1])
     elif ndim == 1:
         # ax1.set_xlim( ??? )
         eigenstate_plot, = ax1.plot(eigenstates[1])

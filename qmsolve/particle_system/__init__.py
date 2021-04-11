@@ -1,2 +1,2 @@
-from .single_particle import Single_particle
-from .two_fermions import Two_fermions
+from .single_particle import SingleParticle
+from .two_fermions import TwoFermions

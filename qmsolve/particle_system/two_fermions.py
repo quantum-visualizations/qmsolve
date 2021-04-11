@@ -2,11 +2,11 @@ import numpy as np
 from scipy.sparse import diags
 from scipy.sparse import kron
 from scipy.sparse import eye
-from .particle_system import Particle_system
+from .particle_system import ParticleSystem
 from ..util.constants import *
 
 
-class Two_fermions(Particle_system):
+class TwoFermions(ParticleSystem):
     def __init__(self, m = m_e, spin = None):
         """
         N: number of grid points
@@ -48,31 +48,44 @@ class Two_fermions(Particle_system):
         return T
 
 
-    #Not tested yet. Work in progress:
+    #Not fully tested yet.
     def get_energies_and_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
 
-        eigenvectors = eigenvectors = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
+        eigenvectors  = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
 
+        # Normalize the eigenvectors
+        eigenvectors = eigenvectors/np.sqrt(H.dx**H.ndim)
+        
 
         energies = []
-        antisymmetric_eigenvectors = []
+        eigenstates = []
 
-        #antisymmetrize eigenvectors:
+        #antisymmetrize eigenvectors: This is made by applying (𝜓(r1 , s1, r2 , s2) - 𝜓(r2 , s2, r1 , s1))/sqrt(2) to each state.
         for i in range(max_states):
-            for j in range(i+1, max_states):
-                if i != j:
-                    energies +=  [eigenvalues[i] + eigenvalues[j]]
-                    antisymmetric_eigenvectors +=  [eigenvectors[i]*eigenvectors[j] - eigenvectors[j]*eigenvectors[i]]
+            eigenstate_tmp = (eigenvectors[i]- eigenvectors[i].swapaxes(0,1))/np.sqrt(2)
 
-        #sort energies
-        def take_eigenvalues(lst):
-            return lst[0]
-        lst  = list(zip(eigenvalues,eigenvectors))
-        lst.sort(key=take_eigenvalues)
-        energies,eigenstates = zip(*lst)
-        eigenstates = np.array(eigenstates)
+            norm = np.sum(eigenstate_tmp*eigenstate_tmp)*H.dx**H.ndim 
+
+            TOL = 0.02
+            
+            # check if is eigenstate_tmp is a normalizable eigenstate. (norm shouldn't be zero)
+            if norm > TOL : 
+                # for some reason when the eigenstate is degenerated it isn't normalized 
+                #print("norm",norm)
+                eigenstate_tmp = eigenstate_tmp/np.sqrt(norm)
+
+                 
+                if eigenstates != []: #check if it's the first eigenstate
+                    inner_product = np.sum(eigenstates[-1]* eigenstate_tmp)*H.dx**H.ndim
+                    #print("inner_product",inner_product)
+                else:
+                    inner_product = 0
 
 
-        # Normalize the eigenstates
+                if np.abs(inner_product) < TOL: # check if is eigenstate_tmp is repeated. (inner_product should be zero)
+
+                    eigenstates +=  [eigenstate_tmp]
+                    energies +=  [eigenvalues[i]]
 
         return energies, eigenstates
+        
