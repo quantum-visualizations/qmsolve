@@ -137,7 +137,7 @@ def animate(energies, eigenstates):
 
     animation_data = {'n': 0.0}
     def func_animation(*arg):
-        animation_data['n'] = (animation_data['n'] + 0.03) % len(energies)
+        animation_data['n'] = (animation_data['n'] + 0.1) % len(energies)
         state = int(animation_data['n'])
         if (animation_data['n'] % 1.0) > 0.5:
             transition_time = (animation_data['n'] - int(animation_data['n']) - 0.5)
@@ -156,3 +156,9 @@ def animate(energies, eigenstates):
     a = animation.FuncAnimation(fig, func_animation,
                                 blit=True, interval=1.0)
     plt.show()
+    """
+    # save animation
+    Writer = animation.writers['ffmpeg']
+    writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
+    a.save('im.gif', writer=writer)
+    """

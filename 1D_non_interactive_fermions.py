@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Halmitonian, TwoFermions, dynamic_visualize
+from qmsolve import Halmitonian, TwoFermions, dynamic_visualize, animate
 
 
 #interaction potential
@@ -18,5 +18,6 @@ H = Halmitonian(particles = TwoFermions(),
 
 
 energies, eigenstates = H.solve(max_states = 30)
-print(energies)
-dynamic_visualize(energies, eigenstates)
+print("Energies:",energies)
+animate(energies, eigenstates)
+#dynamic_visualize(energies, eigenstates)
