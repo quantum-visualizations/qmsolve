@@ -29,7 +29,7 @@ def visualize(energies, eigenstates, k):
     if ndim == 2:
         ax1.set_aspect('equal')
         ax1.set_ylabel("[Å]")
-        im = ax1.imshow((eigenstates[k]), cmap ='seismic',  interpolation = 'bilinear')
+        im = ax1.imshow((eigenstates[k]), cmap ='seismic',  interpolation = 'bilinear',  origin='lower')
     else:
         ax1.plot(eigenstates[k])
 
@@ -67,7 +67,7 @@ def dynamic_visualize(energies, eigenstates):
         ax1.set_aspect('equal')
         ax1.set_ylabel("[Å]")
         eigenstate_plot = ax1.imshow((eigenstates[1]), cmap ='seismic',  
-                                     interpolation = 'bilinear', aspect ="equal",  extent = [-1,1,-1,1])
+                                     interpolation = 'bilinear', aspect ="equal",  extent = [-1,1,-1,1],  origin='lower' )
     elif ndim == 1:
         # ax1.set_xlim( ??? )
         eigenstate_plot, = ax1.plot(eigenstates[1])
@@ -123,7 +123,7 @@ def animate(energies, eigenstates):
         ax1.set_aspect('equal')
         ax1.set_ylabel("[Å]")
         eigenstate_plot = ax1.imshow((eigenstates[1]), cmap ='seismic',  
-                                     interpolation = 'bilinear')
+                                     interpolation = 'bilinear',  origin='lower')
     elif ndim == 1:
         # ax1.set_xlim( ??? )
         eigenstate_plot, = ax1.plot(eigenstates[1])

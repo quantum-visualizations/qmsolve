@@ -10,7 +10,6 @@ def four_gaussian_wells(particle):
 	-np.exp((-(particle.x-𝜇)**2 -(particle.y)**2 ) / (2*σ**2)) / (np.sqrt(2*np.pi)* σ)
 	-np.exp((-(particle.x+𝜇)**2 -(particle.y)**2 ) / (2*σ**2)) / (np.sqrt(2*np.pi)* σ)
 	-np.exp((-(particle.x)**2 -(particle.y+𝜇)**2 ) / (2*σ**2)) / (np.sqrt(2*np.pi)* σ))
-
 	return V
 
 
