@@ -13,7 +13,7 @@ except ImportError as e:
 
 
 spatial_ndim = 1
-L = 20
+L = 10
 N = 100
 separable_potential = [lambda particle: 20.0*particle.x**2,
                        lambda particle: 20.0*particle.x**2,
@@ -42,7 +42,7 @@ sort_array = np.argsort(energies)
 energies = energies[sort_array]
 states = states[sort_array]
 
-visualize3D(energies, states, 1)
+visualize3D(energies, states, 26)
 # Set delay from its default value of 500 to something smaller for a faster 
 # animation.
-animate3D(energies, states)
+#animate3D(energies, states)

@@ -3,9 +3,27 @@ from mayavi import mlab
 
 
 def visualize3D(energies, eigenstates, k):
-    mlab.contour3d(np.abs(eigenstates[k]))
-    # mlab.pipeline.volume(mlab.pipeline.scalar_field(np.abs(eigenstates[k])))
+    mlab.figure(1, bgcolor=(0, 0, 0), size=(350, 350))
+    mlab.clf()
+    mlab.x_axis_visibility = False
+    psi2 = np.abs(eigenstates[k])
+    min = psi2.min()
+    max = psi2.max()
+
+    vol = mlab.pipeline.volume(mlab.pipeline.scalar_field(psi2), 
+                               vmin=min + 0.008 * (max - min),        
+                               vmax=min + 0.5 * (max - min))
+
+    
+    mlab.outline()
+    mlab.axes(nb_labels=4)
+
+
+    φ = 30
+    mlab.view(azimuth= φ)
+
     mlab.show()
+
 
 
 def animate3D(energies, eigenstates):
