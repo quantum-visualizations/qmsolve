@@ -4,8 +4,7 @@ from mayavi import mlab
 
 def visualize3D(energies, eigenstates, k):
     mlab.figure(1, bgcolor=(0, 0, 0), size=(350, 350))
-    mlab.clf()
-    mlab.x_axis_visibility = False
+
     psi2 = np.abs(eigenstates[k])
     min = psi2.min()
     max = psi2.max()
