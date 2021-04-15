@@ -6,7 +6,7 @@ from .two_particles import TwoIdenticalParticles
 from ..util.constants import *
 
 
-class TwoFermions(TwoIdenticalParticles):
+class TwoBosons(TwoIdenticalParticles):
 
     def __init__(self, m = m_e, spin = None):
-        TwoIdenticalParticles.__init__(self, m=m_e, spin=None, p=-1)
+        TwoIdenticalParticles.__init__(self, m=m_e, spin=None, p=1)

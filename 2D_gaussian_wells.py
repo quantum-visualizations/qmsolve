@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Halmitonian, animate, dynamic_visualize, SingleParticle
+from qmsolve import Hamiltonian, animate, dynamic_visualize, SingleParticle
 
 
 #interaction potential
@@ -14,7 +14,7 @@ def four_gaussian_wells(particle):
 
 
 
-H = Halmitonian(particles = SingleParticle(), 
+H = Hamiltonian(particles = SingleParticle(), 
 				potential = four_gaussian_wells, 
 				spatial_ndim = 2, N = 100, extent = 10)
 

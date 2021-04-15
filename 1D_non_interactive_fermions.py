@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Halmitonian, TwoFermions, dynamic_visualize, animate
+from qmsolve import Hamiltonian, TwoFermions, dynamic_visualize, animate
 
 
 #interaction potential
@@ -12,7 +12,7 @@ def harmonic_oscillator(fermions):
 
 
 
-H = Halmitonian(particles = TwoFermions(), 
+H = Hamiltonian(particles = TwoFermions(), 
 				potential = harmonic_oscillator, 
 				spatial_ndim = 1, N = 300, extent = 15)
 

@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Halmitonian, TwoFermions, dynamic_visualize, animate
+from qmsolve import Hamiltonian, TwoFermions, dynamic_visualize, animate
 
 
 def harmonic_interaction(fermions):
@@ -20,7 +20,7 @@ def coulomb_interaction(fermions):
 	V = k/ r**2
 	return V
 
-H = Halmitonian(particles = TwoFermions(), 
+H = Hamiltonian(particles = TwoFermions(), 
 				potential = harmonic_interaction, # change this to coulomb_interaction to check what happens!
 				spatial_ndim = 1, N = 100, extent = 10)
 

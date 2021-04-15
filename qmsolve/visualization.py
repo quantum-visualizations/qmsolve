@@ -88,6 +88,7 @@ def dynamic_visualize(energies, eigenstates):
                      )
 
     def update(state):
+        state = int(state)
         eigenstate_plot.set_data(eigenstates[state])
         line[0].set_ydata([energies[state]/E0, energies[state]/E0])
 

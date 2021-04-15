@@ -7,7 +7,7 @@ This is work in progress. Stay up to date about the next features!
 ## Installation
 
 Just clone or download this repo.
-The package requeriments are:
+The package requirements are:
 
 1. numpy
 2. matplotlib
@@ -15,7 +15,7 @@ The package requeriments are:
 
 ## Examples
 
-Just run from the command prompt the corresponding Python scripts:
+Just run from the command line the corresponding Python scripts:
 
 ```
 python 2D_gaussian_wells.py

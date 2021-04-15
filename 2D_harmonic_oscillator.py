@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Halmitonian, animate, dynamic_visualize, SingleParticle
+from qmsolve import Hamiltonian, animate, dynamic_visualize, SingleParticle
 
 
 #interaction potential
@@ -11,7 +11,7 @@ def harmonic_oscillator(particle):
 
 
 
-H = Halmitonian(particles = SingleParticle(), 
+H = Hamiltonian(particles = SingleParticle(), 
 				potential = harmonic_oscillator, 
 				spatial_ndim = 2, N = 200, extent = 15)
 
