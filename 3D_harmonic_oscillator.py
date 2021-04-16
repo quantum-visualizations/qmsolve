@@ -43,6 +43,5 @@ energies = energies[sort_array]
 states = states[sort_array]
 
 visualize3D(energies, states, 26)
-# Set delay from its default value of 500 to something smaller for a faster 
-# animation.
-#animate3D(energies, states)
+visualize3D(energies, states, 26, plot_type='contour')
+animate3D(energies, states)

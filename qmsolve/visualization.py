@@ -163,3 +163,33 @@ def animate(energies, eigenstates):
     writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
     a.save('im.gif', writer=writer)
     """
+
+
+def compare_numerical_energies_with_analyitic(num_energies, analytic_energies):
+    """
+    Produce a plot that compares the numerical energies with 
+    known analytical versions.
+
+    Note that as of now this function is mostly a reuse from my plot 
+    function from the earlier SPS-QM-2D project.
+    """
+    k = len(analytic_energies)
+    fig = plt.figure()
+    axes = fig.subplots(2, 1)
+    axes[0].scatter([i for i in range(len(analytic_energies))],
+                analytic_energies, marker='_', label='Analytic')
+    axes[0].scatter([i for i in range(len(num_energies))], num_energies, marker='_')
+    axes[0].set_xlim(-1, k)
+    axes[0].set_ylim(0, np.amax(analytic_energies)*1.1)
+    axes[0].set_ylabel('Energy')
+    axes[0].grid()
+    axes[0].legend()
+    axes[1].set_xlim(-1, k)
+    axes[1].scatter([i for i in range(len(num_energies))],
+                     num_energies/np.array(analytic_energies), marker='+')
+    axes[1].set_ylabel('numerical divided by analytic')
+    axes[1].set_ylim(0.8, 1.2)
+    axes[1].set_xlabel('Energy Count')
+    axes[1].grid()
+    plt.show()
+    plt.close()
