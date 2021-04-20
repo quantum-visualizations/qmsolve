@@ -44,10 +44,10 @@ class SingleParticle(ParticleSystem):
             T = T_
 
         elif H.spatial_ndim ==2:
-            T =  kron(T_,I) + kron(I,T_)
+            T =  (kron(T_,I) + kron(I,T_))
 
         elif H.spatial_ndim ==3:
-            T =  kron(T_, kron(I, I)) + kron(I, kron(T_, I)) + kron(I, kron(I, T_))
+            T =  (kron(T_,I,I) + kron(I,T_,I) + kron(I,I,T_))
 
         return T
 

@@ -1,0 +1,7 @@
+numpy >= 1.18.5
+matplotlib >= 3.3.4
+scipy >= 1.4.1
+
+# The following is necessary
+# for 3D graphics.
+# mayavi >= 4.7.2
