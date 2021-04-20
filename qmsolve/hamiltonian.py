@@ -38,7 +38,7 @@ class Hamiltonian:
         H = self.T + self.V
         print ("Computing...")
         t0 = time.time()
-        eigenvalues, eigenvectors = eigsh(H, k = max_states, which='SA')
+        eigenvalues, eigenvectors = eigsh(H, k = max_states, which='LM', sigma=0)
 
         """
         the result of this method depends of the particle system. For example if the systems are two fermions, this method
