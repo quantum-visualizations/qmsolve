@@ -49,8 +49,6 @@ class CircleWidget(widgets.AxesWidget):
             self.update(phi, r)
             self._rotator.set_xdata([phi, phi])
             self._rotator.set_ydata([0.0, r])
-            # TODO: Use blitting when updating the plots
-            event.canvas.draw()
 
 
 def visualize(energies, eigenstates, k):
