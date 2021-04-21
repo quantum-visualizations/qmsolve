@@ -33,6 +33,7 @@ class Hamiltonian:
         V = diags([V], [0])
         return V
 
+
     def solve(self, max_states):
 
         H = self.T + self.V
@@ -42,10 +43,13 @@ class Hamiltonian:
 
         """
         the result of this method depends of the particle system. For example if the systems are two fermions, this method
-        makes the eigenstates antisymetric
+        makes the eigenstates antisymmetric
         """
-        self.energies, self.eigenstates = self.particle_system.get_energies_and_eigenstates(self, max_states, eigenvalues, eigenvectors)
+        self.eigenstates = self.particle_system.get_eigenstates(self, max_states, eigenvalues, eigenvectors)
 
         print ("Took", time.time() - t0)
 
-        return self.energies, self.eigenstates
+        return self.eigenstates
+
+
+

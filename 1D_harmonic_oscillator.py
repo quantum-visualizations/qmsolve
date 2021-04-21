@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Hamiltonian, animate, dynamic_visualize, SingleParticle
+from qmsolve import Hamiltonian,  SingleParticle, init_visualization
 
 
 #interaction potential
@@ -15,7 +15,11 @@ H = Hamiltonian(particles = SingleParticle(),
 				spatial_ndim = 1, N = 300, extent = 20)
 
 
-energies, eigenstates = H.solve(max_states = 30)
+eigenstates = H.solve(max_states = 30)
 
-print(energies)
-dynamic_visualize(energies, eigenstates)
+print(eigenstates.energies)
+
+visualization = init_visualization(eigenstates)
+#visualization.plot_eigenstate(6)
+visualization.slider_plot()
+#visualization.animate()
