@@ -48,7 +48,6 @@ class Hamiltonian:
         self.eigenstates = self.particle_system.get_eigenstates(self, max_states, eigenvalues, eigenvectors)
 
         print ("Took", time.time() - t0)
-
         return self.eigenstates
 
 

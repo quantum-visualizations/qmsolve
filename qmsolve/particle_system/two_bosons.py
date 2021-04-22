@@ -4,6 +4,7 @@ from scipy.sparse import kron
 from scipy.sparse import eye
 from .two_particles import TwoParticles
 from ..util.constants import *
+from .. import Eigenstates
 
 
 class TwoBosons(TwoParticles):

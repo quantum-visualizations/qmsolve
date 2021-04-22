@@ -21,6 +21,7 @@ class Visualization:
 
 from .single_particle_1D import VisualizationSingleParticle1D
 from .single_particle_2D import VisualizationSingleParticle2D
+from .two_identical_particles_1D import VisualizationIdenticalParticles1D
 
 
 def init_visualization(eigenstates):
@@ -29,3 +30,6 @@ def init_visualization(eigenstates):
 
     elif eigenstates.type == "SingleParticle2D":
         return VisualizationSingleParticle2D(eigenstates) 
+
+    elif eigenstates.type == "TwoIdenticalParticles1D":
+        return VisualizationIdenticalParticles1D(eigenstates)
