@@ -87,7 +87,7 @@ def visualize(energies, eigenstates, k):
 
 
 
-def visualize_superpositions(energies, eigenstates, n_states):
+def visualize_superpositions(energies, eigenstates, n_states, **kw):
     """
     Visualize the time evolution of a superposition of energy eigenstates.
     The circle widgets control the relative phase of each of the eigenstates.
@@ -96,9 +96,12 @@ def visualize_superpositions(energies, eigenstates, n_states):
     https://www.falstad.com/qm1d/
 
     """
+    params = {'dt': 0.001}
+    for k in kw.keys():
+        params[k] = kw[k]
     ndim = len(eigenstates[0].shape)
     if ndim == 2:
-        _visualize_superpositions_2d(energies, eigenstates, n_states)
+        _visualize_superpositions_2d(energies, eigenstates, n_states, params)
         return
     fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
     grid = plt.GridSpec(4, 10)
@@ -106,8 +109,8 @@ def visualize_superpositions(energies, eigenstates, n_states):
     ax.set_xticks([])
     ax.set_yticks([])
     get_norm_factor = lambda psi: 1.0/np.sqrt(np.sum(psi*np.conj(psi)))
-    coeffs = np.array([1.0/(i + 1.0)**2 for i in range(n_states)],
-                    dtype=np.complex128)
+    coeffs = np.array([1.0 if i == 0 else 0.0 for i in range(n_states)],
+                      dtype=np.complex128)
     ax.set_ylim(-1.7*np.amax(eigenstates[0]), 
                 1.7*np.amax(eigenstates[0]))
     line1, = ax.plot(np.real(eigenstates[0]))
@@ -141,7 +144,7 @@ def visualize_superpositions(energies, eigenstates, n_states):
 
     def func(*args):
         animation_data['ticks'] += 1
-        e = np.exp(-1.0j*energies[0:n_states]*0.001)
+        e = np.exp(-1.0j*energies[0:n_states]*params['dt'])
         np.copyto(coeffs, coeffs*e)
         norm_factor = animation_data['norm']
         psi = 4*np.tensordot(coeffs*norm_factor, eigenstates[0:n_states], 1)
@@ -162,7 +165,7 @@ def visualize_superpositions(energies, eigenstates, n_states):
 
 
 
-def _visualize_superpositions_2d(energies, eigenstates, n_states):
+def _visualize_superpositions_2d(energies, eigenstates, n_states, params):
     eigenstates = np.array(eigenstates)
     energies = np.array(energies)
     N = eigenstates.shape[1]
@@ -209,7 +212,7 @@ def _visualize_superpositions_2d(energies, eigenstates, n_states):
 
     def func(*args):
         animation_data['ticks'] += 1
-        e = np.exp(-1.0j*energies[0:n_states]*0.001)
+        e = np.exp(-1.0j*energies[0:n_states]*params['dt'])
         np.copyto(coeffs, coeffs*e)
         norm_factor = animation_data['norm']
         psi = np.dot(coeffs*norm_factor, 
