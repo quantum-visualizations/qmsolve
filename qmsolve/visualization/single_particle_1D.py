@@ -13,6 +13,7 @@ class VisualizationSingleParticle1D(Visualization):
     def plot_eigenstate(self, k):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
+        plt.style.use("dark_background")
 
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
 
@@ -41,7 +42,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
     def slider_plot(self):
-        # 1d and 2d slider prototype.
+        plt.style.use("dark_background")
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -95,6 +96,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
     def animate(self):
+        plt.style.use("dark_background")
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -172,6 +174,8 @@ class VisualizationSingleParticle1D(Visualization):
         params = {'dt': 0.001}
         for k in kw.keys():
             params[k] = kw[k]
+
+        plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
         grid = plt.GridSpec(4, 10)
         ax = fig.add_subplot(grid[0:3, 0:10])
@@ -182,7 +186,7 @@ class VisualizationSingleParticle1D(Visualization):
                         dtype=np.complex128)
         line1, = ax.plot(np.real(eigenstates[0]))
         line2, = ax.plot(np.imag(eigenstates[0]))
-        line3, = ax.plot(np.abs(eigenstates[0]), color='black')
+        line3, = ax.plot(np.abs(eigenstates[0]), color='white')
         animation_data = {'ticks': 0, 'norm': get_norm_factor(eigenstates[0]),
                           'is_paused': False}
         ax.set_ylim(-1.7*np.amax(eigenstates[0]*animation_data['norm']), 

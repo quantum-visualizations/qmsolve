@@ -15,9 +15,9 @@ def harmonic_interaction(fermions):
 def coulomb_interaction(fermions):
 
 	k = 500. # measured in eV * Å**2
-	r = (fermions.x1 - fermions.x2)
+	r = np.abs(fermions.x1 - fermions.x2)
 	r = np.where(r < 0.0001, 0.0001, r)
-	V = k/ r**2
+	V = k/ r
 	return V
 
 H = Hamiltonian(particles = TwoFermions(), 

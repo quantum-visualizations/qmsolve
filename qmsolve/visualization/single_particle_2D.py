@@ -3,20 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
-
-
-from matplotlib.colors import hsv_to_rgb
-def complex_to_rgb(Z):
-    #using HSV space
-    r = np.abs(Z)
-    arg = np.angle(Z)
-    
-    h = (arg + np.pi)  / (2 * np.pi)
-    s = np.ones(h.shape)
-    v = r  / np.amax(r)  #alpha
-    c = hsv_to_rgb(   np.moveaxis(np.array([h,s,v]) , 0, -1)  ) # --> tuple
-    return c
-
+from ..util.colour_functions import complex_to_rgb
 
 
 class VisualizationSingleParticle2D(Visualization):
@@ -29,18 +16,19 @@ class VisualizationSingleParticle2D(Visualization):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
 
+        plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
 
         grid = plt.GridSpec(2, 2, width_ratios=[4.5, 1], height_ratios=[1, 1] , hspace=0.1, wspace=0.2)
         ax1 = fig.add_subplot(grid[0:2, 0:1])
         ax2 = fig.add_subplot(grid[0:2, 1:2])
 
-        ax1.set_xlabel("x [Å]")
-        ax1.set_ylabel("y [Å]")
+        ax1.set_xlabel("$x$ [Å]")
+        ax1.set_ylabel("$y$ [Å]")
+        ax1.set_title("$\Psi(x,y)$")
 
         ax2.set_title('E Level')
         ax2.set_facecolor('black')
-
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
 
@@ -53,7 +41,7 @@ class VisualizationSingleParticle2D(Visualization):
 
         ax1.set_aspect('equal')
         L =  self.eigenstates.extent/2
-        im = ax1.imshow((eigenstates_array[k]), extent = [-L, L, -L, L], cmap ='seismic',  interpolation = 'bilinear',  origin='lower')
+        im = ax1.imshow(complex_to_rgb(eigenstates_array[k]*np.exp( 1j*2*np.pi/10*k)), origin='lower',extent = [-L, L, -L, L],  interpolation = 'bilinear')
         plt.show()
 
 
@@ -62,20 +50,22 @@ class VisualizationSingleParticle2D(Visualization):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
 
+        plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
 
         grid = plt.GridSpec(2, 2, width_ratios=[5, 1], height_ratios=[1, 1] , hspace=0.1, wspace=0.2)
         ax1 = fig.add_subplot(grid[0:2, 0:1])
         ax2 = fig.add_subplot(grid[0:2, 1:2])
 
-        ax1.set_xlabel("x [Å]")
-        ax1.set_ylabel("y [Å]")
+        ax1.set_xlabel("$x$ [Å]")
+        ax1.set_ylabel("$y$ [Å]")
+        ax1.set_title("$\Psi(x,y)$")
 
         ax2.set_title('E Level')
         ax2.set_facecolor('black')
-
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
+
 
         E0 = energies[0]
         for E in energies:
@@ -84,9 +74,9 @@ class VisualizationSingleParticle2D(Visualization):
 
         ax1.set_aspect('equal')
         L = self.eigenstates.extent/2
-        eigenstate_plot = ax1.imshow((eigenstates_array[1]), extent = [-L, L, -L, L], cmap ='seismic',  interpolation = 'bilinear',  origin='lower')
+        eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)), origin='lower',extent = [-L, L, -L, L],  interpolation = 'bilinear')
         
-        line = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
+        line = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
         from matplotlib.widgets import Slider
@@ -102,7 +92,7 @@ class VisualizationSingleParticle2D(Visualization):
 
         def update(state):
             state = int(state)
-            eigenstate_plot.set_data(eigenstates_array[state])
+            eigenstate_plot.set_data(complex_to_rgb(eigenstates_array[state]*np.exp( 1j*2*np.pi/10*state)))
             line[0].set_ydata([energies[state]/E0, energies[state]/E0])
 
         slider.on_changed(update)
@@ -118,22 +108,21 @@ class VisualizationSingleParticle2D(Visualization):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
 
-
+        plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
 
         grid = plt.GridSpec(2, 2, width_ratios=[5, 1], height_ratios=[1, 1] , hspace=0.1, wspace=0.2)
         ax1 = fig.add_subplot(grid[0:2, 0:1])
         ax2 = fig.add_subplot(grid[0:2, 1:2])
 
-        ax1.set_xlabel("x [Å]")
-        ax1.set_ylabel("y [Å]")
+        ax1.set_xlabel("$x$ [Å]")
+        ax1.set_ylabel("$y$ [Å]")
+        ax1.set_title("$\Psi(x,y)$")
 
         ax2.set_title('E Level')
         ax2.set_facecolor('black')
-
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
-
 
         E0 = energies[0]
         for E in energies:
@@ -142,9 +131,9 @@ class VisualizationSingleParticle2D(Visualization):
         # ax1.set_xlim( ??? )
         ax1.set_aspect('equal')
         L = self.eigenstates.extent/2
-        eigenstate_plot = ax1.imshow((eigenstates_array[1]), extent = [-L, L, -L, L], cmap ='seismic',  interpolation = 'bilinear',  origin='lower')
+        eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)),  origin='lower',extent = [-L, L, -L, L],   interpolation = 'bilinear')
 
-        line, = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
+        line, = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
 
@@ -156,16 +145,21 @@ class VisualizationSingleParticle2D(Visualization):
             state = int(animation_data['n'])
             if (animation_data['n'] % 1.0) > 0.5:
                 transition_time = (animation_data['n'] - int(animation_data['n']) - 0.5)
-                eigenstate_plot.set_data(np.cos(np.pi*transition_time)*eigenstates_array[state] + 
+                eigenstate_combination = (np.cos(np.pi*transition_time)*eigenstates_array[state]*np.exp( 1j*2*np.pi/10*state) + 
                                          np.sin(np.pi*transition_time)*
-                                         eigenstates_array[(state + 1) % len(energies)])
+                                         eigenstates_array[(state + 1) % len(energies)]*np.exp( 1j*2*np.pi/10*(state + 1)) )
+                
+                eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
+
+
                 E_N = energies[state]/E0 
                 E_M = energies[(state + 1) % len(energies)]/E0
                 E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
                 line.set_ydata([E, E])
             else:
                 line.set_ydata([energies[state]/E0, energies[state]/E0])
-                eigenstate_plot.set_data(eigenstates_array[int(state)])
+                eigenstate_combination = eigenstates_array[int(state)]*np.exp( 1j*2*np.pi/10*state)
+                eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
             return eigenstate_plot, line
 
         a = animation.FuncAnimation(fig, func_animation,
@@ -188,6 +182,8 @@ class VisualizationSingleParticle2D(Visualization):
         for k in kw.keys():
             params[k] = kw[k]
         N = eigenstates.shape[1]
+        
+        plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
         grid = plt.GridSpec(4, 10)
         ax = fig.add_subplot(grid[0:3, 0:10])

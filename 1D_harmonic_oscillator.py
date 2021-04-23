@@ -21,5 +21,6 @@ print(eigenstates.energies)
 
 visualization = init_visualization(eigenstates)
 #visualization.plot_eigenstate(6)
-visualization.superpositions(10)
+visualization.slider_plot()
 #visualization.animate()
+visualization.superpositions(10)
