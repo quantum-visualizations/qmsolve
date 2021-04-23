@@ -153,7 +153,6 @@ class VisualizationIdenticalParticles1D(Visualization):
 
     def animate(self, max_states = None):
 
-        print(len(self.eigenstates.energies))
         if max_states == None:
             max_states = len(self.eigenstates.energies)
 
