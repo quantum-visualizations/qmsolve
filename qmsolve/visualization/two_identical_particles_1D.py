@@ -151,10 +151,15 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def animate(self):
+    def animate(self, max_states = None):
 
-        eigenstates_array = self.eigenstates.array
-        energies = self.eigenstates.energies
+        print(len(self.eigenstates.energies))
+        if max_states == None:
+            max_states = len(self.eigenstates.energies)
+
+        eigenstates_array = self.eigenstates.array[:max_states]
+        energies = self.eigenstates.energies[:max_states]
+
         plt.style.use("dark_background")
 
         fig = plt.figure(figsize=(7.5 ,7.0)) 
