@@ -1,5 +1,8 @@
 from abc import abstractmethod 
 
+# For type hinting purposes
+from typing import Union, Dict, List
+
 
 class Visualization:
     @abstractmethod
@@ -16,6 +19,16 @@ class Visualization:
         
     @abstractmethod
     def animate_eigenstates(self):
+        pass
+
+    @abstractmethod
+    def superpositions(self, states: Union[int, List[int], Dict[int, complex]],
+                       **kw):
+        """
+        states - specify which eigenstates to superimpose on each other.
+        If it's a single number then superimpose eigenstates 0 to states-1.
+        kw - additional parameters to pass to the function.
+        """
         pass
 
 
