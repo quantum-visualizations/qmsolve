@@ -157,3 +157,82 @@ class VisualizationSingleParticle1D(Visualization):
         writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
         a.save('im.gif', writer=writer)
         """
+
+    def superpositions(self, states, **kw):
+        """
+        Visualize the time evolution of a superposition of energy eigenstates.
+        The circle widgets control the relative phase of each of the eigenstates.
+        These widgets are inspired by the circular phasors from the
+        quantum mechanics applets by Paul Falstad:
+        https://www.falstad.com/qm1d/
+        """
+        from .complex_slider_widget import ComplexSliderWidget
+        eigenstates = self.eigenstates.array
+        energies = self.eigenstates.energies
+        params = {'dt': 0.001}
+        for k in kw.keys():
+            params[k] = kw[k]
+        fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
+        grid = plt.GridSpec(4, 10)
+        ax = fig.add_subplot(grid[0:3, 0:10])
+        ax.set_xticks([])
+        ax.set_yticks([])
+        get_norm_factor = lambda psi: 1.0/np.sqrt(np.sum(psi*np.conj(psi)))
+        coeffs = np.array([1.0 if i == 0 else 0.0 for i in range(states)],
+                        dtype=np.complex128)
+        line1, = ax.plot(np.real(eigenstates[0]))
+        line2, = ax.plot(np.imag(eigenstates[0]))
+        line3, = ax.plot(np.abs(eigenstates[0]), color='black')
+        animation_data = {'ticks': 0, 'norm': get_norm_factor(eigenstates[0]),
+                          'is_paused': False}
+        ax.set_ylim(-1.7*np.amax(eigenstates[0]*animation_data['norm']), 
+                    1.7*np.amax(eigenstates[0]*animation_data['norm']))
+
+        def make_update(n):
+            def update(phi, r):
+                animation_data['is_paused'] = True
+                coeffs[n] = r*np.exp(1.0j*phi)
+                psi = np.tensordot(coeffs, eigenstates[0:states], 1)
+                animation_data['norm'] = get_norm_factor(psi)
+                line1.set_ydata(np.real(psi))
+                line2.set_ydata(np.imag(psi))
+                line3.set_ydata(np.abs(psi))
+            return update
+
+        widgets = []
+        circle_artists = []
+        for i in range(states):
+            circle_ax = fig.add_subplot(grid[3, i], projection='polar')
+            circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
+                                )
+            circle_ax.set_xticks([])
+            circle_ax.set_yticks([])
+            widgets.append(ComplexSliderWidget(circle_ax, 0.0, 1.0, animated=True))
+            widgets[i].on_changed(make_update(i))
+            circle_artists.append(widgets[i].get_artist())
+        artists = circle_artists + [line1, line2, line3]
+
+        def func(*args):
+            animation_data['ticks'] += 1
+            e = 1.0
+            if animation_data['is_paused']:
+                animation_data['is_paused'] = False
+            else:
+                e *= np.exp(-1.0j*energies[0:states]*params['dt'])
+            np.copyto(coeffs, coeffs*e)
+            norm_factor = animation_data['norm']
+            psi = np.tensordot(coeffs*norm_factor, eigenstates[0:states], 1)
+            line1.set_ydata(np.real(psi))
+            line2.set_ydata(np.imag(psi))
+            line3.set_ydata(np.abs(psi))
+            if animation_data['ticks'] % 2:
+                return [line1, line2, line3]
+            else:
+                for i, c in enumerate(coeffs):
+                    phi, r = np.angle(c), np.abs(c)
+                    artists[i].set_xdata([phi, phi])
+                    artists[i].set_ydata([0.0, r])
+                return artists
+
+        a = animation.FuncAnimation(fig, func, blit=True, interval=1000.0/60.0)
+        plt.show()

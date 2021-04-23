@@ -4,6 +4,21 @@ from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
 
+
+from matplotlib.colors import hsv_to_rgb
+def complex_to_rgb(Z):
+    #using HSV space
+    r = np.abs(Z)
+    arg = np.angle(Z)
+    
+    h = (arg + np.pi)  / (2 * np.pi)
+    s = np.ones(h.shape)
+    v = r  / np.amax(r)  #alpha
+    c = hsv_to_rgb(   np.moveaxis(np.array([h,s,v]) , 0, -1)  ) # --> tuple
+    return c
+
+
+
 class VisualizationSingleParticle2D(Visualization):
     def __init__(self,eigenstates):
         self.eigenstates = eigenstates
@@ -162,3 +177,78 @@ class VisualizationSingleParticle2D(Visualization):
         writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
         a.save('im.gif', writer=writer)
         """
+
+    def superpositions(self, states, **kw):
+        from .complex_slider_widget import ComplexSliderWidget
+        eigenstates = self.eigenstates.array
+        energies = self.eigenstates.energies
+        eigenstates = np.array(eigenstates)
+        energies = np.array(energies)
+        params = {'dt': 0.001}
+        for k in kw.keys():
+            params[k] = kw[k]
+        N = eigenstates.shape[1]
+        fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
+        grid = plt.GridSpec(4, 10)
+        ax = fig.add_subplot(grid[0:3, 0:10])
+        ax.set_xticks([])
+        ax.set_yticks([])
+        get_norm_factor = lambda psi: 1.0/np.sqrt(np.sum(psi*np.conj(psi)))
+        coeffs = np.array([1.0 if i == 0 else 0.0 for i in range(states)],
+                        dtype=np.complex128)
+        X, Y = np.meshgrid(np.linspace(-1.0, 1.0, eigenstates[0].shape[0]),
+                        np.linspace(-1.0, 1.0, eigenstates[0].shape[1]))
+        maxval = np.amax(np.abs(eigenstates[0]))
+        im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear')
+        im2 = plt.imshow(0.0*eigenstates[0], cmap='gray')
+        animation_data = {'ticks': 0, 'norm': 1.0}
+
+        def make_update(n):
+            def update(phi, r):
+                coeffs[n] = r*np.exp(1.0j*phi)
+                psi = np.dot(coeffs, 
+                            eigenstates[0:states].reshape([states, N*N]))
+                psi = psi.reshape([N, N])
+                animation_data['norm'] = get_norm_factor(psi)
+                psi *= animation_data['norm']
+                # apsi = np.abs(psi)
+                # im.set_alpha(apsi/np.amax(apsi))
+            return update
+
+        widgets = []
+        circle_artists = []
+        for i in range(states):
+            circle_ax = fig.add_subplot(grid[3, i], projection='polar')
+            circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
+                                )
+            circle_ax.set_xticks([])
+            circle_ax.set_yticks([])
+            widgets.append(ComplexSliderWidget(circle_ax, 0.0, 1.0, animated=True))
+            widgets[i].on_changed(make_update(i))
+            circle_artists.append(widgets[i].get_artist())
+        artists = circle_artists + [im]
+
+        def func(*args):
+            animation_data['ticks'] += 1
+            e = np.exp(-1.0j*energies[0:states]*params['dt'])
+            np.copyto(coeffs, coeffs*e)
+            norm_factor = animation_data['norm']
+            psi = np.dot(coeffs*norm_factor, 
+                        eigenstates[0:states].reshape([
+                            states, N*N]))
+            psi = psi.reshape([N, N])
+            im.set_data(complex_to_rgb(psi))
+            # apsi = np.abs(psi)
+            # im.set_alpha(apsi/np.amax(apsi))
+            # if animation_data['ticks'] % 2:
+            #     return (im, )
+            # else:
+            for i, c in enumerate(coeffs):
+                phi, r = np.angle(c), np.abs(c)
+                artists[i].set_xdata([phi, phi])
+                artists[i].set_ydata([0.0, r])
+            return artists
+
+        a = animation.FuncAnimation(fig, func, blit=True, interval=1000.0/60.0)
+        plt.show()
+
