@@ -21,4 +21,4 @@ eigenstates = H.solve(max_states = 80)
 print(eigenstates.energies)
 
 visualization = init_visualization(eigenstates)
-visualization.animate(max_states = 32, xlim = [-4,4], fps = 30, save_animation = False, total_time = 2)
+visualization.animate(max_states = 10, xlim = [-4,4], fps = 30, save_animation = False, seconds_per_eigenstate = 0.5)

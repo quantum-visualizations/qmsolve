@@ -3,19 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
+from ..util.colour_functions import complex_to_rgb
 
-
-from matplotlib.colors import hsv_to_rgb
-def complex_to_rgb(Z):
-    #using HSV space
-    r = np.abs(Z)
-    arg = np.angle(Z)
-    
-    h = (arg + np.pi)  / (2 * np.pi)
-    s = np.ones(h.shape)
-    v = r  / np.amax(r)  #alpha
-    c = hsv_to_rgb(   np.moveaxis(np.array([h,s,v]) , 0, -1)  ) # --> tuple
-    return c
 
 
 
@@ -51,7 +40,11 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_title("Probability density")
 
         plt.setp(ax3.get_yticklabels(), visible=False)
-
+        if xlim != None:
+            ax1.set_xlim(xlim)
+            ax3.set_xlim(xlim)
+            ax1.set_ylim(xlim)
+            ax3.set_ylim(xlim)
 
         E0 = energies[0]
 
@@ -98,6 +91,11 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
         ax3.set_title("Probability density")
         plt.setp(ax3.get_yticklabels(), visible=False)
+        if xlim != None:
+            ax1.set_xlim(xlim)
+            ax3.set_xlim(xlim)
+            ax1.set_ylim(xlim)
+            ax3.set_ylim(xlim)
 
         E0 = energies[0]
         for E in energies:
@@ -137,7 +135,11 @@ class VisualizationIdenticalParticles1D(Visualization):
             ax3.set_title("Probability density")
             ax3.set_yticks([])
             plt.setp(ax3.get_yticklabels(), visible=False)
-
+            if xlim != None:
+                ax1.set_xlim(xlim)
+                ax3.set_xlim(xlim)
+                ax1.set_ylim(xlim)
+                ax3.set_ylim(xlim)
             prob_density = np.abs(np.sum(  (eigenstates_array[state])*np.conjugate(eigenstates_array[state])  , axis = 1))
             prob_plot = ax3.plot(x,  prob_density, color= "cyan")
             ax3.set_ylim([0,max(prob_density)*1.1])
@@ -151,13 +153,18 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def animate(self, total_time = 10, fps = 20, max_states = None, xlim = None, save_animation = False):
+    def animate(self,  seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim = None, save_animation = False):
 
-        total_frames = fps * total_time
+        
 
 
         if max_states == None:
             max_states = len(self.eigenstates.energies)
+
+        frames_per_eigenstate = fps * seconds_per_eigenstate
+        total_time = max_states * seconds_per_eigenstate
+        total_frames = int(fps * total_time)
+
 
         eigenstates_array = self.eigenstates.array[:max_states]
         energies = self.eigenstates.energies[:max_states]
@@ -183,8 +190,12 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_xlabel("$x$ [Å]")
         ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
         ax3.set_title("Probability density")
-        #ax3.set_yticks([])
         plt.setp(ax3.get_yticklabels(), visible=False)
+        if xlim != None:
+            ax1.set_xlim(xlim)
+            ax3.set_xlim(xlim)
+            ax1.set_ylim(xlim)
+            ax3.set_ylim(xlim)
 
         E0 = energies[0]
         for E in energies:
@@ -207,9 +218,10 @@ class VisualizationIdenticalParticles1D(Visualization):
 
         prob_density = np.sum(  (eigenstates_array[0])*np.conjugate(eigenstates_array[0])  , axis = 1)
         animation_data = {'n': 0.0 , 'max_prob_density' : max(prob_density)*1.1}
+        Δn = 1/frames_per_eigenstate
 
-        def func_animation(*arg):
-            animation_data['n'] = (animation_data['n'] + 0.1) % len(energies)
+        def func_animation(frame):
+            animation_data['n'] = (animation_data['n'] + Δn) % len(energies)
             state = int(animation_data['n'])
             if (animation_data['n'] % 1.0) > 0.5:
                 transition_time = (animation_data['n'] - int(animation_data['n']) - 0.5)
@@ -225,14 +237,13 @@ class VisualizationIdenticalParticles1D(Visualization):
 
                 prob_density = np.abs(np.sum(  eigenstate_combination*np.conjugate(eigenstate_combination)  , axis = 1))
 
-                if save_animation == True: #avoid reset the axis make it faster
+                if save_animation == True: #avoid reseting the axis makes it faster
                     ax3.clear()
                     ax3.set_xlabel("$x$ [Å]")
                     ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
                     ax3.set_title("Probability density")
-                    #ax3.set_yticks([])
                     plt.setp(ax3.get_yticklabels(), visible=False)
-
+                    
                 prob_plot, = ax3.plot(x,  prob_density, color= "cyan")
                 prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
                 new_prob_density = max(prob_density)*1.1
@@ -251,12 +262,11 @@ class VisualizationIdenticalParticles1D(Visualization):
                 eigenstate_combination = eigenstates_array[int(state)]*np.exp( 1j*2*np.pi/10*state)
                 eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
                 
-                if save_animation == True: #avoid reset the axis make it faster
+                if save_animation == True: #avoid reseting the axis makes it faster
                     ax3.clear()
                     ax3.set_xlabel("$x$ [Å]")
                     ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
                     ax3.set_title("Probability density")
-                    #ax3.set_yticks([])
                     plt.setp(ax3.get_yticklabels(), visible=False)
 
 
