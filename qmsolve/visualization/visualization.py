@@ -44,5 +44,9 @@ def init_visualization(eigenstates):
     elif eigenstates.type == "SingleParticle2D":
         return VisualizationSingleParticle2D(eigenstates) 
 
+    elif eigenstates.type == "SingleParticle3D":
+        from .single_particle_3D import VisualizationSingleParticle3D
+        return VisualizationSingleParticle3D(eigenstates)
+
     elif eigenstates.type == "TwoIdenticalParticles1D":
         return VisualizationIdenticalParticles1D(eigenstates)
