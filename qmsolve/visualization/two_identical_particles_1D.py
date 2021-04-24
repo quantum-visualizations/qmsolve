@@ -3,7 +3,20 @@ import matplotlib.pyplot as plt
 from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
-from ..util.colour_functions import complex_to_rgb
+
+
+from matplotlib.colors import hsv_to_rgb
+def complex_to_rgb(Z):
+    #using HSV space
+    r = np.abs(Z)
+    arg = np.angle(Z)
+    
+    h = (arg + np.pi)  / (2 * np.pi)
+    s = np.ones(h.shape)
+    v = r  / np.amax(r)  #alpha
+    c = hsv_to_rgb(   np.moveaxis(np.array([h,s,v]) , 0, -1)  ) # --> tuple
+    return c
+
 
 
 class VisualizationIdenticalParticles1D(Visualization):
@@ -12,7 +25,7 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def plot_eigenstate(self, k, xlim = None):
+    def plot_eigenstate(self, k):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
         plt.style.use("dark_background")
@@ -38,12 +51,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_title("Probability density")
 
         plt.setp(ax3.get_yticklabels(), visible=False)
-        
-        if xlim != None:
-            ax1.set_xlim(xlim)
-            ax3.set_xlim(xlim)
-            ax1.set_ylim(xlim)
-            ax3.set_ylim(xlim)
+
 
         E0 = energies[0]
 
@@ -64,7 +72,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         plt.show()
 
 
-    def slider_plot(self, xlim = None):
+    def slider_plot(self):
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -90,13 +98,6 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
         ax3.set_title("Probability density")
         plt.setp(ax3.get_yticklabels(), visible=False)
-
-        if xlim != None:
-            ax1.set_xlim(xlim)
-            ax3.set_xlim(xlim)
-            ax1.set_ylim(xlim)
-            ax3.set_ylim(xlim)
-
 
         E0 = energies[0]
         for E in energies:
@@ -150,7 +151,10 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def animate(self, max_states = None, xlim = None):
+    def animate(self, total_time = 10, fps = 20, max_states = None, xlim = None, save_animation = False):
+
+        total_frames = fps * total_time
+
 
         if max_states == None:
             max_states = len(self.eigenstates.energies)
@@ -179,14 +183,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_xlabel("$x$ [Å]")
         ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
         ax3.set_title("Probability density")
-
-        if xlim != None:
-            ax1.set_xlim(xlim)
-            ax3.set_xlim(xlim)
-            ax1.set_ylim(xlim)
-            ax3.set_ylim(xlim)
-
-
+        #ax3.set_yticks([])
         plt.setp(ax3.get_yticklabels(), visible=False)
 
         E0 = energies[0]
@@ -206,7 +203,11 @@ class VisualizationIdenticalParticles1D(Visualization):
 
         import matplotlib.animation as animation
 
-        animation_data = {'n': 0.0}
+        
+
+        prob_density = np.sum(  (eigenstates_array[0])*np.conjugate(eigenstates_array[0])  , axis = 1)
+        animation_data = {'n': 0.0 , 'max_prob_density' : max(prob_density)*1.1}
+
         def func_animation(*arg):
             animation_data['n'] = (animation_data['n'] + 0.1) % len(energies)
             state = int(animation_data['n'])
@@ -223,9 +224,23 @@ class VisualizationIdenticalParticles1D(Visualization):
                 eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
 
                 prob_density = np.abs(np.sum(  eigenstate_combination*np.conjugate(eigenstate_combination)  , axis = 1))
+
+                if save_animation == True: #avoid reset the axis make it faster
+                    ax3.clear()
+                    ax3.set_xlabel("$x$ [Å]")
+                    ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
+                    ax3.set_title("Probability density")
+                    #ax3.set_yticks([])
+                    plt.setp(ax3.get_yticklabels(), visible=False)
+
                 prob_plot, = ax3.plot(x,  prob_density, color= "cyan")
                 prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
-                ax3.set_ylim([0,max(prob_density)*1.1])
+                new_prob_density = max(prob_density)*1.1
+                if new_prob_density > animation_data['max_prob_density']:
+                    animation_data['max_prob_density'] = new_prob_density
+
+                ax3.set_ylim([0,animation_data['max_prob_density']])
+
                 E_N = energies[state]/E0 
                 E_M = energies[(state + 1) % len(energies)]/E0
                 E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
@@ -236,19 +251,32 @@ class VisualizationIdenticalParticles1D(Visualization):
                 eigenstate_combination = eigenstates_array[int(state)]*np.exp( 1j*2*np.pi/10*state)
                 eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
                 
+                if save_animation == True: #avoid reset the axis make it faster
+                    ax3.clear()
+                    ax3.set_xlabel("$x$ [Å]")
+                    ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
+                    ax3.set_title("Probability density")
+                    #ax3.set_yticks([])
+                    plt.setp(ax3.get_yticklabels(), visible=False)
+
+
                 prob_density = np.abs(np.sum(  eigenstate_combination*np.conjugate(eigenstate_combination)  , axis = 1))
                 prob_plot, = ax3.plot(x,  prob_density, color= "cyan")
                 prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
-                ax3.set_ylim([0,max(prob_density)*1.1])
+                new_prob_density = max(prob_density)*1.1
+                if new_prob_density > animation_data['max_prob_density']:
+                    animation_data['max_prob_density'] = new_prob_density
+                ax3.set_ylim([0,animation_data['max_prob_density']])
+
             return eigenstate_plot, line,prob_plot,prob_plot_fill
 
         a = animation.FuncAnimation(fig, func_animation,
-                                    blit=True, interval=1.0)
-        plt.show()
+                                    blit=True, frames=total_frames, interval= 1/fps * 1000)
         
-        # save animation
-        """
-        Writer = animation.writers['ffmpeg']
-        writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
-        a.save('im.mp4', writer=writer)
-        """        
+        
+        if save_animation == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), bitrate=1800)
+            a.save('im.mp4', writer=writer)
+        else:
+            plt.show()
