@@ -193,32 +193,52 @@ class VisualizationSingleParticle2D(Visualization):
         energies = self.eigenstates.energies
         eigenstates = np.array(eigenstates)
         energies = np.array(energies)
-        params = {'dt': 0.001}
+        coeffs = None
+        if isinstance(states, int) or isinstance(states, float):
+            coeffs = np.array([1.0 if i == 0 else 0.0 for i in range(states)],
+                           dtype=np.complex128)
+            eigenstates = eigenstates[0: states]
+        else:
+            coeffs = states
+            eigenstates = eigenstates[0: len(states)]
+            states = len(states)
+        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2.0, 
+                                        self.eigenstates.extent/2.0],
+                  'save_animation': False,
+                  'frames': 120
+                 }
         for k in kw.keys():
             params[k] = kw[k]
         N = eigenstates.shape[1]
 
         plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
-        grid = plt.GridSpec(4, 10)
-        ax = fig.add_subplot(grid[0:3, 0:10])
-        ax.set_xticks([])
-        ax.set_yticks([])
+        grid = plt.GridSpec(5, states)
+        ax = fig.add_subplot(grid[0:3, 0:states])
+        ax.set_title("$\psi(x, y)$")
+        ax.set_xlabel("$x$ [Å]")
+        ax.set_ylabel("$y$ [Å]")
+        # ax.set_xticks([])
+        # ax.set_yticks([])
         get_norm_factor = lambda psi: 1.0/np.sqrt(np.sum(psi*np.conj(psi)))
-        coeffs = np.array([1.0 if i == 0 else 0.0 for i in range(states)],
-                        dtype=np.complex128)
+        coeffs = np.array(coeffs, dtype=np.complex128)
         X, Y = np.meshgrid(np.linspace(-1.0, 1.0, eigenstates[0].shape[0]),
                         np.linspace(-1.0, 1.0, eigenstates[0].shape[1]))
         maxval = np.amax(np.abs(eigenstates[0]))
-        im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear')
-        im2 = plt.imshow(0.0*eigenstates[0], cmap='gray')
+        im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
+                        origin='lower', extent=[-self.eigenstates.extent/2.0, 
+                                                self.eigenstates.extent/2.0,
+                                                -self.eigenstates.extent/2.0, 
+                                                self.eigenstates.extent/2.0]
+                        )
+        # im2 = plt.imshow(0.0*eigenstates[0], cmap='gray')
         animation_data = {'ticks': 0, 'norm': 1.0}
 
         def make_update(n):
             def update(phi, r):
                 coeffs[n] = r*np.exp(1.0j*phi)
                 psi = np.dot(coeffs, 
-                            eigenstates[0:states].reshape([states, N*N]))
+                             eigenstates.reshape([states, N*N]))
                 psi = psi.reshape([N, N])
                 animation_data['norm'] = get_norm_factor(psi)
                 psi *= animation_data['norm']
@@ -229,7 +249,7 @@ class VisualizationSingleParticle2D(Visualization):
         widgets = []
         circle_artists = []
         for i in range(states):
-            circle_ax = fig.add_subplot(grid[3, i], projection='polar')
+            circle_ax = fig.add_subplot(grid[4, i], projection='polar')
             circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
                                 )
             circle_ax.set_xticks([])
@@ -245,7 +265,7 @@ class VisualizationSingleParticle2D(Visualization):
             np.copyto(coeffs, coeffs*e)
             norm_factor = animation_data['norm']
             psi = np.dot(coeffs*norm_factor, 
-                        eigenstates[0:states].reshape([
+                         eigenstates.reshape([
                             states, N*N]))
             psi = psi.reshape([N, N])
             im.set_data(complex_to_rgb(psi))
@@ -260,6 +280,15 @@ class VisualizationSingleParticle2D(Visualization):
                 artists[i].set_ydata([0.0, r])
             return artists
 
-        a = animation.FuncAnimation(fig, func, blit=True, interval=1000.0/60.0)
+        a = animation.FuncAnimation(fig, func, blit=True, interval=1000.0/60.0,
+                                    frames=None if (not params['save_animation']) else
+                                    params['frames'])
+        if params['save_animation'] == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=30, metadata=dict(artist='Me'), 
+                            bitrate=-1)
+            a.save('im.mp4', writer=writer)
+            return
+        plt.show()
         plt.show()
 

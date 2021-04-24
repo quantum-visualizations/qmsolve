@@ -24,4 +24,9 @@ visualization = init_visualization(eigenstates)
 #visualization.plot_eigenstate(6)
 visualization.slider_plot()
 #visualization.animate()
-visualization.superpositions(10, dt=0.04)
+coeffs = np.zeros([10], np.complex128)
+coeffs[1] = 1.0
+coeffs[2] = 1.0j
+visualization.superpositions(coeffs, dt=0.04, 
+							 # save_animation=True, frames=60
+							 )
