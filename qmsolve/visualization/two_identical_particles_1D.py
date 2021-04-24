@@ -12,7 +12,7 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def plot_eigenstate(self, k):
+    def plot_eigenstate(self, k, xlim = None):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
         plt.style.use("dark_background")
@@ -38,7 +38,12 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_title("Probability density")
 
         plt.setp(ax3.get_yticklabels(), visible=False)
-
+        
+        if xlim != None:
+            ax1.set_xlim(xlim)
+            ax3.set_xlim(xlim)
+            ax1.set_ylim(xlim)
+            ax3.set_ylim(xlim)
 
         E0 = energies[0]
 
@@ -59,7 +64,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         plt.show()
 
 
-    def slider_plot(self):
+    def slider_plot(self, xlim = None):
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -85,6 +90,13 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
         ax3.set_title("Probability density")
         plt.setp(ax3.get_yticklabels(), visible=False)
+
+        if xlim != None:
+            ax1.set_xlim(xlim)
+            ax3.set_xlim(xlim)
+            ax1.set_ylim(xlim)
+            ax3.set_ylim(xlim)
+
 
         E0 = energies[0]
         for E in energies:
@@ -138,7 +150,7 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def animate(self, max_states = None):
+    def animate(self, max_states = None, xlim = None):
 
         if max_states == None:
             max_states = len(self.eigenstates.energies)
@@ -167,7 +179,14 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_xlabel("$x$ [Å]")
         ax3.set_ylabel("${\| \Psi(x)\|}^{2} $")
         ax3.set_title("Probability density")
-        #ax3.set_yticks([])
+
+        if xlim != None:
+            ax1.set_xlim(xlim)
+            ax3.set_xlim(xlim)
+            ax1.set_ylim(xlim)
+            ax3.set_ylim(xlim)
+
+
         plt.setp(ax3.get_yticklabels(), visible=False)
 
         E0 = energies[0]

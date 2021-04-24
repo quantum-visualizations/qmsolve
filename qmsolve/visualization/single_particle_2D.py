@@ -12,7 +12,7 @@ class VisualizationSingleParticle2D(Visualization):
 
 
 
-    def plot_eigenstate(self, k):
+    def plot_eigenstate(self, k, xlim=None, ylim=None):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
 
@@ -32,6 +32,11 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
 
+        if xlim != None:
+            ax1.set_xlim(xlim)
+        if ylim != None:
+            ax1.set_ylim(ylim)
+
         E0 = energies[0]
 
         for E in energies:
@@ -45,7 +50,7 @@ class VisualizationSingleParticle2D(Visualization):
         plt.show()
 
 
-    def slider_plot(self):
+    def slider_plot(self, xlim=None, ylim=None):
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -65,6 +70,11 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.set_facecolor('black')
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
+
+        if xlim != None:
+            ax1.set_xlim(xlim)
+        if ylim != None:
+            ax1.set_ylim(ylim)
 
 
         E0 = energies[0]
@@ -103,7 +113,7 @@ class VisualizationSingleParticle2D(Visualization):
 
 
 
-    def animate(self):
+    def animate(self, xlim=None, ylim=None):
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -123,6 +133,11 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.set_facecolor('black')
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
+
+        if xlim != None:
+            ax1.set_xlim(xlim)
+        if ylim != None:
+            ax1.set_ylim(ylim)
 
         E0 = energies[0]
         for E in energies:
@@ -182,7 +197,7 @@ class VisualizationSingleParticle2D(Visualization):
         for k in kw.keys():
             params[k] = kw[k]
         N = eigenstates.shape[1]
-        
+
         plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
         grid = plt.GridSpec(4, 10)

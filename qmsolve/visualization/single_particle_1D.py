@@ -10,7 +10,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def plot_eigenstate(self, k):
+    def plot_eigenstate(self, k, xlim = None):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
         plt.style.use("dark_background")
@@ -28,6 +28,8 @@ class VisualizationSingleParticle1D(Visualization):
 
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
+        if xlim != None:
+            ax1.set_xlim(xlim)
 
         E0 = energies[0]
 
@@ -41,7 +43,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def slider_plot(self):
+    def slider_plot(self, xlim = None):
         plt.style.use("dark_background")
 
         eigenstates_array = self.eigenstates.array
@@ -60,6 +62,8 @@ class VisualizationSingleParticle1D(Visualization):
 
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
+        if xlim != None:
+            ax1.set_xlim(xlim)
 
         E0 = energies[0]
         for E in energies:
@@ -95,7 +99,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def animate(self):
+    def animate(self, xlim = None):
         plt.style.use("dark_background")
 
         eigenstates_array = self.eigenstates.array
@@ -115,13 +119,14 @@ class VisualizationSingleParticle1D(Visualization):
 
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
+        if xlim != None:
+            ax1.set_xlim(xlim)
 
 
         E0 = energies[0]
         for E in energies:
             ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
         
-        # ax1.set_xlim( ??? )
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
         eigenstate_plot, = ax1.plot(x, eigenstates_array[1])
         eigenstate_plot.set_data = eigenstate_plot.set_ydata
