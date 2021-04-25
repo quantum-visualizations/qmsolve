@@ -95,7 +95,7 @@ class VisualizationSingleParticle2D(Visualization):
                           'state',            # the name of the slider parameter
                           0,          # minimal value of the parameter
                           len(eigenstates_array)-1,          # maximal value of the parameter
-                          valinit = 1,  # initial value of the parameter 
+                          valinit = 0,  # initial value of the parameter 
                           valstep = 1,
                           color = '#5c05ff' 
                          )
@@ -113,7 +113,15 @@ class VisualizationSingleParticle2D(Visualization):
 
 
 
-    def animate(self, xlim=None, ylim=None):
+    def animate(self,seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim=None, ylim=None, save_animation = False):
+
+        if max_states == None:
+            max_states = len(self.eigenstates.energies)
+
+        frames_per_eigenstate = fps * seconds_per_eigenstate
+        total_time = max_states * seconds_per_eigenstate
+        total_frames = int(fps * total_time)
+
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -143,7 +151,6 @@ class VisualizationSingleParticle2D(Visualization):
         for E in energies:
             ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
         
-        # ax1.set_xlim( ??? )
         ax1.set_aspect('equal')
         L = self.eigenstates.extent/2
         eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)),  origin='lower',extent = [-L, L, -L, L],   interpolation = 'bilinear')
@@ -155,8 +162,10 @@ class VisualizationSingleParticle2D(Visualization):
         import matplotlib.animation as animation
 
         animation_data = {'n': 0.0}
+        Δn = 1/frames_per_eigenstate
+
         def func_animation(*arg):
-            animation_data['n'] = (animation_data['n'] + 0.1) % len(energies)
+            animation_data['n'] = (animation_data['n'] + Δn) % len(energies)
             state = int(animation_data['n'])
             if (animation_data['n'] % 1.0) > 0.5:
                 transition_time = (animation_data['n'] - int(animation_data['n']) - 0.5)
@@ -178,14 +187,14 @@ class VisualizationSingleParticle2D(Visualization):
             return eigenstate_plot, line
 
         a = animation.FuncAnimation(fig, func_animation,
-                                    blit=True, interval=1.0)
-        plt.show()
-        """
-        # save animation
-        Writer = animation.writers['ffmpeg']
-        writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
-        a.save('im.gif', writer=writer)
-        """
+                                    blit=True, frames=total_frames, interval= 1/fps * 1000)
+        if save_animation == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), bitrate=1800)
+            a.save('animation.mp4', writer=writer)
+        else:
+            plt.show()
+
 
     def superpositions(self, states, **kw):
         from .complex_slider_widget import ComplexSliderWidget
@@ -287,7 +296,7 @@ class VisualizationSingleParticle2D(Visualization):
             Writer = animation.writers['ffmpeg']
             writer = Writer(fps=30, metadata=dict(artist='Me'), 
                             bitrate=-1)
-            a.save('im.mp4', writer=writer)
+            a.save('animation.mp4', writer=writer)
             return
         plt.show()
         plt.show()

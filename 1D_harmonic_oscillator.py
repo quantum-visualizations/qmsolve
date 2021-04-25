@@ -21,8 +21,8 @@ print(eigenstates.energies)
 
 visualization = init_visualization(eigenstates)
 #visualization.plot_eigenstate(6)
-visualization.slider_plot()
-#visualization.animate()
+#visualization.slider_plot()
+visualization.animate()
 x = np.linspace(-1.0, 1.0, len(eigenstates.array[0]))
 psi0 = np.exp(-(x-0.16)**2/(2*0.05**2))
 coeffs = np.dot(eigenstates.array, psi0)*1.0j

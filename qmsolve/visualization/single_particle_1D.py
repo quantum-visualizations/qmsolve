@@ -81,7 +81,7 @@ class VisualizationSingleParticle1D(Visualization):
                           'state',            # the name of the slider parameter
                           0,          # minimal value of the parameter
                           len(eigenstates_array)-1,          # maximal value of the parameter
-                          valinit = 1,  # initial value of the parameter 
+                          valinit = 0,  # initial value of the parameter 
                           valstep = 1,
                           color = '#5c05ff' 
                          )
@@ -99,13 +99,19 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def animate(self, xlim = None):
-        plt.style.use("dark_background")
+    def animate(self,  seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim = None, save_animation = False):
+
+        if max_states == None:
+            max_states = len(self.eigenstates.energies)
+
+        frames_per_eigenstate = fps * seconds_per_eigenstate
+        total_time = max_states * seconds_per_eigenstate
+        total_frames = int(fps * total_time)
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
 
-
+        plt.style.use("dark_background")
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
 
         grid = plt.GridSpec(2, 2, width_ratios=[5, 1], height_ratios=[1, 1] , hspace=0.1, wspace=0.2)
@@ -156,14 +162,13 @@ class VisualizationSingleParticle1D(Visualization):
             return eigenstate_plot, line
 
         a = animation.FuncAnimation(fig, func_animation,
-                                    blit=True, interval=1.0)
-        plt.show()
-        """
-        # save animation
-        Writer = animation.writers['ffmpeg']
-        writer = Writer(fps=20, metadata=dict(artist='Me'), bitrate=1800)
-        a.save('im.gif', writer=writer)
-        """
+                                    blit=True, frames=total_frames, interval= 1/fps * 1000)
+        if save_animation == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), bitrate=1800)
+            a.save('animation.mp4', writer=writer)
+        else:
+            plt.show()
 
     def superpositions(self, states, **kw):
         """
@@ -269,6 +274,6 @@ class VisualizationSingleParticle1D(Visualization):
             Writer = animation.writers['ffmpeg']
             writer = Writer(fps=30, metadata=dict(artist='Me'), 
                             bitrate=-1)
-            a.save('im.mp4', writer=writer)
+            a.save('animation.mp4', writer=writer)
             return
         plt.show()

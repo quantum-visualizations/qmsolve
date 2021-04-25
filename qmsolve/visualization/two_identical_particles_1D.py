@@ -287,6 +287,6 @@ class VisualizationIdenticalParticles1D(Visualization):
         if save_animation == True:
             Writer = animation.writers['ffmpeg']
             writer = Writer(fps=fps, metadata=dict(artist='Me'), bitrate=1800)
-            a.save('im.mp4', writer=writer)
+            a.save('animation.mp4', writer=writer)
         else:
             plt.show()
