@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Hamiltonian, TwoFermions, init_visualization
+from qmsolve import Hamiltonian, TwoBosons, init_visualization
 
 
 def coulomb_interaction(fermions):
@@ -10,8 +10,8 @@ def coulomb_interaction(fermions):
 	V = k/ r**2
 	return 0*V
 
-H = Hamiltonian(particles = TwoFermions(), 
-				potential = coulomb_interaction,
+H = Hamiltonian(particles = TwoBosons(), 
+				potential = coulomb_interaction, # change this to harmonic_interaction to check what happens!
 				spatial_ndim = 1, N = 100, extent = 10)
 
 
@@ -21,5 +21,5 @@ print(eigenstates.energies)
 visualization = init_visualization(eigenstates)
 
 #visualization.plot_eigenstate(6)
-#visualization.slider_plot()
-visualization.animate()
+visualization.slider_plot()
+#visualization.animate()

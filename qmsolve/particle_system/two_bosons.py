@@ -10,7 +10,7 @@ from .. import Eigenstates
 class TwoBosons(TwoParticles):
 
 
-    def get_energies_and_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
+    def get_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
 
         eigenvectors  = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
 
@@ -19,7 +19,7 @@ class TwoBosons(TwoParticles):
         
 
         energies = []
-        eigenstates = []
+        eigenstates_array = []
 
         #antisymmetrize eigenvectors: This is made by applying (𝜓(r1 , s1, r2 , s2) + 𝜓(r2 , s2, r1 , s1))/sqrt(2) to each state.
         for i in range(max_states):
@@ -34,8 +34,8 @@ class TwoBosons(TwoParticles):
             eigenstate_tmp = eigenstate_tmp/np.sqrt(norm)
 
                  
-            if eigenstates != []: #check if it's the first eigenstate
-                inner_product = np.sum(eigenstates[-1]* eigenstate_tmp)*H.dx**H.ndim
+            if eigenstates_array != []: #check if it's the first eigenstate
+                inner_product = np.sum(eigenstates_array[-1]* eigenstate_tmp)*H.dx**H.ndim
                 #print("inner_product",inner_product)
             else:
                 inner_product = 0
@@ -43,8 +43,13 @@ class TwoBosons(TwoParticles):
 
             if np.abs(inner_product) < TOL: # check if is eigenstate_tmp is repeated. (inner_product should be zero)
 
-                eigenstates +=  [eigenstate_tmp]
+                eigenstates_array +=  [eigenstate_tmp]
                 energies +=  [eigenvalues[i]]
 
-        return energies, eigenstates
+        if H.spatial_ndim == 1:
+            type = "TwoIdenticalParticles1D"
+        elif H.spatial_ndim == 2:
+            type = "TwoIdenticalParticles2D"
 
+        eigenstates = Eigenstates(energies, eigenstates_array, H, type)
+        return eigenstates

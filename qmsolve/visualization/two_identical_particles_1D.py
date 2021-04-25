@@ -14,7 +14,7 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
-    def plot_eigenstate(self, k):
+    def plot_eigenstate(self, k,xlim = None):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
         plt.style.use("dark_background")
@@ -65,7 +65,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         plt.show()
 
 
-    def slider_plot(self):
+    def slider_plot(self,xlim = None):
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
