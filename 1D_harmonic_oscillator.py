@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Hamiltonian, animate, dynamic_visualize, SingleParticle
+from qmsolve import Hamiltonian,  SingleParticle, init_visualization
 
 
 #interaction potential
@@ -12,10 +12,21 @@ def harmonic_oscillator(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = harmonic_oscillator, 
-				spatial_ndim = 1, N = 300, extent = 20)
+				spatial_ndim = 1, N = 512, extent = 20)
 
 
-energies, eigenstates = H.solve(max_states = 30)
+eigenstates = H.solve(max_states = 30)
 
-print(energies)
-dynamic_visualize(energies, eigenstates)
+print(eigenstates.energies)
+
+visualization = init_visualization(eigenstates)
+#visualization.plot_eigenstate(6)
+visualization.slider_plot()
+#visualization.animate()
+x = np.linspace(-1.0, 1.0, len(eigenstates.array[0]))
+psi0 = np.exp(-(x-0.16)**2/(2*0.05**2))
+coeffs = np.dot(eigenstates.array, psi0)*1.0j
+visualization.superpositions(coeffs[0:15],
+							 xlim=[-3.5, 3.5], 
+							 # save_animation=True, frames=30
+							 )

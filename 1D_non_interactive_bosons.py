@@ -1,23 +1,25 @@
 import numpy as np
-from qmsolve import Hamiltonian, TwoBosons, dynamic_visualize, animate
+from qmsolve import Hamiltonian, TwoBosons, init_visualization
 
 
-#interaction potential
-def harmonic_oscillator(bosons):
+def coulomb_interaction(fermions):
 
-	k = 100 # measured in eV / (Å**2)
-
-	V = 0.5*k*bosons.x1**2 + 0.5*k*bosons.x2**2 
-	return V
-
-
+	k = 0. # measured in eV * Å**2
+	r = (fermions.x1 - fermions.x2)
+	r = np.where(r < 0.0001, 0.0001, r)
+	V = k/ r**2
+	return 0*V
 
 H = Hamiltonian(particles = TwoBosons(), 
-				potential = harmonic_oscillator, 
-				spatial_ndim = 1, N = 200, extent = 15)
+				potential = coulomb_interaction, # change this to harmonic_interaction to check what happens!
+				spatial_ndim = 1, N = 100, extent = 10)
 
 
-energies, eigenstates = H.solve(max_states = 30)
-print("Energies:",energies)
-animate(energies, eigenstates)
-#dynamic_visualize(energies, eigenstates)
+eigenstates = H.solve(max_states = 90)
+print(eigenstates.energies)
+
+visualization = init_visualization(eigenstates)
+
+#visualization.plot_eigenstate(6)
+visualization.slider_plot()
+#visualization.animate()
