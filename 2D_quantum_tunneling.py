@@ -23,12 +23,12 @@ eigenstates = H.solve(max_states = 40)
 print(eigenstates.energies)
 visualization = init_visualization(eigenstates)
 
-#visualization.slider_plot()
 visualization.animate()
 
+#visualize a superposition of eigenstates
 coeffs = np.zeros([10], np.complex128)
 coeffs[0] = 1.0
-coeffs[1] = -1
+coeffs[1] = -1.0
 visualization.superpositions(coeffs, dt=0.03, xlim=[-3.0, 3.0],
 							 # save_animation=True, frames=60
 							 )

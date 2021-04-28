@@ -2,16 +2,8 @@ import numpy as np
 from qmsolve import Hamiltonian, TwoFermions, init_visualization
 
 
-def coulomb_interaction(fermions):
-
-	k = 0. # measured in eV * Å**2
-	r = (fermions.x1 - fermions.x2)
-	r = np.where(r < 0.0001, 0.0001, r)
-	V = k/ r**2
-	return 0*V
-
 H = Hamiltonian(particles = TwoFermions(), 
-				potential = coulomb_interaction,
+				potential = None, # If None is specified, the particles are just limited by the limits of the grid which are infinite barriers
 				spatial_ndim = 1, N = 100, extent = 10)
 
 

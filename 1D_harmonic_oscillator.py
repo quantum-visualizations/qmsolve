@@ -9,7 +9,6 @@ def harmonic_oscillator(particle):
 	return 0.5 * k * particle.x**2
 
 
-
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = harmonic_oscillator, 
 				spatial_ndim = 1, N = 512, extent = 20)
@@ -19,10 +18,12 @@ eigenstates = H.solve(max_states = 30)
 
 print(eigenstates.energies)
 
+
 visualization = init_visualization(eigenstates)
-#visualization.plot_eigenstate(6)
 visualization.slider_plot()
 #visualization.animate()
+
+#visualize a superposition of the eigenstates
 x = np.linspace(-1.0, 1.0, len(eigenstates.array[0]))
 psi0 = np.exp(-(x-0.16)**2/(2*0.05**2))
 coeffs = np.dot(eigenstates.array, psi0)*1.0j

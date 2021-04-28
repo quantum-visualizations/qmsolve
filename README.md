@@ -38,3 +38,9 @@ python 1D_non_interactive_fermions_HO.py
 
 In the examples from above you can check how in the non interactive case the energy levels are equally spaced and degenerated, however in the interactive case the degeneracy is broken.
 As a starting point I suggest you to modify the confinement and the interaction potential to see what happens!
+
+## Contributors
+
+- [marl0ny](https://github.com/marl0ny)
+- [Rafael de la Fuente](https://github.com/rafael-fuente)
+- [Hudson Smith](https://github.com/dhudsmith)

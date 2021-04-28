@@ -9,7 +9,7 @@ def harmonic_oscillator_plus_coulomb_interaction(fermions):
 
 	V_harmonic = 0.5*k*fermions.x1**2 + 0.5*k*fermions.x2**2 
 
-	k = 300. # measured in eV * Å**2
+	k = 300. # measured in eV * Å
 	r = np.abs(fermions.x1 - fermions.x2)
 	r = np.where(r < 0.0001, 0.0001, r)
 	V_interaction = k/ r
