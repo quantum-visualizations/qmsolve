@@ -1,23 +1,17 @@
 import numpy as np
-from qmsolve import Hamiltonian, TwoFermions, dynamic_visualize, animate
-
-
-#interaction potential
-def harmonic_oscillator(fermions):
-
-	k = 100 # measured in eV / (Å**2)
-
-	V = 0.5*k*fermions.x1**2 + 0.5*k*fermions.x2**2 
-	return V
-
+from qmsolve import Hamiltonian, TwoFermions, init_visualization
 
 
 H = Hamiltonian(particles = TwoFermions(), 
-				potential = harmonic_oscillator, 
-				spatial_ndim = 1, N = 200, extent = 15)
+				potential = None, # If None is specified, the particles are just limited by the limits of the grid which are infinite barriers
+				spatial_ndim = 1, N = 100, extent = 10)
 
 
-energies, eigenstates = H.solve(max_states = 30)
-print("Energies:",energies)
-animate(energies, eigenstates)
-#dynamic_visualize(energies, eigenstates)
+eigenstates = H.solve(max_states = 90)
+print(eigenstates.energies)
+
+visualization = init_visualization(eigenstates)
+
+#visualization.plot_eigenstate(6)
+#visualization.slider_plot()
+visualization.animate()

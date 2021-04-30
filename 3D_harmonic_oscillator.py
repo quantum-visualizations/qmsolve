@@ -1,15 +1,6 @@
-"""
-Visualization of the numerically computed
-eigenstates of the 3D harmonic oscillator (WIP).
-Separation of variables is used for faster computation.
-"""
 import numpy as np
-from qmsolve import Hamiltonian, SingleParticle
-try:
-    from qmsolve import visualize3D, animate3D
-except ImportError as e:
-    print("You do not have Mayavi.")
-    raise e
+from qmsolve import visualization
+from qmsolve import Hamiltonian, SingleParticle, Eigenstates
 
 
 spatial_ndim = 1
@@ -27,9 +18,9 @@ for V_i in separable_potential:
     H_i = Hamiltonian(particles=SingleParticle(),
                       N=N, potential=V_i, 
                       extent=L, spatial_ndim=1)
-    e_and_v = H_i.solve(M)
-    energies.append(e_and_v[0])
-    states.append(e_and_v[1])
+    v = H_i.solve(M)
+    energies.append(v.energies)
+    states.append(v.array)
 
 states = np.multiply.outer(np.multiply.outer(states[2], states[1]), states[0])
 states = np.transpose(states, (0, 2, 4, 1, 3, 5))
@@ -42,6 +33,10 @@ sort_array = np.argsort(energies)
 energies = energies[sort_array]
 states = states[sort_array]
 
-visualize3D(energies, states, 26)
-visualize3D(energies, states, 26, plot_type='contour')
-animate3D(energies, states)
+
+eigenstates = Eigenstates(energies, states, H_i, 'SingleParticle3D')
+v = visualization.init_visualization(eigenstates)
+v.plot_eigenstate(26)
+v.plot_type = 'contour'
+v.plot_eigenstate(26)
+v.animate()

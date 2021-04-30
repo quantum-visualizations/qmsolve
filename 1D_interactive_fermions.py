@@ -1,12 +1,12 @@
 import numpy as np
-from qmsolve import Hamiltonian, TwoFermions, dynamic_visualize, animate
+from qmsolve import Hamiltonian, TwoFermions, init_visualization
 
 
 def harmonic_interaction(fermions):
 
 	k = 50 # measured in eV / (Å**2)
 
-	l0 = 3 # measured in Å
+	l0 = 5 # measured in Å
 	V = 0.5*k*(fermions.x1 - fermions.x2 - l0) **2
 	return V
 
@@ -14,18 +14,21 @@ def harmonic_interaction(fermions):
 
 def coulomb_interaction(fermions):
 
-	k = 140. # measured in eV * Å**2
-	r = (fermions.x1 - fermions.x2)
+	k = 500. # measured in eV * Å
+	r = np.abs(fermions.x1 - fermions.x2)
 	r = np.where(r < 0.0001, 0.0001, r)
-	V = k/ r**2
+	V = k/ r
 	return V
 
 H = Hamiltonian(particles = TwoFermions(), 
-				potential = harmonic_interaction, # change this to coulomb_interaction to check what happens!
-				spatial_ndim = 1, N = 100, extent = 10)
+				potential = coulomb_interaction, # change this to harmonic_interaction to check what happens!
+				spatial_ndim = 1, N = 200, extent = 10)
 
 
-energies, eigenstates = H.solve(max_states = 90)
-print("Energies:",energies)
-#dynamic_visualize(energies, eigenstates)
-animate(energies, eigenstates)
+eigenstates = H.solve(max_states = 90)
+print(eigenstates.energies)
+
+visualization = init_visualization(eigenstates)
+
+#visualization.slider_plot()
+visualization.animate()

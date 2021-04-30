@@ -4,7 +4,7 @@ from scipy.sparse import kron
 from scipy.sparse import eye
 from .particle_system import ParticleSystem
 from ..util.constants import *
-
+from .. import Eigenstates
 
 class SingleParticle(ParticleSystem):
     def __init__(self, m = m_e, spin = None):
@@ -51,11 +51,18 @@ class SingleParticle(ParticleSystem):
 
         return T
 
-    def get_energies_and_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
+    def get_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
 
         energies = eigenvalues
-        eigenstates = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
+        eigenstates_array = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
 
         # Finish the normalization of the eigenstates
-        eigenstates = eigenstates/np.sqrt(H.dx**H.ndim)
-        return  energies, eigenstates
+        eigenstates_array = eigenstates_array/np.sqrt(H.dx**H.ndim)
+
+        if H.spatial_ndim == 1:
+            type = "SingleParticle1D"
+        elif H.spatial_ndim == 2:
+            type = "SingleParticle2D"
+
+        eigenstates = Eigenstates(energies, eigenstates_array, H, type)
+        return eigenstates

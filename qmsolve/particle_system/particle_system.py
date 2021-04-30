@@ -15,5 +15,5 @@ class ParticleSystem:
         pass
         
     @abstractmethod
-    def get_energies_and_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
+    def get_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
         pass
