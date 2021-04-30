@@ -27,6 +27,6 @@ visualization.slider_plot()
 coeffs = np.zeros([10], np.complex128)
 coeffs[1] = 1.0
 coeffs[2] = 1.0j
-visualization.superpositions(coeffs, dt=0.04, 
+visualization.superpositions(coeffs, dt=0.01, 
 							 # save_animation=True, frames=60
 							 )

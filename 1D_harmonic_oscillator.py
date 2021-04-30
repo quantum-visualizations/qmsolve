@@ -26,7 +26,7 @@ visualization.slider_plot()
 #visualize a superposition of the eigenstates
 x = np.linspace(-1.0, 1.0, len(eigenstates.array[0]))
 psi0 = np.exp(-(x-0.16)**2/(2*0.05**2))
-coeffs = np.dot(eigenstates.array, psi0)*1.0j
+coeffs = np.dot(eigenstates.array, psi0)*(1.0 + 0.0j)
 visualization.superpositions(coeffs[0:15],
 							 xlim=[-3.5, 3.5], 
 							 # save_animation=True, frames=30
