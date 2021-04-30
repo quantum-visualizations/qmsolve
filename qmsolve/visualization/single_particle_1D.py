@@ -170,7 +170,7 @@ class VisualizationSingleParticle1D(Visualization):
         else:
             plt.show()
 
-    def superpositions(self, states, **kw):
+    def superpositions(self, states, fps = 30, total_time = 20, **kw):
         """
         Visualize the time evolution of a superposition of energy eigenstates.
         The circle widgets control the relative phase of each of the eigenstates.
@@ -178,6 +178,8 @@ class VisualizationSingleParticle1D(Visualization):
         quantum mechanics applets by Paul Falstad:
         https://www.falstad.com/qm1d/
         """
+
+        total_frames = fps * total_time
         from .complex_slider_widget import ComplexSliderWidget
         eigenstates = self.eigenstates.array
         coeffs = None
@@ -210,12 +212,14 @@ class VisualizationSingleParticle1D(Visualization):
         fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
         grid = plt.GridSpec(5, states)
         ax = fig.add_subplot(grid[0:3, 0:states])
-        ax.set_xlim(*params['xlim'])
+        
         ax.set_xlabel("[Å]")
         x = np.linspace(-self.eigenstates.extent/2.0,
                         self.eigenstates.extent/2.0,
                         len(eigenstates[0]))
         ax.set_yticks([])
+        ax.set_xlim(params['xlim'])
+
         line1, = ax.plot(x, np.real(eigenstates[0]), label='$Re|\psi(x)|$')
         line2, = ax.plot(x, np.imag(eigenstates[0]), label='$Im|\psi(x)|$')
         line3, = ax.plot(x, np.abs(eigenstates[0]), label='$|\psi(x)|$', color='white')
@@ -269,10 +273,10 @@ class VisualizationSingleParticle1D(Visualization):
                 return artists
         a = animation.FuncAnimation(fig, func, blit=True, interval=1000.0/60.0,
                                     frames=None if (not params['save_animation']) else
-                                    params['frames'])
+                                    total_frames)
         if params['save_animation'] == True:
             Writer = animation.writers['ffmpeg']
-            writer = Writer(fps=30, metadata=dict(artist='Me'), 
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), 
                             bitrate=-1)
             a.save('animation.mp4', writer=writer)
             return

@@ -290,3 +290,119 @@ class VisualizationIdenticalParticles1D(Visualization):
             a.save('animation.mp4', writer=writer)
         else:
             plt.show()
+
+
+
+
+    def superpositions(self, states, fps = 30, total_time = 20, **kw):
+
+        total_frames = fps * total_time
+
+        from .complex_slider_widget import ComplexSliderWidget
+        eigenstates = self.eigenstates.array
+        energies = self.eigenstates.energies
+        eigenstates = np.array(eigenstates)
+        energies = np.array(energies)
+        coeffs = None
+        if isinstance(states, int) or isinstance(states, float):
+            coeffs = np.array([1.0 if i == 0 else 0.0 for i in range(states)],
+                           dtype=np.complex128)
+            eigenstates = eigenstates[0: states]
+        else:
+            coeffs = states
+            eigenstates = eigenstates[0: len(states)]
+            states = len(states)
+        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2.0, 
+                                        self.eigenstates.extent/2.0],
+                  'save_animation': False,
+                  'frames': 120
+                 }
+        for k in kw.keys():
+            params[k] = kw[k]
+        N = eigenstates.shape[1]
+
+        plt.style.use("dark_background")
+        fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
+        grid = plt.GridSpec(5, states)
+        ax = fig.add_subplot(grid[0:3, 0:states])
+        ax.set_title("$\psi(x_1, x_2)$")
+        ax.set_xlabel("$x_1$ [Å]")
+        ax.set_ylabel("$x_2$ [Å]")
+        # ax.set_xticks([])
+        # ax.set_yticks([])
+        get_norm_factor = lambda psi: 1.0/np.sqrt(np.sum(psi*np.conj(psi)))
+        coeffs = np.array(coeffs, dtype=np.complex128)
+        X, Y = np.meshgrid(np.linspace(-1.0, 1.0, eigenstates[0].shape[0]),
+                        np.linspace(-1.0, 1.0, eigenstates[0].shape[1]))
+        maxval = np.amax(np.abs(eigenstates[0]))
+
+        ax.set_xlim(params['xlim'])
+        ax.set_ylim(params['xlim'])
+
+
+        im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
+                        origin='lower', extent=[-self.eigenstates.extent/2.0, 
+                                                self.eigenstates.extent/2.0,
+                                                -self.eigenstates.extent/2.0, 
+                                                self.eigenstates.extent/2.0]
+                        )
+        # im2 = plt.imshow(0.0*eigenstates[0], cmap='gray')
+        animation_data = {'ticks': 0, 'norm': 1.0}
+
+        def make_update(n):
+            def update(phi, r):
+                coeffs[n] = r*np.exp(1.0j*phi)
+                psi = np.dot(coeffs, 
+                             eigenstates.reshape([states, N*N]))
+                psi = psi.reshape([N, N])
+                animation_data['norm'] = get_norm_factor(psi)
+                psi *= animation_data['norm']
+                # apsi = np.abs(psi)
+                # im.set_alpha(apsi/np.amax(apsi))
+            return update
+
+        widgets = []
+        circle_artists = []
+        for i in range(states):
+            circle_ax = fig.add_subplot(grid[4, i], projection='polar')
+            circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
+                                )
+            circle_ax.set_xticks([])
+            circle_ax.set_yticks([])
+            widgets.append(ComplexSliderWidget(circle_ax, 0.0, 1.0, animated=True))
+            widgets[i].on_changed(make_update(i))
+            circle_artists.append(widgets[i].get_artist())
+        artists = circle_artists + [im]
+
+        def func(*args):
+            animation_data['ticks'] += 1
+            e = np.exp(-1.0j*energies[0:states]*params['dt'])
+            np.copyto(coeffs, coeffs*e)
+            norm_factor = animation_data['norm']
+            psi = np.dot(coeffs*norm_factor, 
+                         eigenstates.reshape([
+                            states, N*N]))
+            psi = psi.reshape([N, N])
+            im.set_data(complex_to_rgb(psi))
+            # apsi = np.abs(psi)
+            # im.set_alpha(apsi/np.amax(apsi))
+            # if animation_data['ticks'] % 2:
+            #     return (im, )
+            # else:
+            for i, c in enumerate(coeffs):
+                phi, r = np.angle(c), np.abs(c)
+                artists[i].set_xdata([phi, phi])
+                artists[i].set_ydata([0.0, r])
+            return artists
+
+        a = animation.FuncAnimation(fig, func, blit=True, interval= 1/fps * 1000,
+                                    frames=None if (not params['save_animation']) else
+                                    total_frames)
+        if params['save_animation'] == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), 
+                            bitrate=-1)
+            a.save('animation.mp4', writer=writer)
+            return
+        plt.show()
+        plt.show()

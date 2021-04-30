@@ -196,16 +196,18 @@ class VisualizationSingleParticle2D(Visualization):
             plt.show()
 
 
-    def superpositions(self, states, **kw):
+    def superpositions(self, states, fps = 30, total_time = 20, **kw):
         params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2.0, 
                                         self.eigenstates.extent/2.0],
+                  'ylim': [-self.eigenstates.extent/2.0, 
+                           self.eigenstates.extent/2.0],
                   'save_animation': False,
-                  'frames': 120,
                   'hide_controls': False,
                   # 'plot_style': 'dark_background'
                  }
         for k in kw.keys():
             params[k] = kw[k]
+        total_frames = fps * total_time
         from .complex_slider_widget import ComplexSliderWidget
         eigenstates = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -241,6 +243,10 @@ class VisualizationSingleParticle2D(Visualization):
         X, Y = np.meshgrid(np.linspace(-1.0, 1.0, eigenstates[0].shape[0]),
                         np.linspace(-1.0, 1.0, eigenstates[0].shape[1]))
         maxval = np.amax(np.abs(eigenstates[0]))
+
+        ax.set_xlim(params['xlim'])
+        ax.set_ylim(params['ylim'])
+
         im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
                         origin='lower', extent=[-self.eigenstates.extent/2.0, 
                                                 self.eigenstates.extent/2.0,
@@ -307,12 +313,12 @@ class VisualizationSingleParticle2D(Visualization):
                     artists[i].set_ydata([0.0, r])
             return artists
 
-        a = animation.FuncAnimation(fig, func, blit=True, interval=1000.0/60.0,
+        a = animation.FuncAnimation(fig, func, blit=True, interval= 1/fps * 1000,
                                     frames=None if (not params['save_animation']) else
-                                    params['frames'])
+                                    total_frames)
         if params['save_animation'] == True:
             Writer = animation.writers['ffmpeg']
-            writer = Writer(fps=30, metadata=dict(artist='Me'), 
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), 
                             bitrate=-1)
             a.save('animation.mp4', writer=writer)
             return

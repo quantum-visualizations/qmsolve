@@ -23,11 +23,13 @@ visualization = init_visualization(eigenstates)
 visualization.slider_plot()
 #visualization.animate()
 
-#visualize a superposition of the eigenstates
+#compute the inner product of the initial state 𝜓0(x) with the eigenstates 𝜓_n(x):  
+#coeffs = ∫ <𝜓_n|x><x|𝜓0> dx
 x = np.linspace(-1.0, 1.0, len(eigenstates.array[0]))
-psi0 = np.exp(-(x-0.16)**2/(2*0.05**2))
-coeffs = np.dot(eigenstates.array, psi0)*(1.0 + 0.0j)
+𝜓0 = np.exp(-(x-0.16)**2/(2*0.05**2))
+coeffs = np.dot(eigenstates.array, 𝜓0)*1.0j
+#visualize a superposition of the eigenstates
 visualization.superpositions(coeffs[0:15],
-							 xlim=[-3.5, 3.5], 
+							 xlim=[-3.5, 3.5],
 							 # save_animation=True, frames=30
 							 )
