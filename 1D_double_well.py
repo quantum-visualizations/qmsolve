@@ -1,6 +1,6 @@
 import numpy as np
-from qmsolve import Hamiltonian, SingleParticle
-from qmsolve import visualize_superpositions, dynamic_visualize
+from qmsolve import Hamiltonian,  SingleParticle, init_visualization
+
 
 
 def double_well(particle):
@@ -13,8 +13,9 @@ H = Hamiltonian(particles = SingleParticle(),
 				spatial_ndim = 1, N = 300, extent = 20)
 
 
-energies, eigenstates = H.solve(max_states = 10)
+eigenstates = H.solve(max_states = 10)
 
-print(energies)
-dynamic_visualize(energies, eigenstates)
-visualize_superpositions(energies, eigenstates, 10, dt=0.01)
+vis = init_visualization(eigenstates)
+coeffs = np.zeros([10], np.complex128)
+coeffs[0], coeffs[1] = 1.0, 1.0j
+vis.superpositions(states=coeffs, dt=1.0)

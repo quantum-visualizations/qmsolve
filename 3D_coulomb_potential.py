@@ -1,6 +1,6 @@
 import numpy as np
 from qmsolve import Hamiltonian, SingleParticle
-from qmsolve import visualize3D, animate3D
+from qmsolve import init_visualization
 from qmsolve import k_c
 
 
@@ -17,10 +17,6 @@ def coulomb(particle):
 H = Hamiltonian(particles=SingleParticle(),
                 N=N, potential=coulomb, 
                 extent=L, spatial_ndim=3)
-e, v = H.solve(max_states = 10)
-
-
-print(e)
-visualize3D(e, v, 9)
-visualize3D(e, v, 9, plot_type='contour')
-animate3D(e, v)
+e = H.solve(max_states = 10)
+visualization = init_visualization(e)
+visualization.animate()

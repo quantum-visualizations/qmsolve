@@ -5,11 +5,7 @@ V(x, y, z) = V_{xy}(x, y) + V_{z}(z)
 
 import numpy as np
 from qmsolve import Hamiltonian, SingleParticle
-try:
-    from qmsolve import visualize3D, animate3D, dynamic_visualize
-except ImportError as e:
-    print("You do not have Mayavi.")
-    raise e
+from qmsolve import init_visualization
 
 
 L = 20

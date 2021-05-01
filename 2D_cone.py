@@ -1,6 +1,5 @@
 import numpy as np
-from qmsolve import Hamiltonian, animate, dynamic_visualize
-from qmsolve import SingleParticle, visualize_superpositions
+from qmsolve import Hamiltonian, SingleParticle, init_visualization
 
 
 
@@ -14,8 +13,18 @@ H = Hamiltonian(particles = SingleParticle(),
 				spatial_ndim = 2, N = 100, extent = 15)
 
 
-energies, eigenstates = H.solve(max_states = 11)
+eigenstates = H.solve(max_states = 30)
 
-print(energies)
-visualize_superpositions(energies, eigenstates, 10, dt=0.01)
-dynamic_visualize(energies, eigenstates)
+visualization = init_visualization(eigenstates)
+#visualization.plot_eigenstate(6)
+coeffs = np.zeros([30], np.complex128)
+coeffs[6] = 1.0
+coeffs[7] = 1.0j
+coeffs[28] = (1.0 - 1.0j)/np.sqrt(2.0)
+coeffs[29] = (1.0 + 1.0j)/np.sqrt(2.0)
+visualization.superpositions(coeffs, dt=0.002, 
+							 # hide_controls=True, 
+							 # save_animation=True, frames=7*30
+							 )
+# visualization.animate()
+
