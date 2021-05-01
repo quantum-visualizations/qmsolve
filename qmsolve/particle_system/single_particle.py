@@ -63,6 +63,8 @@ class SingleParticle(ParticleSystem):
             type = "SingleParticle1D"
         elif H.spatial_ndim == 2:
             type = "SingleParticle2D"
+        elif H.spatial_ndim == 3:
+            type = "SingleParticle3D"
 
         eigenstates = Eigenstates(energies, eigenstates_array, H, type)
         return eigenstates
