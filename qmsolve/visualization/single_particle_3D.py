@@ -122,7 +122,7 @@ class VisualizationSingleParticle3D(Visualization):
 
             #azimuth angle
             φ = 30
-            mlab.view(azimuth= φ,  distance=L*12.2)
+            mlab.view(azimuth= φ,  distance=N*3.5)
 
 
             data = {'t': 0.0}
@@ -165,7 +165,7 @@ class VisualizationSingleParticle3D(Visualization):
                     vol.update_ctf = True
 
                     φ = 30 + data['t'] * 360 / 10 
-                    mlab.view(azimuth= φ, distance=L*12.2)
+                    mlab.view(azimuth= φ, distance=N*3.5)
 
                     yield
 
