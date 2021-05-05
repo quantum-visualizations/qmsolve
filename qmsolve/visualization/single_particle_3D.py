@@ -14,33 +14,55 @@ class VisualizationSingleParticle3D(Visualization):
 
     def plot_eigenstate(self, k):
         eigenstates = self.eigenstates.array
-        mlab.figure(1, bgcolor=(0, 0, 0), size=(350, 350))
-        psi = np.abs(eigenstates[k])
-        min = psi.min()
-        max = psi.max()
-
+        mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
+        psi = eigenstates[k]
 
 
         if self.plot_type == 'volume':
+            min_ = psi.min()
+            max_ = psi.max()
+
+            psi = (psi)/(max_)
 
             L = self.eigenstates.extent/2
             N = self.eigenstates.N
 
-            xx, yy, zz = np.mgrid[-L:L:N*1j, -L:L:N*1j, -L:L:N*1j]
-            vol = mlab.pipeline.volume(mlab.pipeline.scalar_field(xx,yy,zz,psi), 
-                                    vmin=min + 0.008 * (max - min),        
-                                    vmax=min + 0.5 * (max - min))
+            vol = mlab.pipeline.volume(mlab.pipeline.scalar_field(psi))
+
+            # Change the color transfer function
+            from tvtk.util import ctf
+            c = ctf.save_ctfs(vol._volume_property)
+            c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
+                        [-0.4, 0.1, 0.1, 1.0],
+                        [-0.3, 0.0, 0.0, 1.0],
+                        [-0.2, 0.0, 0.0, 0.4],
+                        [-0.1, 0.0, 0.0, 0.2],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.1, 0.2, 0.0, 0.0],
+                        [0.2, 0.4, 0.0, 0.0],
+                        [0.3, 1.0, 0.0, 0.0],
+                        [0.4, 1.0, 0.1, 0.1],
+                        [0.45, 1.0, 0.3, 0.3]]
+
+            c['alpha'] = [[-0.5, 1.0],
+                          [-0.1, 0.0],
+                          [0.1, 0.0],
+                         [0.5, 1.0]]
+            ctf.load_ctfs(c, vol._volume_property)
+            # Update the shadow LUT of the volume module.
+            vol.update_ctf = True
 
             mlab.outline()
+            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=6 , ranges = (-L,L,-L,L,-L,L) )
 
-            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=4)
+            mlab.show()
 
         else:
 
             # Adding colour scale to a contour plot:
             # https://github.com/enthought/mayavi/
             #       blob/master/examples/mayavi/mlab/atomic_orbital.py
-            field = mlab.pipeline.scalar_field(psi2, 
+            field = mlab.pipeline.scalar_field(np.abs(psi), 
                                             vmin=min + 0.008 * (max - min),
                                             vmax=min + 0.5 * (max - min))
             field.image_data.point_data.add_array(eigenstates[k].ravel())
@@ -53,15 +75,105 @@ class VisualizationSingleParticle3D(Visualization):
                                                         point_scalars='phase')
             mlab.pipeline.surface(contour2)
 
-        mlab.show()
+            mlab.show()
 
     def animate(self):
         eigenstates = self.eigenstates.array
         energies = self.eigenstates.energies
-        mlab.figure(1, bgcolor=(0, 0, 0), size=(350, 350))
+        mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
 
-
+        
         if self.plot_type == 'volume':
+            psi = eigenstates[0]
+            max_= np.amax(eigenstates)
+
+            psi = (psi)/(max_)
+
+            L = self.eigenstates.extent/2
+            N = self.eigenstates.N
+            field = mlab.pipeline.scalar_field(psi)
+            vol = mlab.pipeline.volume(field)
+
+            # Change the color transfer function
+            from tvtk.util import ctf
+            c = ctf.save_ctfs(vol._volume_property)
+            c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
+                        [-0.4, 0.1, 0.1, 1.0],
+                        [-0.3, 0.0, 0.0, 1.0],
+                        [-0.2, 0.0, 0.0, 0.4],
+                        [-0.1, 0.0, 0.0, 0.2],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.1, 0.2, 0.0, 0.0],
+                        [0.2, 0.4, 0.0, 0.0],
+                        [0.3, 1.0, 0.0, 0.0],
+                        [0.4, 1.0, 0.1, 0.1],
+                        [0.45, 1.0, 0.3, 0.3]]
+
+            c['alpha'] = [[-0.5, 1.0],
+                          [-0.1, 0.0],
+                          [0.1, 0.0],
+                         [0.5, 1.0]]
+            ctf.load_ctfs(c, vol._volume_property)
+            # Update the shadow LUT of the volume module.
+            vol.update_ctf = True
+
+            mlab.outline()
+            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=6 , ranges = (-L,L,-L,L,-L,L) )
+
+            #azimuth angle
+            φ = 30
+            mlab.view(azimuth= φ,  distance=L*12.2)
+
+
+            data = {'t': 0.0}
+            @mlab.animate(delay=10)
+            def animation():
+                while (1):
+                    data['t'] += 0.05
+                    k1 = int(data['t']) % len(energies)
+                    k2 = (int(data['t']) + 1) % len(energies)
+                    if data['t'] % 1.0 > 0.5:
+                        t = (data['t'] - int(data['t']) - 0.5)
+                        psi = (np.cos(np.pi*t)*eigenstates[k1]
+                            + np.sin(np.pi*t)*eigenstates[k2])
+                    else:
+                        psi = eigenstates[k1]
+
+                    psi = (psi)/(max_)
+                    field.mlab_source.scalars = psi
+                    # Change the color transfer function
+                    from tvtk.util import ctf
+                    c = ctf.save_ctfs(vol._volume_property)
+                    c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
+                                [-0.4, 0.1, 0.1, 1.0],
+                                [-0.3, 0.0, 0.0, 1.0],
+                                [-0.2, 0.0, 0.0, 0.4],
+                                [-0.1, 0.0, 0.0, 0.2],
+                                [0.0, 0.0, 0.0, 0.0],
+                                [0.1, 0.2, 0.0, 0.0],
+                                [0.2, 0.4, 0.0, 0.0],
+                                [0.3, 1.0, 0.0, 0.0],
+                                [0.4, 1.0, 0.1, 0.1],
+                                [0.45, 1.0, 0.3, 0.3]]
+
+                    c['alpha'] = [[-0.5, 1.0],
+                                  [-0.1, 0.0],
+                                  [0.1, 0.0],
+                                 [0.5, 1.0]]
+                    ctf.load_ctfs(c, vol._volume_property)
+                    # Update the shadow LUT of the volume module.
+                    vol.update_ctf = True
+
+                    φ = 30 + data['t'] * 360 / 10 
+                    mlab.view(azimuth= φ, distance=L*12.2)
+
+                    yield
+
+            animation()
+            mlab.show()
+
+
+        elif self.plot_type == 'volume_old_colormap':
             L = self.eigenstates.extent/2
             N = self.eigenstates.N
 
@@ -78,10 +190,10 @@ class VisualizationSingleParticle3D(Visualization):
             field = mlab.pipeline.scalar_field(xx, yy, zz, psi)
             vol = mlab.pipeline.volume(field)
             φ = 30
-            mlab.view(azimuth= φ, distance=L*6.7)
+            mlab.view(azimuth= φ, distance=L*7.2)
             mlab.outline()
 
-            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=4)
+            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=6 , ranges = (-L,L,-L,L,-L,L) )
 
             data = {'t': 0.0}
             @mlab.animate(delay=10)
@@ -105,12 +217,14 @@ class VisualizationSingleParticle3D(Visualization):
 
                     field.mlab_source.scalars = np.abs(psi)
                     φ = 30 + data['t'] * 360 / 10 
-                    mlab.view(azimuth= φ, distance=L*6.7)
+                    mlab.view(azimuth= φ, distance=L*7.2)
 
                     yield
 
             animation()
             mlab.show()
+
+
 
         else:
 
