@@ -9,7 +9,7 @@ def coulomb_potential(particle):
 
 	r = np.sqrt((particle.x)**2 + (particle.y)**2 + (particle.z)**2)
 	r = np.where(r < 0.0001, 0.0001, r)
-	return - k_c/ r + k_c/ 0.0001 
+	return - k_c/ r
 
 
 

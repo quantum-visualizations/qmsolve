@@ -25,10 +25,17 @@ class Hamiltonian:
         self.V = self.get_potential_matrix()
 
     def get_potential_matrix(self):
-        V = self.potential(self.particle_system)
-        V = V.reshape(self.N ** self.ndim)
-        V = diags([V], [0])
-        return V
+        if self.potential == None:
+            self.Vmin = 0.
+            V = 0.
+            return V
+        else: 
+            V = self.potential(self.particle_system)
+            self.Vmin = np.amin(V)
+            V = V.reshape(self.N ** self.ndim)
+            V = diags([V], [0])
+            return V
+
 
     def solve(self, max_states: int, method: str = 'eigsh'):
         """
@@ -50,7 +57,8 @@ class Hamiltonian:
         if method == 'eigsh':
             # Note: uses shift-invert trick for stability finding low-lying states
             # Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode
-            eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LM', sigma=0)
+
+            eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LM', sigma=min(0, self.Vmin))
         elif method == 'lobpcg':
             # preconditioning matrix should approximate the inverse of the hamiltonian
             # we naively construct this by taking the inverse of diagonal elements
