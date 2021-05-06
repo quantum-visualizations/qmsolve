@@ -12,15 +12,14 @@ class VisualizationSingleParticle3D(Visualization):
     def slider_plot(self):
         raise NotImplementedError
 
-    def plot_eigenstate(self, k):
+    def plot_eigenstate(self, k, contrast_vals= [0.1, 0.25]):
         eigenstates = self.eigenstates.array
         mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
         psi = eigenstates[k]
 
 
         if self.plot_type == 'volume':
-            min_ = psi.min()
-            max_ = psi.max()
+            max_= np.amax(eigenstates)
 
             psi = (psi)/(max_)
 
@@ -35,18 +34,21 @@ class VisualizationSingleParticle3D(Visualization):
             c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
                         [-0.4, 0.1, 0.1, 1.0],
                         [-0.3, 0.0, 0.0, 1.0],
-                        [-0.2, 0.0, 0.0, 0.4],
-                        [-0.1, 0.0, 0.0, 0.2],
+                        [-0.2, 0.0, 0.0, 1.0],
+                        [-0.001, 0.0, 0.0, 1.0],
                         [0.0, 0.0, 0.0, 0.0],
-                        [0.1, 0.2, 0.0, 0.0],
-                        [0.2, 0.4, 0.0, 0.0],
+                        [0.001, 1.0, 0.0, 0.],
+                        [0.2, 1.0, 0.0, 0.0],
                         [0.3, 1.0, 0.0, 0.0],
                         [0.4, 1.0, 0.1, 0.1],
                         [0.45, 1.0, 0.3, 0.3]]
 
             c['alpha'] = [[-0.5, 1.0],
-                          [-0.1, 0.0],
-                          [0.1, 0.0],
+                          [-contrast_vals[1], 1.0],
+                          [-contrast_vals[0], 0.0],
+                          [0, 0.0],
+                          [contrast_vals[0], 0.0],
+                          [contrast_vals[1], 1.0],
                          [0.5, 1.0]]
             ctf.load_ctfs(c, vol._volume_property)
             # Update the shadow LUT of the volume module.
@@ -54,7 +56,9 @@ class VisualizationSingleParticle3D(Visualization):
 
             mlab.outline()
             mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=6 , ranges = (-L,L,-L,L,-L,L) )
-
+            #azimuth angle
+            φ = 30
+            mlab.view(azimuth= φ,  distance=N*3.5)
             mlab.show()
 
         else:
@@ -77,7 +81,7 @@ class VisualizationSingleParticle3D(Visualization):
 
             mlab.show()
 
-    def animate(self):
+    def animate(self,  contrast_vals= [0.1, 0.25]):
         eigenstates = self.eigenstates.array
         energies = self.eigenstates.energies
         mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
@@ -100,18 +104,21 @@ class VisualizationSingleParticle3D(Visualization):
             c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
                         [-0.4, 0.1, 0.1, 1.0],
                         [-0.3, 0.0, 0.0, 1.0],
-                        [-0.2, 0.0, 0.0, 0.4],
-                        [-0.1, 0.0, 0.0, 0.2],
+                        [-0.2, 0.0, 0.0, 1.0],
+                        [-0.001, 0.0, 0.0, 1.0],
                         [0.0, 0.0, 0.0, 0.0],
-                        [0.1, 0.2, 0.0, 0.0],
-                        [0.2, 0.4, 0.0, 0.0],
+                        [0.001, 1.0, 0.0, 0.],
+                        [0.2, 1.0, 0.0, 0.0],
                         [0.3, 1.0, 0.0, 0.0],
                         [0.4, 1.0, 0.1, 0.1],
                         [0.45, 1.0, 0.3, 0.3]]
 
             c['alpha'] = [[-0.5, 1.0],
-                          [-0.1, 0.0],
-                          [0.1, 0.0],
+                          [-contrast_vals[1], 1.0],
+                          [-contrast_vals[0], 0.0],
+                          [0, 0.0],
+                          [contrast_vals[0], 0.0],
+                          [contrast_vals[1], 1.0],
                          [0.5, 1.0]]
             ctf.load_ctfs(c, vol._volume_property)
             # Update the shadow LUT of the volume module.
@@ -147,18 +154,21 @@ class VisualizationSingleParticle3D(Visualization):
                     c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
                                 [-0.4, 0.1, 0.1, 1.0],
                                 [-0.3, 0.0, 0.0, 1.0],
-                                [-0.2, 0.0, 0.0, 0.4],
-                                [-0.1, 0.0, 0.0, 0.2],
+                                [-0.2, 0.0, 0.0, 1.0],
+                                [-0.001, 0.0, 0.0, 1.0],
                                 [0.0, 0.0, 0.0, 0.0],
-                                [0.1, 0.2, 0.0, 0.0],
-                                [0.2, 0.4, 0.0, 0.0],
+                                [0.001, 1.0, 0.0, 0.],
+                                [0.2, 1.0, 0.0, 0.0],
                                 [0.3, 1.0, 0.0, 0.0],
                                 [0.4, 1.0, 0.1, 0.1],
                                 [0.45, 1.0, 0.3, 0.3]]
 
                     c['alpha'] = [[-0.5, 1.0],
-                                  [-0.1, 0.0],
-                                  [0.1, 0.0],
+                                  [-contrast_vals[1], 1.0],
+                                  [-contrast_vals[0], 0.0],
+                                  [0, 0.0],
+                                  [contrast_vals[0], 0.0],
+                                  [contrast_vals[1], 1.0],
                                  [0.5, 1.0]]
                     ctf.load_ctfs(c, vol._volume_property)
                     # Update the shadow LUT of the volume module.
