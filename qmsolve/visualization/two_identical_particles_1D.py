@@ -295,9 +295,17 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
     def superpositions(self, states, fps = 30, total_time = 20, **kw):
-
+        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2.0, 
+                                        self.eigenstates.extent/2.0],
+                  'ylim': [-self.eigenstates.extent/2.0, 
+                           self.eigenstates.extent/2.0],
+                  'save_animation': False,
+                  'hide_controls': False,
+                  # 'plot_style': 'dark_background'
+                 }
+        for k in kw.keys():
+            params[k] = kw[k]
         total_frames = fps * total_time
-
         from .complex_slider_widget import ComplexSliderWidget
         eigenstates = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -312,19 +320,17 @@ class VisualizationIdenticalParticles1D(Visualization):
             coeffs = states
             eigenstates = eigenstates[0: len(states)]
             states = len(states)
-        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2.0, 
-                                        self.eigenstates.extent/2.0],
-                  'save_animation': False,
-                  'frames': 120
-                 }
-        for k in kw.keys():
             params[k] = kw[k]
         N = eigenstates.shape[1]
-
         plt.style.use("dark_background")
-        fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804)) 
-        grid = plt.GridSpec(5, states)
-        ax = fig.add_subplot(grid[0:3, 0:states])
+        fig = plt.figure(figsize=(16/9 *5.804 * 0.9,5.804))
+        grid_width = 10
+        grid_length = states if states < 30 else 30
+        grid = plt.GridSpec(grid_width, grid_length)
+        grid_slice = grid[0:int(0.7*grid_width), 0:grid_length]
+        if params['hide_controls']:
+            grid_slice = grid[0:grid_width, 0:grid_length]
+        ax = fig.add_subplot(grid_slice)
         ax.set_title("$\psi(x_1, x_2)$")
         ax.set_xlabel("$x_1$ [Å]")
         ax.set_ylabel("$x_2$ [Å]")
@@ -338,7 +344,6 @@ class VisualizationIdenticalParticles1D(Visualization):
 
         ax.set_xlim(params['xlim'])
         ax.set_ylim(params['xlim'])
-
 
         im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
                         origin='lower', extent=[-self.eigenstates.extent/2.0, 
@@ -363,15 +368,25 @@ class VisualizationIdenticalParticles1D(Visualization):
 
         widgets = []
         circle_artists = []
-        for i in range(states):
-            circle_ax = fig.add_subplot(grid[4, i], projection='polar')
-            circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
-                                )
-            circle_ax.set_xticks([])
-            circle_ax.set_yticks([])
-            widgets.append(ComplexSliderWidget(circle_ax, 0.0, 1.0, animated=True))
-            widgets[i].on_changed(make_update(i))
-            circle_artists.append(widgets[i].get_artist())
+        if not params['hide_controls']:
+            for i in range(states):
+                if states <= 30:
+                    circle_ax = fig.add_subplot(grid[8:10, i], projection='polar')
+                    circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
+                                        , size=8.0 if states < 15 else 6.0 
+                                        )
+                else:
+                    circle_ax = fig.add_subplot(grid[8 if i < 30 else 9,
+                                                     i if i < 30 else i-30], 
+                                                projection='polar')
+                    circle_ax.set_title('n=' + str(i) # + '\nE=' + str() + '$E_0$'
+                                        , size=8.0 if states < 15 else 6.0 
+                                        )
+                circle_ax.set_xticks([])
+                circle_ax.set_yticks([])
+                widgets.append(ComplexSliderWidget(circle_ax, 0.0, 1.0, animated=True))
+                widgets[i].on_changed(make_update(i))
+                circle_artists.append(widgets[i].get_artist())
         artists = circle_artists + [im]
 
         def func(*args):
@@ -389,10 +404,11 @@ class VisualizationIdenticalParticles1D(Visualization):
             # if animation_data['ticks'] % 2:
             #     return (im, )
             # else:
-            for i, c in enumerate(coeffs):
-                phi, r = np.angle(c), np.abs(c)
-                artists[i].set_xdata([phi, phi])
-                artists[i].set_ydata([0.0, r])
+            if not params['hide_controls']:
+                for i, c in enumerate(coeffs):
+                    phi, r = np.angle(c), np.abs(c)
+                    artists[i].set_xdata([phi, phi])
+                    artists[i].set_ydata([0.0, r])
             return artists
 
         a = animation.FuncAnimation(fig, func, blit=True, interval= 1/fps * 1000,
@@ -406,3 +422,6 @@ class VisualizationIdenticalParticles1D(Visualization):
             return
         plt.show()
         plt.show()
+
+
+

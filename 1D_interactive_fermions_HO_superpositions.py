@@ -40,4 +40,4 @@ mu0 = 2.0
 #coeffs = <𝜓_n(x1,x2)|𝜓0(x1,x2)>
 coeffs = np.tensordot(eigenstates.array, 𝜓0, axes=([1, 2], [0,1]))*1.0j
 #visualize a superposition of the eigenstates
-visualization.superpositions(coeffs,xlim=[-3.5, 3.5])
+visualization.superpositions(coeffs,xlim=[-3.5, 3.5], hide_controls = True)
