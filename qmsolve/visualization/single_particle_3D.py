@@ -1,6 +1,7 @@
 import numpy as np
 from mayavi import mlab
 from .visualization import Visualization
+from ..util.colour_functions import complex_to_rgb
 
 
 class VisualizationSingleParticle3D(Visualization):
@@ -100,20 +101,23 @@ class VisualizationSingleParticle3D(Visualization):
             field = mlab.pipeline.scalar_field(psi)
             vol = mlab.pipeline.volume(field)
 
+            color1 = complex_to_rgb(np.exp( 1j*2*np.pi/10*0)) 
+            color2 = complex_to_rgb(-np.exp( 1j*2*np.pi/10*0)) 
+
             # Change the color transfer function
             from tvtk.util import ctf
             c = ctf.save_ctfs(vol._volume_property)
-            c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
-                        [-0.4, 0.1, 0.1, 1.0],
-                        [-0.3, 0.0, 0.0, 1.0],
-                        [-0.2, 0.0, 0.0, 1.0],
-                        [-0.001, 0.0, 0.0, 1.0],
+            c['rgb'] = [[-0.45, *color1],
+                        [-0.4, *color1],
+                        [-0.3, *color1],
+                        [-0.2, *color1],
+                        [-0.001, *color1],
                         [0.0, 0.0, 0.0, 0.0],
-                        [0.001, 1.0, 0.0, 0.],
-                        [0.2, 1.0, 0.0, 0.0],
-                        [0.3, 1.0, 0.0, 0.0],
-                        [0.4, 1.0, 0.1, 0.1],
-                        [0.45, 1.0, 0.3, 0.3]]
+                        [0.001, *color2],
+                        [0.2, *color2],
+                        [0.3, *color2],
+                        [0.4, *color2],
+                        [0.45, *color2]]
 
             c['alpha'] = [[-0.5, 1.0],
                           [-contrast_vals[1], 1.0],
@@ -145,25 +149,30 @@ class VisualizationSingleParticle3D(Visualization):
                         t = (data['t'] - int(data['t']) - 0.5)
                         psi = (np.cos(np.pi*t)*eigenstates[k1]
                             + np.sin(np.pi*t)*eigenstates[k2])
+
+                        color1 = complex_to_rgb(np.exp( 1j*2*np.pi/10*k1)*np.cos(np.pi*t) + np.exp( 1j*2*np.pi/10*k2)*np.sin(np.pi*t)) 
+                        color2 = complex_to_rgb(-np.exp( 1j*2*np.pi/10*k1)*np.cos(np.pi*t) - np.exp( 1j*2*np.pi/10*k2)*np.sin(np.pi*t)) 
                     else:
                         psi = eigenstates[k1]
+                        color1 = complex_to_rgb(np.exp( 1j*2*np.pi/10*k1)) 
+                        color2 = complex_to_rgb(-np.exp( 1j*2*np.pi/10*k1)) 
 
                     psi = (psi)/(max_)
                     field.mlab_source.scalars = psi
                     # Change the color transfer function
                     from tvtk.util import ctf
                     c = ctf.save_ctfs(vol._volume_property)
-                    c['rgb'] = [[-0.45, 0.3, 0.3, 1.0],
-                                [-0.4, 0.1, 0.1, 1.0],
-                                [-0.3, 0.0, 0.0, 1.0],
-                                [-0.2, 0.0, 0.0, 1.0],
-                                [-0.001, 0.0, 0.0, 1.0],
+                    c['rgb'] = [[-0.45, *color1],
+                                [-0.4, *color1],
+                                [-0.3, *color1],
+                                [-0.2, *color1],
+                                [-0.001, *color1],
                                 [0.0, 0.0, 0.0, 0.0],
-                                [0.001, 1.0, 0.0, 0.],
-                                [0.2, 1.0, 0.0, 0.0],
-                                [0.3, 1.0, 0.0, 0.0],
-                                [0.4, 1.0, 0.1, 0.1],
-                                [0.45, 1.0, 0.3, 0.3]]
+                                [0.001, *color2],
+                                [0.2, *color2],
+                                [0.3, *color2],
+                                [0.4, *color2],
+                                [0.45, *color2]]
 
                     c['alpha'] = [[-0.5, 1.0],
                                   [-contrast_vals[1], 1.0],
