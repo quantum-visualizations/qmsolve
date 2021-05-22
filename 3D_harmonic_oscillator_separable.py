@@ -36,9 +36,8 @@ states = states[sort_array]
 
 eigenstates = Eigenstates(energies, states, H_i, 'SingleParticle3D')
 v = visualization.init_visualization(eigenstates)
-v.superpositions(np.array([0.0]*10 + [((1.0 + 1.0j)/np.sqrt(2.0))**i for i in range(10)]), 
-                 dt=0.005, display_type='real')
-v.plot_eigenstate(26)
 v.plot_type = 'contour'
-v.plot_eigenstate(26)
+v.superpositions(np.array([0.0]*10 + [((1.0 + 1.0j)/np.sqrt(2.0))**i for i in range(10)]), 
+                 dt=0.005)
+v.plot_type = 'volume'
 v.animate()
