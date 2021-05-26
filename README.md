@@ -24,11 +24,16 @@ python 1D_harmonic_oscillator.py
 ![animation](/images/1D_harmonic_oscillator.gif)
 
 ```
+python 3D_two_gaussian_wells.py
+```
+
+![animation](/images/3D_two_gaussian_wells.gif)
+
+```
 python 1D_interactive_fermions_HO.py
 ```
 
 ![animation](/images/1D_interactive_fermions.gif)
-
 
 ```
 python 1D_non_interactive_fermions_HO.py
