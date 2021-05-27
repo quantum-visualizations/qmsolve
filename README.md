@@ -12,6 +12,7 @@ The package requirements are:
 1. numpy
 2. matplotlib
 3. scipy
+4. mayavi (only for 3D simulations)
 
 ## Examples
 
