@@ -21,5 +21,5 @@ eigenstates = H.solve(max_states = 32)
 print(eigenstates.energies)
 
 visualization = visualization.init_visualization(eigenstates)
-visualization.plot_eigenstate(26, contrast_vals = [0.001, 0.5])
-#visualization.animate()
+visualization.plot_eigenstate(26)
+visualization.animate()
