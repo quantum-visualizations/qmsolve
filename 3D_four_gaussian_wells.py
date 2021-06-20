@@ -16,10 +16,10 @@ def four_gaussian_wells(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = four_gaussian_wells, 
-				spatial_ndim = 3, N = 30, extent = 5)
+				spatial_ndim = 3, N = 100, extent = 5)
 
 
-eigenstates = H.solve( max_states = 6, N0 = 100, method ='lobpcg')
+eigenstates = H.solve( max_states = 50, N0 = 30, method ='lobpcg')
 print(eigenstates.energies)
 
 visualization = init_visualization(eigenstates)

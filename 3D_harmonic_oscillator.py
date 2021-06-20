@@ -13,11 +13,11 @@ def harmonic_oscillator(particle):
 
 
 H = Hamiltonian(particles=SingleParticle(),
-                  N=30, potential=harmonic_oscillator, 
-                  extent=10, spatial_ndim=3)
+                  N=90, potential=harmonic_oscillator, 
+                  extent=12, spatial_ndim=3)
 
 
-eigenstates = H.solve(max_states = 32)
+eigenstates = H.solve( max_states = 32, N0 = 30, method ='lobpcg')
 print(eigenstates.energies)
 
 visualization = visualization.init_visualization(eigenstates)

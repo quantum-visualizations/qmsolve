@@ -15,10 +15,10 @@ def two_gaussian_wells(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = two_gaussian_wells, 
-				spatial_ndim = 3, N = 30, extent = 3)
+				spatial_ndim = 3, N = 90, extent = 3)
 
 
-eigenstates = H.solve( max_states = 50, N0 = 90, method ='lobpcg')
+eigenstates = H.solve( max_states = 50, N0 = 30, method ='lobpcg')
 print(eigenstates.energies)
 
 visualization = init_visualization(eigenstates)
