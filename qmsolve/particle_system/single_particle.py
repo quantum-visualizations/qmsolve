@@ -54,7 +54,7 @@ class SingleParticle(ParticleSystem):
     def get_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
 
         energies = eigenvalues
-        eigenstates_array = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
+        eigenstates_array = np.moveaxis(eigenvectors.reshape(  *[H.N]*H.ndim , max_states), -1, 0)
 
         # Finish the normalization of the eigenstates
         eigenstates_array = eigenstates_array/np.sqrt(H.dx**H.ndim)
@@ -66,5 +66,5 @@ class SingleParticle(ParticleSystem):
         elif H.spatial_ndim == 3:
             type = "SingleParticle3D"
 
-        eigenstates = Eigenstates(energies, eigenstates_array, H, type)
+        eigenstates = Eigenstates(energies, eigenstates_array, H.extent, H.N, type)
         return eigenstates

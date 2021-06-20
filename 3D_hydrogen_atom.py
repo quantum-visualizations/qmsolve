@@ -9,19 +9,25 @@ def coulomb_potential(particle):
 
 	r = np.sqrt((particle.x)**2 + (particle.y)**2 + (particle.z)**2)
 	r = np.where(r < 0.0001, 0.0001, r)
-	return - k_c/ r
+	external_electric_field = 0.00005 #shows Stark effect
+
+	return - k_c/ r + particle.z*external_electric_field
+
 
 
 
 
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = coulomb_potential, 
-				spatial_ndim = 3, N = 30, extent = 30)
+				spatial_ndim = 3, N = 150, extent = 40)
 
 
-eigenstates = H.solve(max_states = 20)
+
+eigenstates = H.solve( max_states = 10, N0 = 30, method ='lobpcg-cupy')
 print(eigenstates.energies)
 
+
+
 visualization = init_visualization(eigenstates)
-visualization.plot_eigenstate(19, contrast_vals = [0.04, 0.09])
-visualization.animate(contrast_vals = [0.04, 0.09])
+visualization.plot_eigenstate(5, contrast_vals = [0.01, 0.391])
+visualization.animate(contrast_vals = [0.01, 0.391])

@@ -20,11 +20,10 @@ class VisualizationSingleParticle3D(Visualization):
         min_ = psi.min()
         max_ = psi.max()
 
-
         if self.plot_type == 'volume':
             
-            max_= np.amax(eigenstates)
-            psi = (psi)/(max_)
+            abs_max= np.amax(np.abs(eigenstates))
+            psi = (psi)/(abs_max)
 
             L = self.eigenstates.extent/2
             N = self.eigenstates.N
@@ -92,9 +91,10 @@ class VisualizationSingleParticle3D(Visualization):
         
         if self.plot_type == 'volume':
             psi = eigenstates[0]
-            max_ = np.amax(eigenstates)
+            
+            abs_max= np.amax(np.abs(eigenstates))
+            psi = (psi)/(abs_max)
 
-            psi = (psi)/(max_)
 
             L = self.eigenstates.extent/2
             N = self.eigenstates.N
@@ -157,7 +157,7 @@ class VisualizationSingleParticle3D(Visualization):
                         color1 = complex_to_rgb(np.exp( 1j*2*np.pi/10*k1)) 
                         color2 = complex_to_rgb(-np.exp( 1j*2*np.pi/10*k1)) 
 
-                    psi = (psi)/(max_)
+                    psi = (psi)/(abs_max)
                     field.mlab_source.scalars = psi
                     # Change the color transfer function
                     from tvtk.util import ctf

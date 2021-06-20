@@ -53,5 +53,5 @@ class TwoFermions(TwoParticles):
         elif H.spatial_ndim == 2:
             type = "TwoIdenticalParticles2D"
 
-        eigenstates = Eigenstates(energies, eigenstates_array, H, type)
+        eigenstates = Eigenstates(energies, eigenstates_array, H.extent, H.N, type)
         return eigenstates
