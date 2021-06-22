@@ -31,6 +31,12 @@ python 3D_two_gaussian_wells.py
 ![animation](/images/3D_two_gaussian_wells.gif)
 
 ```
+python 3D_four_gaussian_wells.py
+```
+
+![animation](/images/3D_four_gaussian_wells.gif)
+
+```
 python 1D_interactive_fermions_HO.py
 ```
 

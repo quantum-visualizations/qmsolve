@@ -43,7 +43,7 @@ class Hamiltonian:
             max_states: the number of states to retreive
             method: the solver method. Currently, 'eigsh' and 'lobpcg' are implemented. Note: 'lobpcg' is potentially
             much faster than 'eigsh' but can fail catastrophically for some systems. Use 'lobpcg' with care.
-            N0: grid divisions for the initial eigsh computations. Later the eigenstates will be scales
+            N0: grid divisions for the initial eigsh computations to be used as an initial guess in lobpcg.
         Returns:
 
         """
