@@ -30,11 +30,37 @@ class SingleParticle(ParticleSystem):
 
 
         elif H.spatial_ndim ==3:
-            x = np.linspace(-H.extent/2, H.extent/2, H.N)
-            y = np.linspace(-H.extent/2, H.extent/2, H.N)
-            z = np.linspace(-H.extent/2, H.extent/2, H.N)
-            self.x, self.y, self.z  = np.meshgrid(x,y,z)
+            self.x, self.y, self.z  = np.mgrid[ -H.extent/2: H.extent/2:H.N*1j, -H.extent/2: H.extent/2:H.N*1j, -H.extent/2: H.extent/2:H.N*1j]
             H.ndim = 3
+
+    def build_matrix_operators(self, H):
+
+        if H.spatial_ndim == 1:
+            self.x = np.linspace(-H.extent/2, H.extent/2, H.N)
+            diff_x =  diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+            self.px = - k2 *1j * diff_x
+            H.ndim = 1
+            self.I = eye(H.N)
+
+
+        elif H.spatial_ndim == 2:
+            x = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
+            y = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
+            I = eye(H.N)
+
+            self.x = kron(I,x)
+            self.y = kron(y,I)
+
+            diff_x =  diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+            diff_y = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+
+            self.px = kron(I, - k2 *1j * diff_y)
+            self.py = kron(- k2 *1j * diff_x, I)
+            H.ndim = 2
+            self.I = kron(I,I)
+
+        elif H.spatial_ndim == 3:
+            raise NotImplementedError()
 
     def get_kinetic_matrix(self, H):
 

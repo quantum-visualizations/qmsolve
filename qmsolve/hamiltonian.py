@@ -4,10 +4,11 @@ import time
 
 
 class Hamiltonian:
-    def __init__(self, particles, potential, N, extent, spatial_ndim):
+    def __init__(self, particles, potential, N, extent, spatial_ndim, potential_type = "grid", E_min=0):
         """
         N: number of grid points
         extent: spacial extent, measured in angstroms
+        E_min: Initial guess for the energy of the ground state. It's only used if potential_type = "matrix" is used
         """
 
         self.N = N
@@ -17,23 +18,39 @@ class Hamiltonian:
         self.spatial_ndim = spatial_ndim
         self.ndim = 0  # total number of observables
 
-        self.particle_system.get_observables(self)
         self.T = self.particle_system.get_kinetic_matrix(self)
 
         self.potential = potential
+        self.potential_type = potential_type
+
+
+        if potential_type == "grid":
+            self.particle_system.get_observables(self)
+
+        elif potential_type == "matrix":
+            self.particle_system.build_matrix_operators(self)
+
         self.V = self.get_potential_matrix()
+        self.E_min = E_min
 
     def get_potential_matrix(self):
-        if self.potential == None:
-            self.Vmin = 0.
-            V = 0.
-            return V
-        else: 
-            V = self.potential(self.particle_system)
-            self.Vmin = np.amin(V)
-            V = V.reshape(self.N ** self.ndim)
-            V = diags([V], [0])
-            return V
+
+        if self.potential_type == "grid":
+
+            if self.potential == None:
+                self.E_min = 0.
+                V = 0.
+                return V
+            else: 
+                V = self.potential(self.particle_system)
+                self.E_min = np.amin(V)
+                V = V.reshape(self.N ** self.ndim)
+                V = diags([V], [0])
+                return V
+
+        elif self.potential_type == "matrix":
+             return self.potential(self.particle_system)
+
 
 
     def solve(self, max_states: int, method: str = 'eigsh', N0 = 30, maxiter = 30, verbose = False):
@@ -60,7 +77,7 @@ class Hamiltonian:
             # Note: uses shift-invert trick for stability finding low-lying states
             # Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode
 
-            eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LM', sigma=min(0, self.Vmin))
+            eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LA', sigma=min(0, self.E_min))
 
 
 
