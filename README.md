@@ -53,7 +53,7 @@ python 1D_non_interactive_fermions_HO.py
 In the examples from above you can check how in the non interactive case the energy levels are equally spaced and degenerated, however in the interactive case the degeneracy is broken.
 As a starting point I suggest you to modify the confinement and the interaction potential to see what happens!
 
-The interface use [Hartree atomic units](https://en.wikipedia.org/wiki/Hartree_atomic_units) for input. In the file [https://github.com/quantum-visualizations/qmsolve/blob/main/qmsolve/util/constants.py] there is a list of common conversion factors from other units, that can be imported and used to build your potential.
+The interface use [Hartree atomic units](https://en.wikipedia.org/wiki/Hartree_atomic_units) for input. In the file [constants.py](https://github.com/quantum-visualizations/qmsolve/blob/main/qmsolve/util/constants.py) there is a list of common conversion factors from other units, that can be imported and used to build your potential.
 
 3D examples are considerably faster when using a GPU. GPU acceleration requires having [CuPy](https://docs.cupy.dev/en/stable/install.html) and [CUDA](https://developer.nvidia.com/cuda-downloads) installed in your computer. 
 
