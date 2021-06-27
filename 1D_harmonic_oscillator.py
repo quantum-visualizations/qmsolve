@@ -20,8 +20,9 @@ print(eigenstates.energies)
 
 
 visualization = init_visualization(eigenstates)
+visualization.plot_eigenstate(0)
 visualization.slider_plot()
-#visualization.animate()
+visualization.animate()
 
 #compute the inner product of the initial state 𝜓0(x) with the eigenstates 𝜓_n(x):  
 #coeffs = ∫ <𝜓_n|x><x|𝜓0> dx

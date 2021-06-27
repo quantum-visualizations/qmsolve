@@ -8,7 +8,6 @@ from abc import abstractmethod
 
 class TwoParticles(ParticleSystem):
 
-    @abstractmethod
     def __init__(self, m = m_e, spin = None):
         """
         N: number of grid points
@@ -17,7 +16,6 @@ class TwoParticles(ParticleSystem):
         self.m = m
         self.spin = spin
 
-    @abstractmethod
     def get_observables(self, H):
 
         if H.spatial_ndim ==1:
@@ -36,7 +34,6 @@ class TwoParticles(ParticleSystem):
             self.x1, self.y1, self.x2, self.y2 = np.meshgrid(x1,y1,x2,y2)
 
 
-    @abstractmethod
     def get_kinetic_matrix(self, H):
 
         I = eye(H.N)

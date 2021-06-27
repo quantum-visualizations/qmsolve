@@ -10,7 +10,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def plot_eigenstate(self, k, xlim = None):
+    def plot_eigenstate(self, k, xlim = None, show_imaginary_part = False):
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
         plt.style.use("dark_background")
@@ -26,15 +26,32 @@ class VisualizationSingleParticle1D(Visualization):
         ax2.set_title('E Level')
         ax2.set_facecolor('black')
 
+
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
         if xlim != None:
             ax1.set_xlim(xlim)
 
+        ymax = np.amax(eigenstates_array)
+        ymin = np.amin(eigenstates_array)
+        ax1.set_ylim([ymin*1.2, ymax*1.2 ])
+
+
+
         E0 = energies[0]
 
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
-        ax1.plot(x, eigenstates_array[k])
+
+
+        if show_imaginary_part == True:
+            eigenstate_plot1 = ax1.plot(x, np.real(eigenstates_array[k]), label='$Re|\psi(x)|$')
+            eigenstate_plot2 = ax1.plot(x, np.imag(eigenstates_array[k]), label='$Im|\psi(x)|$')
+            eigenstate_plot3 = ax1.plot(x, np.abs(eigenstates_array[k]), label='$|\psi(x)|$', color='white')
+            ax1.legend()
+        else:
+            eigenstate_plot1 = ax1.plot(x, np.real(eigenstates_array[k]))
+
+
         for E in energies:
             ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
 
@@ -43,7 +60,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def slider_plot(self, xlim = None):
+    def slider_plot(self, xlim = None, show_imaginary_part = False):
         plt.style.use("dark_background")
 
         eigenstates_array = self.eigenstates.array
@@ -65,13 +82,26 @@ class VisualizationSingleParticle1D(Visualization):
         if xlim != None:
             ax1.set_xlim(xlim)
 
+        ymax = np.amax(eigenstates_array)
+        ymin = np.amin(eigenstates_array)
+        ax1.set_ylim([ymin*1.2, ymax*1.2 ])
+
+
         E0 = energies[0]
         for E in energies:
             ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
 
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
-        eigenstate_plot, = ax1.plot(x, eigenstates_array[1])
-        eigenstate_plot.set_data = eigenstate_plot.set_ydata
+
+        if show_imaginary_part == True:
+            eigenstate_plot1, = ax1.plot(x, np.real(eigenstates_array[0]), label='$Re|\psi(x)|$')
+            eigenstate_plot2, = ax1.plot(x, np.imag(eigenstates_array[0]), label='$Im|\psi(x)|$')
+            eigenstate_plot3, = ax1.plot(x, np.abs(eigenstates_array[0]), label='$|\psi(x)|$', color='white')
+            ax1.legend()
+        else:
+            eigenstate_plot, = ax1.plot(x, np.real(eigenstates_array[0]))
+
+
         line = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
@@ -88,7 +118,14 @@ class VisualizationSingleParticle1D(Visualization):
 
         def update(state):
             state = int(state)
-            eigenstate_plot.set_data(eigenstates_array[state])
+            if show_imaginary_part == True:
+
+                eigenstate_plot1.set_ydata(np.real(eigenstates_array[state]))
+                eigenstate_plot2.set_ydata(np.imag(eigenstates_array[state]))
+                eigenstate_plot3.set_ydata( np.abs(eigenstates_array[state]))
+            else:
+                eigenstate_plot.set_ydata(np.real(eigenstates_array[state]))
+
             line[0].set_ydata([energies[state]/E0, energies[state]/E0])
 
         slider.on_changed(update)
@@ -99,7 +136,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-    def animate(self,  seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim = None, save_animation = False):
+    def animate(self,  seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim = None, save_animation = False, show_imaginary_part = False):
 
         if max_states == None:
             max_states = len(self.eigenstates.energies)
@@ -127,6 +164,9 @@ class VisualizationSingleParticle1D(Visualization):
         ax2.set_xticks(ticks=[])
         if xlim != None:
             ax1.set_xlim(xlim)
+        ymax = np.amax(eigenstates_array)
+        ymin = np.amin(eigenstates_array)
+        ax1.set_ylim([ymin*1.2, ymax*1.2 ])
 
 
         E0 = energies[0]
@@ -134,8 +174,15 @@ class VisualizationSingleParticle1D(Visualization):
             ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
         
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
-        eigenstate_plot, = ax1.plot(x, eigenstates_array[1])
-        eigenstate_plot.set_data = eigenstate_plot.set_ydata
+        if show_imaginary_part == True:
+            eigenstate_plot1, = ax1.plot(x, np.real(eigenstates_array[0]), label='$Re|\psi(x)|$')
+            eigenstate_plot2, = ax1.plot(x, np.imag(eigenstates_array[0]), label='$Im|\psi(x)|$')
+            eigenstate_plot3, = ax1.plot(x, np.abs(eigenstates_array[0]), label='$|\psi(x)|$', color='white')
+            ax1.legend()
+        else:
+            eigenstate_plot, = ax1.plot(x, np.real(eigenstates_array[0]))
+
+
 
         line, = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
 
@@ -149,17 +196,36 @@ class VisualizationSingleParticle1D(Visualization):
             state = int(animation_data['n'])
             if (animation_data['n'] % 1.0) > 0.5:
                 transition_time = (animation_data['n'] - int(animation_data['n']) - 0.5)
-                eigenstate_plot.set_data(np.cos(np.pi*transition_time)*eigenstates_array[state] + 
-                                         np.sin(np.pi*transition_time)*
-                                         eigenstates_array[(state + 1) % len(energies)])
+                wavefunction = (np.cos(np.pi*transition_time)*eigenstates_array[state] + 
+                                np.sin(np.pi*transition_time)*eigenstates_array[(state + 1) % len(energies)])
+
+                if show_imaginary_part == True:
+
+                    eigenstate_plot1.set_ydata(np.real(wavefunction))
+                    eigenstate_plot2.set_ydata(np.imag(wavefunction))
+                    eigenstate_plot3.set_ydata( np.abs(wavefunction))
+                    return eigenstate_plot1, eigenstate_plot2, eigenstate_plot3, line
+                else:
+                    eigenstate_plot.set_ydata(np.real(wavefunction))
+                    return eigenstate_plot, line
+
                 E_N = energies[state]/E0 
                 E_M = energies[(state + 1) % len(energies)]/E0
                 E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
                 line.set_ydata([E, E])
             else:
                 line.set_ydata([energies[state]/E0, energies[state]/E0])
-                eigenstate_plot.set_data(eigenstates_array[int(state)])
-            return eigenstate_plot, line
+                wavefunction = eigenstates_array[int(state)]
+
+                if show_imaginary_part == True:
+
+                    eigenstate_plot1.set_ydata(np.real(wavefunction))
+                    eigenstate_plot2.set_ydata(np.imag(wavefunction))
+                    eigenstate_plot3.set_ydata( np.abs(wavefunction))
+                    return eigenstate_plot1, eigenstate_plot2, eigenstate_plot3, line
+                else:
+                    eigenstate_plot.set_ydata(np.real(wavefunction))
+                    return eigenstate_plot, line
 
         a = animation.FuncAnimation(fig, func_animation,
                                     blit=True, frames=total_frames, interval= 1/fps * 1000)

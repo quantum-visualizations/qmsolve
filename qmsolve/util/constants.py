@@ -6,3 +6,5 @@ eV = 1 #default unit used for measuring energy
 m_e = 1 #default unit used for measuring mass
 m_p = 1836.1526734400013 * m_e
 k_c = 14.39964547842567 # (e*e / (4 * np.pi * epsilon_0))  # measured in eV / Å
+hbar = 6.582119569509067e-16 # measured in eV/Hz
+k2 = 6.582119569509066e-06 # hbar**2 / (eV * Å**2)
