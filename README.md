@@ -1,6 +1,8 @@
-# qmsolve
+# Qmsolve: A module for solving and visualize Schrodinger equation.
 
-This is an attempt at making a solid, easy to use solver, capable of solving and visualize the Schrödinger equation for multiple particles, and representing the solutions both in 1D, 2D, and 3D.
+This is an attempt at making a robust, easy to use solver, capable of solving and visualize the Schrödinger equation for multiple particles, and representing the solutions both in 1D, 2D, and 3D.
+The way this simulator works is by discretizing the Hamiltonian of an arbitrary potential and diagonalizing it for getting the energies and eigenstates of the system. It also features the possibility of interactively visualizing a superposition of the computed eigenstastes and studying the time dependence of the resulting wavefunction.
+
 
 This is work in progress. Stay up to date about the next features!
 

@@ -31,7 +31,7 @@ def harmonic_oscillator(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
                 potential = harmonic_oscillator, potential_type = "matrix",
-                spatial_ndim = 3, N = 400, extent = 15)
+                spatial_ndim = 2, N = 400, extent = 15)
 
 
 eigenstates = H.solve(max_states = 28)

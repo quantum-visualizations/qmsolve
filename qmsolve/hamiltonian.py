@@ -22,7 +22,7 @@ class Hamiltonian:
 
         self.potential = potential
         self.potential_type = potential_type
-
+        self.E_min = E_min
 
         if potential_type == "grid":
             self.particle_system.get_observables(self)
@@ -31,7 +31,6 @@ class Hamiltonian:
             self.particle_system.build_matrix_operators(self)
 
         self.V = self.get_potential_matrix()
-        self.E_min = E_min
 
     def get_potential_matrix(self):
 
@@ -77,7 +76,7 @@ class Hamiltonian:
             # Note: uses shift-invert trick for stability finding low-lying states
             # Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode
 
-            eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LA', sigma=min(0, self.E_min))
+            eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LM', sigma=min(0, self.E_min))
 
 
 
@@ -94,7 +93,7 @@ class Hamiltonian:
                                   potential = self.potential, 
                                   spatial_ndim = 3, N = N0, extent = self.extent)
 
-            eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.Vmin))
+            eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.E_min))
 
             eigenvectors_eigsh = eigenvectors_eigsh.reshape(  *[N0]*3 , max_states)
 
@@ -140,7 +139,7 @@ class Hamiltonian:
                                   potential = self.potential, 
                                   spatial_ndim = 3, N = N0, extent = self.extent)
 
-            eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.Vmin))
+            eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.E_min))
 
             eigenvectors_eigsh = eigenvectors_eigsh.reshape(  *[N0]*3 , max_states)
 
