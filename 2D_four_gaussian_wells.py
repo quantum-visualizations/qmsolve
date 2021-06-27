@@ -1,12 +1,12 @@
 import numpy as np
-from qmsolve import Hamiltonian, SingleParticle, init_visualization
+from qmsolve import Hamiltonian, SingleParticle, init_visualization,Å
 
 
 #interaction potential
 def four_gaussian_wells(particle):
-	𝜇 = 1.6
-	σ = 0.5
-	V = 600*(4-np.exp((-(particle.x)**2 -(particle.y-𝜇)**2 ) / (2*σ**2))
+	𝜇 = 1.6*Å
+	σ = 0.5*Å
+	V = 22*(4-np.exp((-(particle.x)**2 -(particle.y-𝜇)**2 ) / (2*σ**2))
 	-np.exp((-(particle.x-𝜇)**2 -(particle.y)**2 ) / (2*σ**2))
 	-np.exp((-(particle.x+𝜇)**2 -(particle.y)**2 ) / (2*σ**2))
 	-np.exp((-(particle.x)**2 -(particle.y+𝜇)**2 ) / (2*σ**2)))
@@ -16,14 +16,14 @@ def four_gaussian_wells(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = four_gaussian_wells, 
-				spatial_ndim = 2, N = 100, extent = 8)
+				spatial_ndim = 2, N = 100, extent = 8*Å)
 
 
 eigenstates = H.solve(max_states = 60)
 
 print(eigenstates.energies)
 visualization = init_visualization(eigenstates)
-#visualization.plot_eigenstate(6)
+visualization.animate()
 coeffs = np.zeros([30], np.complex128)
 coeffs[6] = 1.0
 coeffs[7] = 1.0j
@@ -33,5 +33,5 @@ visualization.superpositions(coeffs, dt=0.0002,
 							 # hide_controls=True, 
 							 # save_animation=True, frames=7*30
 							 )
-# visualization.animate()
+
 

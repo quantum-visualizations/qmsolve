@@ -13,25 +13,21 @@ from qmsolve import Hamiltonian, SingleParticle, init_visualization, Å, T , eV
 
 
 #interaction potential
-def harmonic_and_magnetic_interaction(particle):
+def magnetic_interaction(particle):
 
-    kx = 0.02 
-    ky = 0.02 
-    Bz = 2000 * T 
+    Bz = 8000 * T 
 
     γ = 0.5 # e/(2*m_e)
     𝜇 = γ*Bz
 
-
-    harmonic_interaction =  0.5 * kx * particle.x **2 +    0.5 * ky * particle.y **2
     magnetic_interaction = 𝜇* (particle.px @ particle.y - particle.py @ particle.x)
-    return harmonic_interaction + magnetic_interaction
+    return particle.x*0.0000001 + magnetic_interaction
 
 
 
 H = Hamiltonian(particles = SingleParticle(), 
-                potential = harmonic_and_magnetic_interaction, potential_type = "matrix",
-                spatial_ndim = 2, N = 400, extent = 15 * Å)
+                potential = magnetic_interaction, potential_type = "matrix",
+                spatial_ndim = 2, N = 400, extent = 15 * Å, E_min=0.0)
 
 
 eigenstates = H.solve(max_states = 28)

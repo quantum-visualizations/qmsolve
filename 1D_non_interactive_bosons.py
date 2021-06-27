@@ -1,11 +1,11 @@
 import numpy as np
-from qmsolve import Hamiltonian, TwoBosons, init_visualization
+from qmsolve import Hamiltonian, TwoBosons, init_visualization,Å
 
 
 
 H = Hamiltonian(particles = TwoBosons(), 
 				potential = None, # If None is specified, the particles are just limited by the limits of the grid which are infinite barriers
-				spatial_ndim = 1, N = 100, extent = 10)
+				spatial_ndim = 1, N = 100, extent = 10*Å)
 
 
 eigenstates = H.solve(max_states = 90)

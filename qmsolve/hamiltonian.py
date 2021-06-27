@@ -182,5 +182,12 @@ class Hamiltonian:
         this method makes the eigenstates antisymmetric """
         self.eigenstates = self.particle_system.get_eigenstates(self, max_states, eigenvalues, eigenvectors)
 
+        # When using complex numbers in the potential energies aren't necessarily sorted
+        if self.potential_type == "matrix":
+            sort_array = np.argsort(self.eigenstates.energies)
+            self.eigenstates.energies = self.eigenstates.energies[sort_array]
+            self.eigenstates.array = self.eigenstates.array[sort_array]
+
+
         print("Took", time.time() - t0)
         return self.eigenstates
