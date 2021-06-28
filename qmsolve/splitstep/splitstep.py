@@ -13,6 +13,7 @@ from typing import Union, Any, Tuple, Callable, List
 import numpy as np
 from ..util import constants
 from ..hamiltonian import Hamiltonian
+from .. import TwoBosons, TwoFermions
 
 
 class SplitStepMethod:
@@ -59,6 +60,10 @@ class SplitStepMethod:
         psi_p = np.fft.fftn(psi*self._exp_potential)
         psi_p = psi_p*self._exp_kinetic
         psi = np.fft.ifftn(psi_p)*self._exp_potential
+        if isinstance(self.H.particle_system, TwoFermions):
+            psi = 1.0/np.sqrt(2.0)*(psi - psi.T)
+        if isinstance(self.H.particle_system, TwoBosons):
+            psi = 1.0/np.sqrt(2.0)*(psi + psi.T)
         if self._norm:
             psi = psi/np.sqrt(np.sum(psi*np.conj(psi)))
         return psi
