@@ -1,20 +1,20 @@
 import numpy as np
-from qmsolve import Hamiltonian, SingleParticle, init_visualization
+from qmsolve import Hamiltonian, SingleParticle, init_visualization,Å
 
 
 
 #interaction potential
 def harmonic_oscillator(particle):
 
-	kx = 2 # measured in eV / (Å**2)
-	ky = 2
+	kx = 0.02 
+	ky = 0.02
 	return 0.5 * kx * particle.x**2    +    0.5 * ky * particle.y**2
 
 
 
 H = Hamiltonian(particles = SingleParticle(), 
-				potential = harmonic_oscillator,
-				spatial_ndim = 2, N = 200, extent = 15)
+				potential = harmonic_oscillator, 
+				spatial_ndim = 2, N = 100, extent = 15*Å)
 
 
 eigenstates = H.solve(max_states = 30)

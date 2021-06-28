@@ -38,7 +38,7 @@ class SingleParticle(ParticleSystem):
         if H.spatial_ndim == 1:
             self.x = np.linspace(-H.extent/2, H.extent/2, H.N)
             diff_x =  diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
-            self.px = - k2 *1j * diff_x
+            self.px = - hbar *1j * diff_x
             H.ndim = 1
             self.I = eye(H.N)
 
@@ -54,8 +54,8 @@ class SingleParticle(ParticleSystem):
             diff_x =  diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
             diff_y = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
 
-            self.px = kron(I, - k2 *1j * diff_y)
-            self.py = kron(- k2 *1j * diff_x, I)
+            self.px = kron(I, - hbar *1j * diff_y)
+            self.py = kron(- hbar *1j * diff_x, I)
             H.ndim = 2
             self.I = kron(I,I)
 
@@ -92,5 +92,5 @@ class SingleParticle(ParticleSystem):
         elif H.spatial_ndim == 3:
             type = "SingleParticle3D"
 
-        eigenstates = Eigenstates(energies, eigenstates_array, H.extent, H.N, type)
+        eigenstates = Eigenstates(energies/eV, eigenstates_array, H.extent, H.N, type)
         return eigenstates

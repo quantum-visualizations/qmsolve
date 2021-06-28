@@ -1,10 +1,10 @@
 import numpy as np
 from qmsolve import visualization
-from qmsolve import Hamiltonian, SingleParticle, Eigenstates
+from qmsolve import Hamiltonian, SingleParticle, Eigenstates,Å
 
 
 spatial_ndim = 1
-L = 10
+L = 10*Å
 N = 100
 separable_potential = [lambda particle: 20.0*particle.x**2,
                        lambda particle: 20.0*particle.x**2,

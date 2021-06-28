@@ -39,4 +39,4 @@ class TwoDistinguishableParticles(TwoParticles):
 
         # Finish the normalization of the eigenstates
         eigenstates = eigenstates/np.sqrt(H.dx**H.ndim)
-        return  energies, eigenstates
+        return  energies/eV, eigenstates
