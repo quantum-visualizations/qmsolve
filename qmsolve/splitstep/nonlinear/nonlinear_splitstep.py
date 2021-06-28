@@ -6,6 +6,19 @@ from ...util import constants
 
 class NonlinearSplitStepMethod(SplitStepMethod):
 
+    """
+    Split-Operator method for the non-linear Schrodinger equation.
+    
+    References:
+
+      Xavier Antoine, Weizhu Bao, Christophe Besse
+      Computational methods for the dynamics of 
+      the nonlinear Schrodinger/Gross-Pitaevskii equations.
+      Comput. Phys. Commun., Vol. 184, pp. 2621-2633, 2013.
+      https://arxiv.org/pdf/1305.1093
+
+    """
+
     def __init__(self, hamiltonian, timestep):
         SplitStepMethod.__init__(self, hamiltonian, timestep)
         self._nonlinear = lambda psi: psi
