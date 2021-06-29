@@ -36,14 +36,20 @@ class SingleParticle(ParticleSystem):
     def build_matrix_operators(self, H):
 
         if H.spatial_ndim == 1:
+
+            H.ndim = 1
+            
             self.x = np.linspace(-H.extent/2, H.extent/2, H.N)
             diff_x =  diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
             self.px = - hbar *1j * diff_x
-            H.ndim = 1
+            
             self.I = eye(H.N)
 
 
         elif H.spatial_ndim == 2:
+
+            H.ndim = 2
+
             x = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
             y = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
             I = eye(H.N)
@@ -51,16 +57,45 @@ class SingleParticle(ParticleSystem):
             self.x = kron(I,x)
             self.y = kron(y,I)
 
-            diff_x =  diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+            diff_x = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
             diff_y = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
 
             self.px = kron(I, - hbar *1j * diff_y)
             self.py = kron(- hbar *1j * diff_x, I)
-            H.ndim = 2
+            
             self.I = kron(I,I)
 
         elif H.spatial_ndim == 3:
-            raise NotImplementedError()
+
+            H.ndim = 3
+            xx, yy, zz  = np.mgrid[ -H.extent/2: H.extent/2:H.N*1j, -H.extent/2: H.extent/2:H.N*1j, -H.extent/2: H.extent/2:H.N*1j]
+            r = np.sqrt(xx**2 + yy**2 + zz**2)
+
+            TOL = 0.000001
+            r_inv = np.where(r < TOL, 1/TOL, 1./r)
+
+            self.r = diags([ r.reshape(H.N ** H.ndim) ], [0])   
+            self.r_inv = diags([ r_inv.reshape(H.N ** H.ndim) ], [0])   
+
+            x = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
+            y = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
+            z = diags([np.linspace(-H.extent/2, H.extent/2, H.N)], [0])
+            I = eye(H.N)
+
+            self.x = kron(x, kron(I, I))
+            self.y = kron(I, kron(y, I))
+            self.z = kron(I, kron(I, z))
+
+            diff_x = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+            diff_y = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+            diff_z = diags([-1., 0., 1.], [-1, 0, 1] , shape=(H.N, H.N))*1/(2*H.dx)
+
+            self.px = kron(- hbar *1j * diff_x, kron(I,  I))
+            self.py = kron(I , kron(- hbar *1j * diff_x, I))
+            self.pz = kron(I, kron(I , - hbar *1j * diff_x))
+            
+
+            self.I = kron(I,kron(I,I))
 
     def get_kinetic_matrix(self, H):
 

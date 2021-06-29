@@ -17,15 +17,22 @@ def harmonic_and_magnetic_interaction(particle):
 
     kx = 0.02 
     ky = 0.02 
-    Bz = 2000 * T 
-
-    γ = 0.5 # e/(2*m_e)
-    𝜇 = γ*Bz
-
 
     harmonic_interaction =  0.5 * kx * particle.x **2 +    0.5 * ky * particle.y **2
-    magnetic_interaction = 𝜇* (particle.px @ particle.y - particle.py @ particle.x)
-    return harmonic_interaction + magnetic_interaction
+
+
+    Bz = 2000 * T 
+
+    B_dot_L =  Bz*(-particle.px @ particle.y + particle.py @ particle.x)
+    𝜇 = 0.5 # e/(2*m_e)
+    paramagnetic_term = -𝜇 * B_dot_L
+
+    d = 0.125 # e**2/(8*m_e)
+    diamagnetic_term = d* Bz**2 *(particle.x**2 + particle.y**2)
+
+
+    magnetic_interaction = diamagnetic_term  + paramagnetic_term
+    return magnetic_interaction + harmonic_interaction
 
 
 

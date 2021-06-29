@@ -91,7 +91,7 @@ class Hamiltonian:
             #First, we compute eighs eigenvectors with a grid of size N0, 
             H_eigsh = Hamiltonian(particles = SingleParticle(), 
                                   potential = self.potential, 
-                                  spatial_ndim = 3, N = N0, extent = self.extent)
+                                  spatial_ndim = 3, N = N0, extent = self.extent, potential_type = self.potential_type, E_min = self.E_min)
 
             eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.E_min))
 
@@ -137,7 +137,7 @@ class Hamiltonian:
             #First, we compute eighs eigenvectors with a grid of size N0, 
             H_eigsh = Hamiltonian(particles = SingleParticle(), 
                                   potential = self.potential, 
-                                  spatial_ndim = 3, N = N0, extent = self.extent)
+                                  spatial_ndim = 3, N = N0, extent = self.extent, potential_type = self.potential_type, E_min = self.E_min)
 
             eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.E_min))
 
@@ -146,12 +146,20 @@ class Hamiltonian:
             if verbose == True:
                 print("Initial eigsh computation completed")
 
-            #Now, we interpolate them to a grid of size N and then use it as an initial guess to the lobpcg solver.
-            from scipy.interpolate import interpn
-            new_xx, new_yy, new_zz, states = np.mgrid[ -1:1:self.N*1j, -1:1:self.N*1j, -1:1:self.N*1j, -1:1:max_states*1j]
-            eigenvectors_eigsh_interpolated = interpn((np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,max_states)), 
-                                                      eigenvectors_eigsh, 
-                                                      np.array([new_xx, new_yy, new_zz, states]).T).T
+            if self.potential_type == "grid":
+                #Now, we interpolate them to a grid of size N and then use it as an initial guess to the lobpcg solver.
+                from scipy.interpolate import interpn
+                new_xx, new_yy, new_zz, states = np.mgrid[ -1:1:self.N*1j, -1:1:self.N*1j, -1:1:self.N*1j, -1:1:max_states*1j]
+                eigenvectors_eigsh_interpolated = interpn((np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,max_states)), 
+                                                          eigenvectors_eigsh, 
+                                                          np.array([new_xx, new_yy, new_zz, states]).T).T
+
+            elif self.potential_type == "matrix":
+                raise NotImplementedError(
+                f"lobpcg-cupy solver has not been implemented to work with complex numbers. Use lobpcg instead")
+
+
+
             if verbose == True:
                 print("Interpolation completed")
             eigenvectors_guess = eigenvectors_eigsh_interpolated.reshape(  self.N**self.ndim , max_states)

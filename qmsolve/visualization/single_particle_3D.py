@@ -17,8 +17,6 @@ class VisualizationSingleParticle3D(Visualization):
         eigenstates = self.eigenstates.array
         mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
         psi = eigenstates[k]
-        min_ = psi.min()
-        max_ = psi.max()
 
         if self.plot_type == 'volume':
             
@@ -63,23 +61,39 @@ class VisualizationSingleParticle3D(Visualization):
             mlab.view(azimuth= φ,  distance=N*3.5)
             mlab.show()
 
-        else:
+        elif self.plot_type == 'contour':
+            psi = eigenstates[k]
+            L = self.eigenstates.extent/2
+            N = self.eigenstates.N
+            isovalue = np.mean(contrast_vals)
+            abs_max= np.amax(np.abs(eigenstates))
+            psi = (psi)/(abs_max)
 
-            # Adding colour scale to a contour plot:
-            # https://github.com/enthought/mayavi/
-            #       blob/master/examples/mayavi/mlab/atomic_orbital.py
-            field = mlab.pipeline.scalar_field(np.abs(psi), 
-                                            vmin=min_ + 0.008 * (max_ - min_),
-                                            vmax=min_ + 0.5 * (max_ - min_))
-            field.image_data.point_data.add_array(eigenstates[k].ravel())
+            field = mlab.pipeline.scalar_field(np.abs(psi))
+
+            arr = mlab.screenshot(antialiased = False)
+
+            mlab.outline()
+            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=6 , ranges = (-L,L,-L,L,-L,L) )
+            colour_data = np.angle(psi.T.ravel())%(2*np.pi)
+            field.image_data.point_data.add_array(colour_data)
             field.image_data.point_data.get_array(1).name = 'phase'
             field.update()
             field2 = mlab.pipeline.set_active_attribute(field, 
                                                         point_scalars='scalar')
             contour = mlab.pipeline.contour(field2)
+            contour.filter.contours= [isovalue,]
             contour2 = mlab.pipeline.set_active_attribute(contour, 
                                                         point_scalars='phase')
-            mlab.pipeline.surface(contour2)
+            s = mlab.pipeline.surface(contour, colormap='hsv', vmin= 0.0 ,vmax= 2.*np.pi)
+
+            s.scene.light_manager.light_mode = 'vtk'
+            s.actor.property.interpolation = 'phong'
+
+
+            #azimuth angle
+            φ = 30
+            mlab.view(azimuth= φ,  distance=N*3.5)
 
             mlab.show()
 
@@ -194,6 +208,75 @@ class VisualizationSingleParticle3D(Visualization):
             mlab.show()
 
 
+        elif self.plot_type == 'contour':
+            psi = eigenstates[0]
+            L = self.eigenstates.extent/2
+            N = self.eigenstates.N
+            isovalue = np.mean(contrast_vals)
+
+
+            abs_max= np.amax(np.abs(eigenstates))
+            psi = (psi)/(abs_max)
+
+            field = mlab.pipeline.scalar_field(np.abs(psi))
+
+            arr = mlab.screenshot(antialiased = False)
+
+            mlab.outline()
+            mlab.axes(xlabel='x [Å]', ylabel='y [Å]', zlabel='z [Å]',nb_labels=6 , ranges = (-L,L,-L,L,-L,L) )
+            colour_data = np.angle(psi.T.ravel())%(2*np.pi)
+            field.image_data.point_data.add_array(colour_data)
+            field.image_data.point_data.get_array(1).name = 'phase'
+            field.update()
+            field2 = mlab.pipeline.set_active_attribute(field, 
+                                                        point_scalars='scalar')
+            contour = mlab.pipeline.contour(field2)
+            contour.filter.contours= [isovalue,]
+            contour2 = mlab.pipeline.set_active_attribute(contour, 
+                                                        point_scalars='phase')
+            s = mlab.pipeline.surface(contour2, colormap='hsv', vmin= 0.0 ,vmax= 2.*np.pi)
+
+            s.scene.light_manager.light_mode = 'vtk'
+            s.actor.property.interpolation = 'phong'
+
+
+            #azimuth angle
+            φ = 30
+            mlab.view(azimuth= φ,  distance=N*3.5)
+
+
+
+
+            data = {'t': 0.0}
+            @mlab.animate(delay=10)
+            def animation():
+                while (1):
+                    data['t'] += 0.05
+                    k1 = int(data['t']) % len(energies)
+                    k2 = (int(data['t']) + 1) % len(energies)
+                    if data['t'] % 1.0 > 0.5:
+                        t = (data['t'] - int(data['t']) - 0.5)
+                        psi = (np.cos(np.pi*t)*eigenstates[k1]*np.exp( 1j*2*np.pi/10*k1) 
+                             + np.sin(np.pi*t)*eigenstates[k2]*np.exp( 1j*2*np.pi/10*k2))
+
+
+                    else:
+                        psi = eigenstates[k1]*np.exp( 1j*2*np.pi/10*k1)
+                    psi = (psi)/(abs_max)
+                    np.copyto(colour_data, np.angle(psi.T.ravel())%(2*np.pi))
+                    field.mlab_source.scalars = np.abs(psi)
+
+                    φ = 30 + data['t'] * 360 / 10 
+                    mlab.view(azimuth= φ, distance=N*3.5)
+
+
+                    yield
+            animation()
+            mlab.show()
+
+
+
+
         elif self.plot_type == 'volume_old_colormap':
             L = self.eigenstates.extent/2
             N = self.eigenstates.N
@@ -247,37 +330,6 @@ class VisualizationSingleParticle3D(Visualization):
 
 
 
-        else:
-
-            field = mlab.pipeline.scalar_field(np.abs(eigenstates[0]))
-            colour_data = np.angle(eigenstates[0].ravel())
-            field.image_data.point_data.add_array(colour_data)
-            field.image_data.point_data.get_array(1).name = 'phase'
-            field.update()
-            field2 = mlab.pipeline.set_active_attribute(field, 
-                                                        point_scalars='scalar')
-            contour = mlab.pipeline.contour(field2)
-            contour2 = mlab.pipeline.set_active_attribute(contour, 
-                                                        point_scalars='phase')
-            mlab.pipeline.surface(contour2)
-            data = {'t': 0.0}
-            @mlab.animate(delay=10)
-            def animation():
-                while (1):
-                    data['t'] += 0.05
-                    k1 = int(data['t']) % len(energies)
-                    k2 = (int(data['t']) + 1) % len(energies)
-                    if data['t'] % 1.0 > 0.5:
-                        t = (data['t'] - int(data['t']) - 0.5)
-                        psi = (np.cos(np.pi*t)*eigenstates[k1]
-                            + np.sin(np.pi*t)*eigenstates[k2])
-                    else:
-                        psi = eigenstates[k1]
-                    np.copyto(colour_data, np.angle(psi.T.ravel()))
-                    field.mlab_source.scalars = np.abs(psi)
-                    yield
-            animation()
-            mlab.show()
 
     def superpositions(self, states, **kw):
         eigenstates = self.eigenstates.array[0 : len(states)]
@@ -399,7 +451,7 @@ class VisualizationSingleParticle3D(Visualization):
                 else:
                     raise KeyError
             field = mlab.pipeline.scalar_field(np.abs(psi))
-            colour_data = np.angle(psi.ravel())
+            colour_data = np.angle(psi.T.ravel())
             field.image_data.point_data.add_array(colour_data)
             field.image_data.point_data.get_array(1).name = 'phase'
             field.update()
