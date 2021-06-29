@@ -1,10 +1,10 @@
-# Qmsolve: A module for solving and visualizing the Schrodinger equation.
+# Qmsolve: A module for solving and visualizing the Schrödinger equation.
 
 This is an attempt at making a robust, easy to use solver, capable of solving and visualizing the Schrödinger equation for multiple particles, and representing the solutions both in 1D, 2D, and 3D.
 
-The way this simulator works is by discretizing the Hamiltonian of an arbitrary potential and diagonalizing it for getting the energies and eigenstates of the system. It also features the possibility of interactively visualizing a superposition of the computed eigenstastes and studying the time dependence of the resulting wavefunction.
+The way this simulator works is by discretizing the Hamiltonian of an arbitrary potential and diagonalizing it for getting the energies and eigenstates of the system. It also features the possibility of interactively visualizing a superposition of the computed eigenstates and studying the time dependence of the resulting wavefunction.
 
-This is work in progress. Stay up to date about the next features!
+This is a work in progress. Stay up to date about the next features!
 
 ## Installation
 
@@ -60,7 +60,7 @@ The interface use [Hartree atomic units](https://en.wikipedia.org/wiki/Hartree_a
 To use GPU acceleration in your 3D simulations, add the argument `method ='lobpcg-cupy'` in the Hamiltonian `solve` method. For example:
 
 ```python
-eigenstates = H.solve( max_states = 100, method ='lobpcg-cupy')
+eigenstates = H.solve( max_states = 50, method ='lobpcg-cupy')
 ```
 
 ## Contributors

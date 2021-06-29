@@ -6,9 +6,9 @@ from qmsolve import Hamiltonian, SingleParticle, Eigenstates,Å
 spatial_ndim = 1
 L = 10*Å
 N = 100
-separable_potential = [lambda particle: 20.0*particle.x**2,
-                       lambda particle: 20.0*particle.x**2,
-                       lambda particle: 20.0*particle.x**2]
+separable_potential = [lambda particle: 0.02*particle.x**2,
+                       lambda particle: 0.02*particle.x**2,
+                       lambda particle: 0.02*particle.x**2]
 
 energies = []
 states = []
@@ -34,10 +34,12 @@ energies = energies[sort_array]
 states = states[sort_array]
 
 
-eigenstates = Eigenstates(energies, states, H_i, 'SingleParticle3D')
+eigenstates = Eigenstates(energies, states, L, N, type = 'SingleParticle3D')
 v = visualization.init_visualization(eigenstates)
+"""
 v.plot_type = 'contour'
 v.superpositions(np.array([0.0]*10 + [((1.0 + 1.0j)/np.sqrt(2.0))**i for i in range(10)]), 
                  dt=0.005)
+"""
 v.plot_type = 'volume'
 v.animate()
