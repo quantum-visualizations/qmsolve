@@ -2,6 +2,7 @@ import numpy as np
 from mayavi import mlab
 from .visualization import Visualization
 from ..util.colour_functions import complex_to_rgb
+from ..util.constants import *
 
 
 class VisualizationSingleParticle3D(Visualization):
@@ -23,7 +24,7 @@ class VisualizationSingleParticle3D(Visualization):
             abs_max= np.amax(np.abs(eigenstates))
             psi = (psi)/(abs_max)
 
-            L = self.eigenstates.extent/2
+            L = self.eigenstates.extent/2/Å
             N = self.eigenstates.N
 
             vol = mlab.pipeline.volume(mlab.pipeline.scalar_field(psi))
@@ -63,7 +64,7 @@ class VisualizationSingleParticle3D(Visualization):
 
         elif self.plot_type == 'contour':
             psi = eigenstates[k]
-            L = self.eigenstates.extent/2
+            L = self.eigenstates.extent/2/Å
             N = self.eigenstates.N
             isovalue = np.mean(contrast_vals)
             abs_max= np.amax(np.abs(eigenstates))
@@ -110,7 +111,7 @@ class VisualizationSingleParticle3D(Visualization):
             psi = (psi)/(abs_max)
 
 
-            L = self.eigenstates.extent/2
+            L = self.eigenstates.extent/2/Å
             N = self.eigenstates.N
             field = mlab.pipeline.scalar_field(psi)
             vol = mlab.pipeline.volume(field)
@@ -210,7 +211,7 @@ class VisualizationSingleParticle3D(Visualization):
 
         elif self.plot_type == 'contour':
             psi = eigenstates[0]
-            L = self.eigenstates.extent/2
+            L = self.eigenstates.extent/2/Å
             N = self.eigenstates.N
             isovalue = np.mean(contrast_vals)
 
@@ -278,7 +279,7 @@ class VisualizationSingleParticle3D(Visualization):
 
 
         elif self.plot_type == 'volume_old_colormap':
-            L = self.eigenstates.extent/2
+            L = self.eigenstates.extent/2/Å
             N = self.eigenstates.N
 
             xx, yy, zz = np.mgrid[-L:L:N*1j, -L:L:N*1j, -L:L:N*1j]
@@ -354,7 +355,7 @@ class VisualizationSingleParticle3D(Visualization):
             else:
                 psi = np.abs(psi)/(max_)
 
-            L = self.eigenstates.extent/2
+            L = self.eigenstates.extent/2/Å
             N = self.eigenstates.N
             field = mlab.pipeline.scalar_field(psi)
             vol = mlab.pipeline.volume(field)

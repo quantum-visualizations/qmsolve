@@ -15,7 +15,7 @@ from qmsolve import Hamiltonian, SingleParticle, init_visualization, Å, T , eV
 #interaction potential
 def magnetic_interaction(particle):
 
-    Bz = 200 * T 
+    Bz = 30 * T 
     B_dot_L =  Bz*(-particle.px @ particle.y + particle.py @ particle.x)
     
     
@@ -34,7 +34,7 @@ def magnetic_interaction(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
                 potential = magnetic_interaction, potential_type = "matrix",
-                spatial_ndim = 2, N = 400, extent = 5. * Å, E_min=0.0)
+                spatial_ndim = 2, N = 400, extent = 250 * Å, E_min=-0.00*eV)
 
 
 eigenstates = H.solve(max_states = 28)

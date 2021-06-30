@@ -4,6 +4,7 @@ from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
 from ..util.colour_functions import complex_to_rgb
+from ..util.constants import *
 
 
 class VisualizationSingleParticle2D(Visualization):
@@ -45,7 +46,7 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.plot([0,1], [energies[k]/E0, energies[k]/E0], color='yellow', lw = 3)
 
         ax1.set_aspect('equal')
-        L =  self.eigenstates.extent/2
+        L =  self.eigenstates.extent/2/Å
         im = ax1.imshow(complex_to_rgb(eigenstates_array[k]*np.exp( 1j*2*np.pi/10*k)), origin='lower',extent = [-L, L, -L, L],  interpolation = 'bilinear')
         plt.show()
 
@@ -83,7 +84,7 @@ class VisualizationSingleParticle2D(Visualization):
 
 
         ax1.set_aspect('equal')
-        L = self.eigenstates.extent/2
+        L = self.eigenstates.extent/2/Å
         eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)), origin='lower',extent = [-L, L, -L, L],  interpolation = 'bilinear')
         
         line = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
@@ -152,7 +153,7 @@ class VisualizationSingleParticle2D(Visualization):
             ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
         
         ax1.set_aspect('equal')
-        L = self.eigenstates.extent/2
+        L = self.eigenstates.extent/2/Å
         eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)),  origin='lower',extent = [-L, L, -L, L],   interpolation = 'bilinear')
 
         line, = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
@@ -197,10 +198,10 @@ class VisualizationSingleParticle2D(Visualization):
 
 
     def superpositions(self, states, fps = 30, total_time = 20, **kw):
-        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2.0, 
-                                        self.eigenstates.extent/2.0],
-                  'ylim': [-self.eigenstates.extent/2.0, 
-                           self.eigenstates.extent/2.0],
+        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2/Å, 
+                                        self.eigenstates.extent/2/Å],
+                  'ylim': [-self.eigenstates.extent/2/Å, 
+                           self.eigenstates.extent/2/Å],
                   'save_animation': False,
                   'hide_controls': False,
                   # 'plot_style': 'dark_background'
@@ -248,10 +249,10 @@ class VisualizationSingleParticle2D(Visualization):
         ax.set_ylim(params['ylim'])
 
         im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
-                        origin='lower', extent=[-self.eigenstates.extent/2.0, 
-                                                self.eigenstates.extent/2.0,
-                                                -self.eigenstates.extent/2.0, 
-                                                self.eigenstates.extent/2.0]
+                        origin='lower', extent=[-self.eigenstates.extent/2/Å, 
+                                                self.eigenstates.extent/2/Å,
+                                                -self.eigenstates.extent/2/Å, 
+                                                self.eigenstates.extent/2/Å]
                         )
         # im2 = plt.imshow(0.0*eigenstates[0], cmap='gray')
         animation_data = {'ticks': 0, 'norm': 1.0}

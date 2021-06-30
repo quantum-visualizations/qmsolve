@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
+from ..util.constants import *
 
 class VisualizationSingleParticle1D(Visualization):
     def __init__(self,eigenstates):
@@ -44,12 +45,12 @@ class VisualizationSingleParticle1D(Visualization):
 
 
         if show_imaginary_part == True:
-            eigenstate_plot1 = ax1.plot(x, np.real(eigenstates_array[k]), label='$Re|\psi(x)|$')
-            eigenstate_plot2 = ax1.plot(x, np.imag(eigenstates_array[k]), label='$Im|\psi(x)|$')
-            eigenstate_plot3 = ax1.plot(x, np.abs(eigenstates_array[k]), label='$|\psi(x)|$', color='white')
+            eigenstate_plot1 = ax1.plot(x/Å, np.real(eigenstates_array[k]), label='$Re|\psi(x)|$')
+            eigenstate_plot2 = ax1.plot(x/Å, np.imag(eigenstates_array[k]), label='$Im|\psi(x)|$')
+            eigenstate_plot3 = ax1.plot(x/Å, np.abs(eigenstates_array[k]), label='$|\psi(x)|$', color='white')
             ax1.legend()
         else:
-            eigenstate_plot1 = ax1.plot(x, np.real(eigenstates_array[k]))
+            eigenstate_plot1 = ax1.plot(x/Å, np.real(eigenstates_array[k]))
 
 
         for E in energies:
@@ -94,12 +95,12 @@ class VisualizationSingleParticle1D(Visualization):
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
 
         if show_imaginary_part == True:
-            eigenstate_plot1, = ax1.plot(x, np.real(eigenstates_array[0]), label='$Re|\psi(x)|$')
-            eigenstate_plot2, = ax1.plot(x, np.imag(eigenstates_array[0]), label='$Im|\psi(x)|$')
-            eigenstate_plot3, = ax1.plot(x, np.abs(eigenstates_array[0]), label='$|\psi(x)|$', color='white')
+            eigenstate_plot1, = ax1.plot(x/Å, np.real(eigenstates_array[0]), label='$Re|\psi(x)|$')
+            eigenstate_plot2, = ax1.plot(x/Å, np.imag(eigenstates_array[0]), label='$Im|\psi(x)|$')
+            eigenstate_plot3, = ax1.plot(x/Å, np.abs(eigenstates_array[0]), label='$|\psi(x)|$', color='white')
             ax1.legend()
         else:
-            eigenstate_plot, = ax1.plot(x, np.real(eigenstates_array[0]))
+            eigenstate_plot, = ax1.plot(x/Å, np.real(eigenstates_array[0]))
 
 
         line = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
@@ -175,12 +176,12 @@ class VisualizationSingleParticle1D(Visualization):
         
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
         if show_imaginary_part == True:
-            eigenstate_plot1, = ax1.plot(x, np.real(eigenstates_array[0]), label='$Re|\psi(x)|$')
-            eigenstate_plot2, = ax1.plot(x, np.imag(eigenstates_array[0]), label='$Im|\psi(x)|$')
-            eigenstate_plot3, = ax1.plot(x, np.abs(eigenstates_array[0]), label='$|\psi(x)|$', color='white')
+            eigenstate_plot1, = ax1.plot(x/Å, np.real(eigenstates_array[0]), label='$Re|\psi(x)|$')
+            eigenstate_plot2, = ax1.plot(x/Å, np.imag(eigenstates_array[0]), label='$Im|\psi(x)|$')
+            eigenstate_plot3, = ax1.plot(x/Å, np.abs(eigenstates_array[0]), label='$|\psi(x)|$', color='white')
             ax1.legend()
         else:
-            eigenstate_plot, = ax1.plot(x, np.real(eigenstates_array[0]))
+            eigenstate_plot, = ax1.plot(x/Å, np.real(eigenstates_array[0]))
 
 
 
@@ -286,9 +287,9 @@ class VisualizationSingleParticle1D(Visualization):
         ax.set_yticks([])
         ax.set_xlim(params['xlim'])
 
-        line1, = ax.plot(x, np.real(eigenstates[0]), label='$Re|\psi(x)|$')
-        line2, = ax.plot(x, np.imag(eigenstates[0]), label='$Im|\psi(x)|$')
-        line3, = ax.plot(x, np.abs(eigenstates[0]), label='$|\psi(x)|$', color='white')
+        line1, = ax.plot(x/Å, np.real(eigenstates[0]), label='$Re|\psi(x)|$')
+        line2, = ax.plot(x/Å, np.imag(eigenstates[0]), label='$Im|\psi(x)|$')
+        line3, = ax.plot(x/Å, np.abs(eigenstates[0]), label='$|\psi(x)|$', color='white')
         ax.set_ylim(-1.7*np.amax(np.abs(psi0)), 1.7*np.amax(np.abs(psi0)))
         ax.legend()
 

@@ -15,13 +15,13 @@ from qmsolve import Hamiltonian, SingleParticle, init_visualization, Å, T , eV
 #interaction potential
 def harmonic_and_magnetic_interaction(particle):
 
-    kx = 0.02 
-    ky = 0.02 
+    kx = 2 * 1e-6
+    ky = 2 * 1e-6
 
     harmonic_interaction =  0.5 * kx * particle.x **2 +    0.5 * ky * particle.y **2
 
 
-    Bz = 2000 * T 
+    Bz = 30 * T 
 
     B_dot_L =  Bz*(-particle.px @ particle.y + particle.py @ particle.x)
     𝜇 = 0.5 # e/(2*m_e)
@@ -38,7 +38,7 @@ def harmonic_and_magnetic_interaction(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
                 potential = harmonic_and_magnetic_interaction, potential_type = "matrix",
-                spatial_ndim = 2, N = 400, extent = 15 * Å)
+                spatial_ndim = 2, N = 400, extent = 250 * Å)
 
 
 eigenstates = H.solve(max_states = 28)
