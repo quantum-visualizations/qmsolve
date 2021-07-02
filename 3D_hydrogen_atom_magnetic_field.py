@@ -7,8 +7,8 @@ from qmsolve import Hamiltonian, SingleParticle, Eigenstates, Å, T, eV
 #
 # Notes:
 # The example requires to use potential_type = "matrix" in the Hamiltonian constructor, 
-# which allows to use momentum operators (px and py) in the potential term
-# particle.x, particle.px , particle.y, particle.py, , particle.z, particle.pz,   are treated as operators, 
+# which allows to use momentum operators (px and py) in the potential term.
+# particle.x, particle.px , particle.y, particle.py, , particle.z, particle.pz, are treated as operators, 
 # and they are discretized as matrices. Therefore, for multiplying them,
 # we use the @ instead of *, because this is the operator that represents matrix multiplication.
 #==========================================================================================================================================================================

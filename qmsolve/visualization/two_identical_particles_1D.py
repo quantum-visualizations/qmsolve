@@ -91,10 +91,10 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_title("Probability density")
         plt.setp(ax3.get_yticklabels(), visible=False)
         if xlim != None:
-            ax1.set_xlim(xlim)
-            ax3.set_xlim(xlim)
-            ax1.set_ylim(xlim)
-            ax3.set_ylim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
+            ax3.set_xlim(np.array(xlim)/Å)
+            ax1.set_ylim(np.array(xlim)/Å)
+            ax3.set_ylim(np.array(xlim)/Å)
 
         E0 = energies[0]
         for E in energies:
@@ -135,10 +135,10 @@ class VisualizationIdenticalParticles1D(Visualization):
             ax3.set_yticks([])
             plt.setp(ax3.get_yticklabels(), visible=False)
             if xlim != None:
-                ax1.set_xlim(xlim)
-                ax3.set_xlim(xlim)
-                ax1.set_ylim(xlim)
-                ax3.set_ylim(xlim)
+                ax1.set_xlim(np.array(xlim)/Å)
+                ax3.set_xlim(np.array(xlim)/Å)
+                ax1.set_ylim(np.array(xlim)/Å)
+                ax3.set_ylim(np.array(xlim)/Å)
             prob_density = np.abs(np.sum(  (eigenstates_array[state])*np.conjugate(eigenstates_array[state])  , axis = 1))
             prob_plot = ax3.plot(x,  prob_density, color= "cyan")
             ax3.set_ylim([0,max(prob_density)*1.1])
@@ -191,10 +191,10 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax3.set_title("Probability density")
         plt.setp(ax3.get_yticklabels(), visible=False)
         if xlim != None:
-            ax1.set_xlim(xlim)
-            ax3.set_xlim(xlim)
-            ax1.set_ylim(xlim)
-            ax3.set_ylim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
+            ax3.set_xlim(np.array(xlim)/Å)
+            ax1.set_ylim(np.array(xlim)/Å)
+            ax3.set_ylim(np.array(xlim)/Å)
 
         E0 = energies[0]
         for E in energies:
@@ -341,9 +341,8 @@ class VisualizationIdenticalParticles1D(Visualization):
                         np.linspace(-1.0, 1.0, eigenstates[0].shape[1]))
         maxval = np.amax(np.abs(eigenstates[0]))
 
-        ax.set_xlim(params['xlim'])
-        ax.set_ylim(params['xlim'])
-
+        ax.set_xlim(np.array(params['xlim'])/Å)
+        ax.set_ylim(np.array(params['xlim'])/Å)
         im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
                         origin='lower', extent=[-self.eigenstates.extent/2/Å, 
                                                 self.eigenstates.extent/2/Å,

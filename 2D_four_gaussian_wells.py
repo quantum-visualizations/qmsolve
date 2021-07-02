@@ -16,7 +16,7 @@ def four_gaussian_wells(particle):
 
 H = Hamiltonian(particles = SingleParticle(), 
 				potential = four_gaussian_wells, 
-				spatial_ndim = 2, N = 100, extent = 8*Å)
+				spatial_ndim = 2, N = 200, extent = 8*Å)
 
 
 eigenstates = H.solve(max_states = 60)

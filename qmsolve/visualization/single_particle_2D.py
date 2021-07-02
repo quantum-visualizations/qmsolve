@@ -34,9 +34,9 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.set_xticks(ticks=[])
 
         if xlim != None:
-            ax1.set_xlim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
         if ylim != None:
-            ax1.set_ylim(ylim)
+            ax1.set_ylim(np.array(ylim)/Å)
 
         E0 = energies[0]
 
@@ -73,9 +73,9 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.set_xticks(ticks=[])
 
         if xlim != None:
-            ax1.set_xlim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
         if ylim != None:
-            ax1.set_ylim(ylim)
+            ax1.set_ylim(np.array(ylim)/Å)
 
 
         E0 = energies[0]
@@ -144,9 +144,9 @@ class VisualizationSingleParticle2D(Visualization):
         ax2.set_xticks(ticks=[])
 
         if xlim != None:
-            ax1.set_xlim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
         if ylim != None:
-            ax1.set_ylim(ylim)
+            ax1.set_ylim(np.array(ylim)/Å)
 
         E0 = energies[0]
         for E in energies:
@@ -198,10 +198,10 @@ class VisualizationSingleParticle2D(Visualization):
 
 
     def superpositions(self, states, fps = 30, total_time = 20, **kw):
-        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2/Å, 
-                                        self.eigenstates.extent/2/Å],
-                  'ylim': [-self.eigenstates.extent/2/Å, 
-                           self.eigenstates.extent/2/Å],
+        params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2, 
+                                        self.eigenstates.extent/2],
+                  'ylim': [-self.eigenstates.extent/2, 
+                           self.eigenstates.extent/2],
                   'save_animation': False,
                   'hide_controls': False,
                   # 'plot_style': 'dark_background'
@@ -245,8 +245,10 @@ class VisualizationSingleParticle2D(Visualization):
                         np.linspace(-1.0, 1.0, eigenstates[0].shape[1]))
         maxval = np.amax(np.abs(eigenstates[0]))
 
-        ax.set_xlim(params['xlim'])
-        ax.set_ylim(params['ylim'])
+
+        ax.set_xlim(np.array(params['xlim'])/Å)
+        ax.set_ylim(np.array(params['ylim'])/Å)
+
 
         im = plt.imshow(complex_to_rgb(eigenstates[0]), interpolation='bilinear',
                         origin='lower', extent=[-self.eigenstates.extent/2/Å, 

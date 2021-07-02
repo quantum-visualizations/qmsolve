@@ -31,7 +31,7 @@ class VisualizationSingleParticle1D(Visualization):
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
         if xlim != None:
-            ax1.set_xlim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
 
         ymax = np.amax(eigenstates_array)
         ymin = np.amin(eigenstates_array)
@@ -81,7 +81,7 @@ class VisualizationSingleParticle1D(Visualization):
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
         if xlim != None:
-            ax1.set_xlim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
 
         ymax = np.amax(eigenstates_array)
         ymin = np.amin(eigenstates_array)
@@ -164,7 +164,7 @@ class VisualizationSingleParticle1D(Visualization):
         ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
         ax2.set_xticks(ticks=[])
         if xlim != None:
-            ax1.set_xlim(xlim)
+            ax1.set_xlim(np.array(xlim)/Å)
         ymax = np.amax(eigenstates_array)
         ymin = np.amin(eigenstates_array)
         ax1.set_ylim([ymin*1.2, ymax*1.2 ])
@@ -285,7 +285,7 @@ class VisualizationSingleParticle1D(Visualization):
                         self.eigenstates.extent/2.0,
                         len(eigenstates[0]))
         ax.set_yticks([])
-        ax.set_xlim(params['xlim'])
+        ax.set_xlim(np.array(params['xlim'])/Å)
 
         line1, = ax.plot(x/Å, np.real(eigenstates[0]), label='$Re|\psi(x)|$')
         line2, = ax.plot(x/Å, np.imag(eigenstates[0]), label='$Im|\psi(x)|$')
