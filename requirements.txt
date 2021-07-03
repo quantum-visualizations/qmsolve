@@ -4,4 +4,8 @@ scipy >= 1.4.1
 
 # The following is necessary
 # for 3D graphics.
-# mayavi >= 4.7.2
+mayavi >= 4.7.2
+
+# The following is neccesary
+# for storing a loading computed eigenstates
+h5py >= 3.2.1

@@ -24,11 +24,11 @@ class VisualizationSingleParticle1D(Visualization):
 
         ax1.set_xlabel("x [Å]")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
 
 
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
         if xlim != None:
             ax1.set_xlim(np.array(xlim)/Å)
@@ -54,9 +54,9 @@ class VisualizationSingleParticle1D(Visualization):
 
 
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
-        ax2.plot([0,1], [energies[k]/E0, energies[k]/E0], color='yellow', lw = 3)
+        ax2.plot([0,1], [energies[k], energies[k]], color='yellow', lw = 3)
         plt.show()
 
 
@@ -75,10 +75,10 @@ class VisualizationSingleParticle1D(Visualization):
 
         ax1.set_xlabel("x [Å]")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
 
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
         if xlim != None:
             ax1.set_xlim(np.array(xlim)/Å)
@@ -90,7 +90,7 @@ class VisualizationSingleParticle1D(Visualization):
 
         E0 = energies[0]
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
 
@@ -103,7 +103,7 @@ class VisualizationSingleParticle1D(Visualization):
             eigenstate_plot, = ax1.plot(x/Å, np.real(eigenstates_array[0]))
 
 
-        line = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
+        line = ax2.plot([0,1], [energies[1], energies[1]], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
         from matplotlib.widgets import Slider
@@ -127,7 +127,7 @@ class VisualizationSingleParticle1D(Visualization):
             else:
                 eigenstate_plot.set_ydata(np.real(eigenstates_array[state]))
 
-            line[0].set_ydata([energies[state]/E0, energies[state]/E0])
+            line[0].set_ydata([energies[state], energies[state]])
 
         slider.on_changed(update)
         plt.show()
@@ -158,10 +158,10 @@ class VisualizationSingleParticle1D(Visualization):
 
         ax1.set_xlabel("[Å]")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
 
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
         if xlim != None:
             ax1.set_xlim(np.array(xlim)/Å)
@@ -172,7 +172,7 @@ class VisualizationSingleParticle1D(Visualization):
 
         E0 = energies[0]
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
         
         x = np.linspace(-self.eigenstates.extent/2, self.eigenstates.extent/2, self.eigenstates.N)
         if show_imaginary_part == True:
@@ -185,7 +185,7 @@ class VisualizationSingleParticle1D(Visualization):
 
 
 
-        line, = ax2.plot([0,1], [energies[1]/E0, energies[1]/E0], color='yellow', lw = 3)
+        line, = ax2.plot([0,1], [energies[1], energies[1]], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
 
@@ -210,12 +210,12 @@ class VisualizationSingleParticle1D(Visualization):
                     eigenstate_plot.set_ydata(np.real(wavefunction))
                     return eigenstate_plot, line
 
-                E_N = energies[state]/E0 
-                E_M = energies[(state + 1) % len(energies)]/E0
+                E_N = energies[state] 
+                E_M = energies[(state + 1) % len(energies)]
                 E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
                 line.set_ydata([E, E])
             else:
-                line.set_ydata([energies[state]/E0, energies[state]/E0])
+                line.set_ydata([energies[state], energies[state]])
                 wavefunction = eigenstates_array[int(state)]
 
                 if show_imaginary_part == True:

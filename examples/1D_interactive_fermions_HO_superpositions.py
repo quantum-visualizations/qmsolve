@@ -1,0 +1,43 @@
+import numpy as np
+from qmsolve import Hamiltonian, TwoFermions, init_visualization,Å
+
+
+#interaction potential
+def harmonic_oscillator_plus_coulomb_interaction(fermions):
+
+	k = 1.029 
+
+	V_harmonic = 0.5*k*fermions.x1**2 + 0.5*k*fermions.x2**2 
+
+	k = 20.83
+	r = np.abs(fermions.x1 - fermions.x2)
+	r = np.where(r < 0.0001, 0.0001, r)
+	V_interaction = k/ r
+
+	return V_harmonic + V_interaction
+
+
+
+
+H = Hamiltonian(particles = TwoFermions(), 
+				potential = harmonic_oscillator_plus_coulomb_interaction, 
+				spatial_ndim = 1, N = 100, extent = 15*Å)
+
+
+eigenstates = H.solve(max_states = 200)
+
+visualization = init_visualization(eigenstates)
+
+
+#This example visualizes the time dependent Schrödinger of two interactive fermions with a a superposition of the eigenstates
+x1, x2 = np.meshgrid(np.linspace(-7.5*Å, 7.5*Å, eigenstates.array[0].shape[0]),
+                np.linspace(-7.5*Å, 7.5*Å, eigenstates.array[0].shape[1]))
+
+mu0 = 2.0*Å
+𝜓0 = np.exp(-(x1+mu0)**2/(2*(0.375*Å)**2))*np.exp(-(x2-mu0)**2/(2*(0.375*Å)**2)) - np.exp(-(x1-mu0)**2/(2*(0.375*Å)**2))*np.exp(-(x2+mu0)**2/(2*(0.375*Å)**2))
+
+#compute the inner product of the initial state 𝜓0(x1,x2) with the eigenstates 𝜓_n(x1,x2):  
+#coeffs = <𝜓_n(x1,x2)|𝜓0(x1,x2)>
+coeffs = np.tensordot(eigenstates.array, 𝜓0, axes=([1, 2], [0,1]))*1.0j
+#visualize a superposition of the eigenstates
+visualization.superpositions(coeffs,xlim=[-3.5*Å, 3.5*Å], hide_controls = True)

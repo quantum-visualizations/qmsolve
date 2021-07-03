@@ -29,9 +29,9 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax1.set_ylabel("$x_2$ [Å]")
         ax1.set_title("$\Psi(x_1,x_2)$")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
 
         ax3.set_xlabel("$x$ [Å]")
@@ -48,9 +48,9 @@ class VisualizationIdenticalParticles1D(Visualization):
         E0 = energies[0]
 
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
-        ax2.plot([0,1], [energies[k]/E0, energies[k]/E0], color='yellow', lw = 3)
+        ax2.plot([0,1], [energies[k], energies[k]], color='yellow', lw = 3)
 
 
         L =  self.eigenstates.extent/2/Å
@@ -81,9 +81,9 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax1.set_ylabel("$x_2$ [Å]")
         ax1.set_title("$\Psi(x_1,x_2)$")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
 
         ax3.set_xlabel("$x$ [Å]")
@@ -98,7 +98,7 @@ class VisualizationIdenticalParticles1D(Visualization):
 
         E0 = energies[0]
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
 
         L =  self.eigenstates.extent/2/Å
@@ -109,7 +109,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         prob_plot = ax3.plot(x,  prob_density, color= "cyan")
         prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
         
-        line = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
+        line = ax2.plot([0,1], [energies[0], energies[0]], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
         from matplotlib.widgets import Slider
@@ -143,7 +143,7 @@ class VisualizationIdenticalParticles1D(Visualization):
             prob_plot = ax3.plot(x,  prob_density, color= "cyan")
             ax3.set_ylim([0,max(prob_density)*1.1])
             prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
-            line[0].set_ydata([energies[state]/E0, energies[state]/E0])
+            line[0].set_ydata([energies[state], energies[state]])
         slider.on_changed(update)
         plt.show()
 
@@ -181,9 +181,9 @@ class VisualizationIdenticalParticles1D(Visualization):
         ax1.set_ylabel("$x_2$ [Å]")
         ax1.set_title("$\Psi(x_1,x_2)$")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
 
         ax3.set_xlabel("$x$ [Å]")
@@ -198,7 +198,7 @@ class VisualizationIdenticalParticles1D(Visualization):
 
         E0 = energies[0]
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
 
         L =  self.eigenstates.extent/2/Å
@@ -209,7 +209,7 @@ class VisualizationIdenticalParticles1D(Visualization):
         #ax3.set_ylim([0,max(prob_density)*1.2])
         #prob_plot, = ax3.plot(x,  prob_density, color= "cyan")
         #prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
-        line, = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
+        line, = ax2.plot([0,1], [energies[0], energies[0]], color='yellow', lw = 3)
 
         import matplotlib.animation as animation
 
@@ -251,12 +251,12 @@ class VisualizationIdenticalParticles1D(Visualization):
 
                 ax3.set_ylim([0,animation_data['max_prob_density']])
 
-                E_N = energies[state]/E0 
-                E_M = energies[(state + 1) % len(energies)]/E0
+                E_N = energies[state] 
+                E_M = energies[(state + 1) % len(energies)]
                 E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
                 line.set_ydata([E, E])
             else:
-                line.set_ydata([energies[state]/E0, energies[state]/E0])
+                line.set_ydata([energies[state], energies[state]])
 
                 eigenstate_combination = eigenstates_array[int(state)]*np.exp( 1j*2*np.pi/10*state)
                 eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))

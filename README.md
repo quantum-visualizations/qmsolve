@@ -1,42 +1,38 @@
-# Qmsolve: A module for solving and visualizing the Schrödinger equation.
+# QMsolve: A module for solving and visualizing the Schrödinger equation
 
-This is an attempt at making a robust, easy to use solver, capable of solving and visualizing the Schrödinger equation for multiple particles, and representing the solutions both in 1D, 2D, and 3D.
+![animation](/images/3D_two_gaussian_wells.gif)
 
-The way this simulator works is by discretizing the Hamiltonian of an arbitrary potential and diagonalizing it for getting the energies and eigenstates of the system. It also features the possibility of interactively visualizing a superposition of the computed eigenstates and studying the time dependence of the resulting wavefunction.
+QMsolve seeks to provide easy solid and easy to use solver, capable of solving the Schrödinger equation for one and two particles, 
+and creating descriptive and stunning visualizations of its solutions both in 1D, 2D, and 3D.
 
-This is a work in progress. Stay up to date about the next features!
 
 ## Installation
 
-Just clone or download this repo.
-The package requirements are:
+```
+pip install qmsolve
+```
 
-1. numpy
-2. matplotlib
-3. scipy
-4. mayavi (only for 3D simulations)
+## How it works
+
+The way this simulator works is by discretizing and Hamiltonian of an arbitrary potential, 
+specified as a function of the particle observables. This is achieved with the `Hamiltonian` constructor.
+
+Then, the `Hamiltonian.solve` method efficiently diagonalizes the Hamiltonian and outputs the energies and the eigenstates of the system.
+Finally, the eigenstates can be plotted with the use of the `visualization` class.
+
+The `visualization.superpositions` method features the possibility of interactively visualizing a superposition of the computed eigenstates and studying the time dependence of the resulting wavefunction. 
+
+For a quick start, take a look to the examples found in the [examples subdirectory](https://github.com/quantum-visualizations/qmsolve/tree/main/examples).
 
 ## Examples
 
-Just run from the command line the corresponding Python scripts:
+To perform the simulations, just run from the corresponding Python scripts on the command prompt.
 
 ```
 python 1D_harmonic_oscillator.py
 ```
 
 ![animation](/images/1D_harmonic_oscillator.gif)
-
-```
-python 3D_two_gaussian_wells.py
-```
-
-![animation](/images/3D_two_gaussian_wells.gif)
-
-```
-python 3D_four_gaussian_wells.py
-```
-
-![animation](/images/3D_four_gaussian_wells.gif)
 
 ```
 python 1D_interactive_fermions_HO.py
@@ -49,6 +45,13 @@ python 1D_non_interactive_fermions_HO.py
 ```
 
 ![animation](/images/1D_non_interactive_fermions.gif)
+
+```
+python 3D_four_gaussian_wells.py
+```
+
+![animation](/images/3D_four_gaussian_wells.gif)
+
 
 In the examples from above you can check how in the non interactive case the energy levels are equally spaced and degenerated, however in the interactive case the degeneracy is broken.
 As a starting point I suggest you to modify the confinement and the interaction potential to see what happens!

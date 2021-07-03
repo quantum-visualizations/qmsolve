@@ -28,9 +28,9 @@ class VisualizationSingleParticle2D(Visualization):
         ax1.set_ylabel("$y$ [Å]")
         ax1.set_title("$\Psi(x,y)$")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
 
         if xlim != None:
@@ -41,9 +41,9 @@ class VisualizationSingleParticle2D(Visualization):
         E0 = energies[0]
 
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
-        ax2.plot([0,1], [energies[k]/E0, energies[k]/E0], color='yellow', lw = 3)
+        ax2.plot([0,1], [energies[k], energies[k]], color='yellow', lw = 3)
 
         ax1.set_aspect('equal')
         L =  self.eigenstates.extent/2/Å
@@ -67,9 +67,9 @@ class VisualizationSingleParticle2D(Visualization):
         ax1.set_ylabel("$y$ [Å]")
         ax1.set_title("$\Psi(x,y)$")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
 
         if xlim != None:
@@ -80,14 +80,14 @@ class VisualizationSingleParticle2D(Visualization):
 
         E0 = energies[0]
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
 
 
         ax1.set_aspect('equal')
         L = self.eigenstates.extent/2/Å
         eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)), origin='lower',extent = [-L, L, -L, L],  interpolation = 'bilinear')
         
-        line = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
+        line = ax2.plot([0,1], [energies[0], energies[0]], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
         from matplotlib.widgets import Slider
@@ -104,7 +104,7 @@ class VisualizationSingleParticle2D(Visualization):
         def update(state):
             state = int(state)
             eigenstate_plot.set_data(complex_to_rgb(eigenstates_array[state]*np.exp( 1j*2*np.pi/10*state)))
-            line[0].set_ydata([energies[state]/E0, energies[state]/E0])
+            line[0].set_ydata([energies[state], energies[state]])
 
         slider.on_changed(update)
         plt.show()
@@ -138,9 +138,9 @@ class VisualizationSingleParticle2D(Visualization):
         ax1.set_ylabel("$y$ [Å]")
         ax1.set_title("$\Psi(x,y)$")
 
-        ax2.set_title('E Level')
+        ax2.set_title('Energy Level')
         ax2.set_facecolor('black')
-        ax2.set_ylabel('$E_N$ (Relative to $E_{1}$)')
+        ax2.set_ylabel('$E_N$ [eV]')
         ax2.set_xticks(ticks=[])
 
         if xlim != None:
@@ -150,13 +150,13 @@ class VisualizationSingleParticle2D(Visualization):
 
         E0 = energies[0]
         for E in energies:
-            ax2.plot([0,1], [E/E0, E/E0], color='gray', alpha=0.5)
+            ax2.plot([0,1], [E, E], color='gray', alpha=0.5)
         
         ax1.set_aspect('equal')
         L = self.eigenstates.extent/2/Å
         eigenstate_plot = ax1.imshow(complex_to_rgb(eigenstates_array[0]*np.exp( 1j*2*np.pi/10*0)),  origin='lower',extent = [-L, L, -L, L],   interpolation = 'bilinear')
 
-        line, = ax2.plot([0,1], [energies[0]/E0, energies[0]/E0], color='yellow', lw = 3)
+        line, = ax2.plot([0,1], [energies[0], energies[0]], color='yellow', lw = 3)
 
         plt.subplots_adjust(bottom=0.2)
 
@@ -177,12 +177,12 @@ class VisualizationSingleParticle2D(Visualization):
                 eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
 
 
-                E_N = energies[state]/E0 
-                E_M = energies[(state + 1) % len(energies)]/E0
+                E_N = energies[state] 
+                E_M = energies[(state + 1) % len(energies)]
                 E =  E_N*np.cos(np.pi*transition_time)**2 + E_M*np.sin(np.pi*transition_time)**2
                 line.set_ydata([E, E])
             else:
-                line.set_ydata([energies[state]/E0, energies[state]/E0])
+                line.set_ydata([energies[state], energies[state]])
                 eigenstate_combination = eigenstates_array[int(state)]*np.exp( 1j*2*np.pi/10*state)
                 eigenstate_plot.set_data(complex_to_rgb(eigenstate_combination))
             return eigenstate_plot, line
