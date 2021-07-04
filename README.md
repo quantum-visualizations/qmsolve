@@ -53,7 +53,7 @@ python 3D_four_gaussian_wells.py
 ![animation](/images/3D_four_gaussian_wells.gif)
 
 
-In the examples from above you can check how in the non interactive case the energy levels are equally spaced and degenerated, however in the interactive case the degeneracy is broken.
+In the two interactive particle examples from above you can check how in the non interactive case the energy levels are equally spaced and degenerated, however in the interactive case the degeneracy is broken.
 As a starting point I suggest you to modify the confinement and the interaction potential to see what happens!
 
 The interface use [Hartree atomic units](https://en.wikipedia.org/wiki/Hartree_atomic_units) for input. In the file [constants.py](https://github.com/quantum-visualizations/qmsolve/blob/main/qmsolve/util/constants.py) there is a list of common conversion factors from other units, that can be imported and used to build your potential.
