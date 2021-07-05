@@ -52,7 +52,7 @@ eigenstates = H.solve( max_states = 14, N0 = 40, method ='lobpcg')
 
 #Note: visualization with the entire complex hue isn't fully implemented yet. There is a well known bug in the red color.
 v = visualization.init_visualization(eigenstates)
-v.plot_eigenstate(12, contrast_vals = [0.03, 0.03])
 
 v.plot_type = 'contour'
+#v.plot_eigenstate(12, contrast_vals = [0.02, 0.02])
 v.animate(contrast_vals = [0.02, 0.02])
