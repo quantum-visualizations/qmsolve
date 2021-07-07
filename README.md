@@ -14,7 +14,7 @@ pip install qmsolve
 
 ## How it works
 
-The way this simulator works is by discretizing and Hamiltonian of an arbitrary potential, 
+The way this simulator works is by discretizing the Hamiltonian of an arbitrary potential, 
 specified as a function of the particle observables. This is achieved with the `Hamiltonian` constructor.
 
 Then, the `Hamiltonian.solve` method efficiently diagonalizes the Hamiltonian and outputs the energies and the eigenstates of the system.
