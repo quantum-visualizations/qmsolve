@@ -2,7 +2,7 @@
 
 ![animation](/images/3D_two_gaussian_wells.gif)
 
-QMsolve seeks to provide easy solid and easy to use solver, capable of solving the Schrödinger equation for one and two particles, 
+QMsolve seeks to provide a solid and easy to use solver, capable of solving the Schrödinger equation for one and two particles, 
 and creating descriptive and stunning visualizations of its solutions both in 1D, 2D, and 3D.
 
 
