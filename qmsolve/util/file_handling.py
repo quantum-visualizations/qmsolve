@@ -1,7 +1,9 @@
 # used for loading and storing eigenstates in large computations. Requires h5py package
+import numpy as np
+from ..eigenstates import Eigenstates
+import h5py
 
 def save_eigenstates(eigenstates, name:str):
-    import h5py
     #create dataset
     with h5py.File(name, 'a') as f:
         dset = f.create_dataset('energies', (eigenstates.energies.shape),dtype='float64')
@@ -14,8 +16,6 @@ def save_eigenstates(eigenstates, name:str):
         f.attrs['type'] = eigenstates.type
 
 def load_eigenstates(name:str):
-    import h5py
-
     with h5py.File(name, 'a') as f:
         energies = np.copy(f['energies'])
         array = np.copy(f['array'])
