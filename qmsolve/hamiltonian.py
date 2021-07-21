@@ -63,21 +63,28 @@ class Hamiltonian:
         Returns:
 
         """
-        implemented_solvers = ('eigsh', 'lobpcg', 'lobpcg-cupy')
+        implemented_solvers = ('eigs', 'eigsh', 'lobpcg', 'lobpcg-cupy')
 
         H = self.T + self.V
         print("Computing...")
 
         t0 = time.time()
 
-        if method == 'eigsh':
+        if method == 'eigs':
+            from scipy.sparse.linalg import eigs
+
+            # Note: uses shift-invert trick for stability finding low-lying states
+            # Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode
+
+            eigenvalues, eigenvectors = eigs(H, k=max_states, which='LM', sigma=min(0, self.E_min))
+
+        elif method == 'eigsh':
             from scipy.sparse.linalg import eigsh
 
             # Note: uses shift-invert trick for stability finding low-lying states
             # Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode
 
             eigenvalues, eigenvectors = eigsh(H, k=max_states, which='LM', sigma=min(0, self.E_min))
-
 
 
         elif method == 'lobpcg':
