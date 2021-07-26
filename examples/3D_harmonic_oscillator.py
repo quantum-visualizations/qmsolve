@@ -18,7 +18,7 @@ H = Hamiltonian(particles=SingleParticle(),
                   extent=12*Å, spatial_ndim=3)
 
 
-eigenstates = H.solve( max_states = 32, N0 = 30, method ='lobpcg-cupy')
+eigenstates = H.solve( max_states = 32, method ='lobpcg')
 print(eigenstates.energies)
 
 

@@ -27,7 +27,7 @@ For a quick start, take a look to the examples found in the examples subdirector
 
 setup(
     name='qmsolve',
-    version='0.1.0',
+    version='1.0.0',
     description='A module for solving and visualizing the Schrödinger equation',
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -47,7 +47,7 @@ H = Hamiltonian(particles=SingleParticle(),
 
 
 
-eigenstates = H.solve( max_states = 14, N0 = 40, method ='lobpcg')
+eigenstates = H.solve( max_states = 14, method ='lobpcg')
 
 
 #Note: visualization with the entire complex hue isn't fully implemented yet. There is a well known bug in the red color.

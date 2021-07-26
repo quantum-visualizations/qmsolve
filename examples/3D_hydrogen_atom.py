@@ -23,7 +23,7 @@ H = Hamiltonian(particles = SingleParticle(),
 
 
 
-eigenstates = H.solve( max_states = 14, N0 = 30, method ='lobpcg')
+eigenstates = H.solve( max_states = 14, method ='lobpcg')
 print(eigenstates.energies)
 
 
