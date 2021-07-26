@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>qmsolve.hamiltonian &#8212; qmsolve  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for qmsolve.hamiltonian</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="Hamiltonian"><a class="viewcode-back" href="../../qmsolve.html#qmsolve.hamiltonian.Hamiltonian">[docs]</a><span class="k">class</span> <span class="nc">Hamiltonian</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">particles</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">extent</span><span class="p">,</span> <span class="n">spatial_ndim</span><span class="p">,</span> <span class="n">potential_type</span> <span class="o">=</span> <span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">E_min</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class to represent the Hamiltonian operator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        particles : ParticleSystem</span>
+<span class="sd">            The particle system</span>
+<span class="sd">        potential : callable</span>
+<span class="sd">            The potential</span>
+<span class="sd">        N : int</span>
+<span class="sd">            number of grid points</span>
+<span class="sd">        extent : array-like</span>
+<span class="sd">            spacial extent, measured in angstroms</span>
+<span class="sd">        spatial_ndim : [type]</span>
+<span class="sd">            Initial guess for the energy of the ground state. It&#39;s only used if potential_type = &quot;matrix&quot; is used</span>
+<span class="sd">        potential_type : str, optional</span>
+<span class="sd">            The type of the potential, by default &quot;grid&quot;</span>
+<span class="sd">        E_min : int, optional</span>
+<span class="sd">            The minimum energy, by default 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extent</span> <span class="o">=</span> <span class="n">extent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">=</span> <span class="n">extent</span> <span class="o">/</span> <span class="n">N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span> <span class="o">=</span> <span class="n">particles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spatial_ndim</span> <span class="o">=</span> <span class="n">spatial_ndim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># total number of observables</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">get_kinetic_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span> <span class="o">=</span> <span class="n">potential_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span> <span class="o">=</span> <span class="n">E_min</span>
+
+        <span class="k">if</span> <span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">get_observables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;matrix&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">build_matrix_operators</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_potential_matrix</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Hamiltonian.get_potential_matrix"><a class="viewcode-back" href="../../qmsolve.html#qmsolve.hamiltonian.Hamiltonian.get_potential_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_potential_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the potential matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array-like</span>
+<span class="sd">            The potential matrix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="n">V</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="k">return</span> <span class="n">V</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+                <span class="n">V</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+                <span class="n">V</span> <span class="o">=</span> <span class="n">diags</span><span class="p">([</span><span class="n">V</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">V</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;matrix&quot;</span><span class="p">:</span>
+             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Hamiltonian.solve"><a class="viewcode-back" href="../../qmsolve.html#qmsolve.hamiltonian.Hamiltonian.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_states</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;eigsh&#39;</span><span class="p">,</span> <span class="n">N0</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Solve the Hamiltonian for its energies and eigenstates.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        max_states : int</span>
+<span class="sd">            The maximum number of states to solve.</span>
+<span class="sd">        method : str</span>
+<span class="sd">            Which methods to use (currently only &quot;eigsh&quot;, &quot;lobpcg&quot;, and &quot;lobpcg-cupy&quot; are available), by default &quot;eigsh&quot;.</span>
+<span class="sd">        N0 : int</span>
+<span class="sd">            TODO</span>
+<span class="sd">        maxiter : int</span>
+<span class="sd">            The number of iterations to perform. by default False</span>
+<span class="sd">        verbose : bool</span>
+<span class="sd">            TODO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">implemented_solvers</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;eigsh&#39;</span><span class="p">,</span> <span class="s1">&#39;lobpcg&#39;</span><span class="p">,</span> <span class="s1">&#39;lobpcg-cupy&#39;</span><span class="p">)</span>
+
+        <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing...&quot;</span><span class="p">)</span>
+
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;eigsh&#39;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">eigsh</span>
+
+            <span class="c1"># Note: uses shift-invert trick for stability finding low-lying states</span>
+            <span class="c1"># Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode</span>
+
+            <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigsh</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">max_states</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;LM&#39;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span><span class="p">))</span>
+
+
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;lobpcg&#39;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">eigsh</span><span class="p">,</span> <span class="n">lobpcg</span><span class="p">,</span> <span class="n">LinearOperator</span>
+            <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="s2">&quot;lobpcg is only implemented for a 3D single particle&quot;</span><span class="p">)</span>
+
+            <span class="kn">from</span> <span class="nn">qmsolve</span> <span class="kn">import</span> <span class="n">SingleParticle</span>
+            <span class="c1">#First, we compute eighs eigenvectors with a grid of size N0, </span>
+            <span class="n">H_eigsh</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">particles</span> <span class="o">=</span> <span class="n">SingleParticle</span><span class="p">(),</span> 
+                                  <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> 
+                                  <span class="n">spatial_ndim</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">N0</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">potential_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span><span class="p">,</span> <span class="n">E_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span><span class="p">)</span>
+
+            <span class="n">eigenvalues_eigsh</span><span class="p">,</span> <span class="n">eigenvectors_eigsh</span> <span class="o">=</span> <span class="n">eigsh</span><span class="p">(</span><span class="n">H_eigsh</span><span class="o">.</span><span class="n">V</span> <span class="o">+</span> <span class="n">H_eigsh</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">max_states</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;LM&#39;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span><span class="p">))</span>
+
+            <span class="n">eigenvectors_eigsh</span> <span class="o">=</span> <span class="n">eigenvectors_eigsh</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>  <span class="o">*</span><span class="p">[</span><span class="n">N0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span> <span class="p">,</span> <span class="n">max_states</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial eigsh computation completed&quot;</span><span class="p">)</span>
+
+
+            <span class="c1">#Now, we interpolate them to a grid of size N and then use it as an initial guess to the lobpcg solver.</span>
+            <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interpn</span>
+            <span class="n">new_xx</span><span class="p">,</span> <span class="n">new_yy</span><span class="p">,</span> <span class="n">new_zz</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="n">max_states</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">eigenvectors_eigsh_interpolated</span> <span class="o">=</span> <span class="n">interpn</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">max_states</span><span class="p">)),</span> 
+                                                      <span class="n">eigenvectors_eigsh</span><span class="p">,</span> 
+                                                      <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">new_xx</span><span class="p">,</span> <span class="n">new_yy</span><span class="p">,</span> <span class="n">new_zz</span><span class="p">,</span> <span class="n">states</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interpolation completed&quot;</span><span class="p">)</span>
+
+            <span class="c1"># preconditioning matrix should approximate the inverse of the hamiltonian</span>
+            <span class="c1"># we naively construct this by taking the inverse of diagonal elements</span>
+            <span class="c1"># and setting all others to zero. This is called the Jacobi or diagonal preconditioner.</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">diags</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="n">H</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">precond</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">LinearOperator</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">matvec</span><span class="o">=</span><span class="n">precond</span><span class="p">,</span> <span class="n">matmat</span><span class="o">=</span><span class="n">precond</span><span class="p">)</span>
+            <span class="c1"># guess for eigenvectors is computed from random numbers</span>
+            <span class="c1"># TODO: a better guess would be to use the eigenstates of a reference system like a square well</span>
+            <span class="n">eigenvectors_guess</span> <span class="o">=</span> <span class="n">eigenvectors_eigsh_interpolated</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>  <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="p">,</span> <span class="n">max_states</span><span class="p">)</span>
+
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">eigenvectors_guess</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="n">maxiter</span><span class="p">)</span>
+            <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lobpcg computation completed&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;lobpcg-cupy&#39;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">eigsh</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="s2">&quot;lobpcg is only implemented for a 3D single particle&quot;</span><span class="p">)</span>
+
+            <span class="kn">from</span> <span class="nn">qmsolve</span> <span class="kn">import</span> <span class="n">SingleParticle</span>
+            <span class="c1">#First, we compute eighs eigenvectors with a grid of size N0, </span>
+            <span class="n">H_eigsh</span> <span class="o">=</span> <span class="n">Hamiltonian</span><span class="p">(</span><span class="n">particles</span> <span class="o">=</span> <span class="n">SingleParticle</span><span class="p">(),</span> 
+                                  <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> 
+                                  <span class="n">spatial_ndim</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">N0</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">potential_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span><span class="p">,</span> <span class="n">E_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span><span class="p">)</span>
+
+            <span class="n">eigenvalues_eigsh</span><span class="p">,</span> <span class="n">eigenvectors_eigsh</span> <span class="o">=</span> <span class="n">eigsh</span><span class="p">(</span><span class="n">H_eigsh</span><span class="o">.</span><span class="n">V</span> <span class="o">+</span> <span class="n">H_eigsh</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">max_states</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;LM&#39;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">E_min</span><span class="p">))</span>
+
+            <span class="n">eigenvectors_eigsh</span> <span class="o">=</span> <span class="n">eigenvectors_eigsh</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>  <span class="o">*</span><span class="p">[</span><span class="n">N0</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span> <span class="p">,</span> <span class="n">max_states</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initial eigsh computation completed&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;grid&quot;</span><span class="p">:</span>
+                <span class="c1">#Now, we interpolate them to a grid of size N and then use it as an initial guess to the lobpcg solver.</span>
+                <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interpn</span>
+                <span class="n">new_xx</span><span class="p">,</span> <span class="n">new_yy</span><span class="p">,</span> <span class="n">new_zz</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="n">max_states</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">eigenvectors_eigsh_interpolated</span> <span class="o">=</span> <span class="n">interpn</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">N0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">max_states</span><span class="p">)),</span> 
+                                                          <span class="n">eigenvectors_eigsh</span><span class="p">,</span> 
+                                                          <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">new_xx</span><span class="p">,</span> <span class="n">new_yy</span><span class="p">,</span> <span class="n">new_zz</span><span class="p">,</span> <span class="n">states</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;matrix&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                 <span class="s2">&quot;lobpcg-cupy solver has not been implemented to work with complex numbers. Use lobpcg instead&quot;</span><span class="p">)</span>
+
+
+
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interpolation completed&quot;</span><span class="p">)</span>
+            <span class="n">eigenvectors_guess</span> <span class="o">=</span> <span class="n">eigenvectors_eigsh_interpolated</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>  <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="p">,</span> <span class="n">max_states</span><span class="p">)</span>
+
+            <span class="kn">from</span> <span class="nn">cupyx.scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">lobpcg</span><span class="p">,</span> <span class="n">LinearOperator</span>
+            <span class="kn">from</span> <span class="nn">cupyx.scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
+            <span class="kn">from</span> <span class="nn">cupyx.scipy.sparse.csr</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+            <span class="c1"># preconditioning matrix should approximate the inverse of the hamiltonian</span>
+            <span class="c1"># we naively construct this by taking the inverse of diagonal elements</span>
+            <span class="c1"># and setting all others to zero. This is called the Jacobi or diagonal preconditioner.</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">diags</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="n">H</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">tocsc</span><span class="p">()</span>
+            <span class="n">precond</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">A</span> <span class="o">@</span> <span class="n">x</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">LinearOperator</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">matvec</span><span class="o">=</span><span class="n">precond</span><span class="p">,</span> <span class="n">matmat</span><span class="o">=</span><span class="n">precond</span><span class="p">)</span>
+
+            <span class="c1"># guess for eigenvectors is computed from random numbers</span>
+            <span class="c1"># TODO: a better guess would be to use the eigenstates of a reference system like a square well</span>
+            <span class="kn">import</span> <span class="nn">cupy</span> <span class="k">as</span> <span class="nn">cp</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">cp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eigenvectors_guess</span><span class="p">),</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">=</span> <span class="n">maxiter</span><span class="p">)</span>
+            <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">sol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; solver has not been implemented. Use one of &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">implemented_solvers</span><span class="p">))</span>
+
+        <span class="sd">&quot;&quot;&quot;the result of this method depends of the particle system. For example if the systems are two fermions, </span>
+<span class="sd">        this method makes the eigenstates antisymmetric &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">particle_system</span><span class="o">.</span><span class="n">get_eigenstates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_states</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span><span class="p">)</span>
+
+        <span class="c1"># When using complex numbers in the potential energies aren&#39;t necessarily sorted</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_type</span> <span class="o">==</span> <span class="s2">&quot;matrix&quot;</span><span class="p">:</span>
+            <span class="n">sort_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span><span class="p">[</span><span class="n">sort_array</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="n">sort_array</span><span class="p">]</span>
+
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Took&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">qmsolve</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../qmsolve.html">qmsolve package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup.html">setup module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

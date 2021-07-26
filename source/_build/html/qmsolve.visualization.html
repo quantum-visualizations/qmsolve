@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>qmsolve.visualization package &#8212; qmsolve  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="setup module" href="setup.html" />
+    <link rel="prev" title="qmsolve.util package" href="qmsolve.util.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="qmsolve-visualization-package">
+<h1>qmsolve.visualization package<a class="headerlink" href="#qmsolve-visualization-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-qmsolve.visualization.complex_slider_widget">
+<span id="qmsolve-visualization-complex-slider-widget-module"></span><h2>qmsolve.visualization.complex_slider_widget module<a class="headerlink" href="#module-qmsolve.visualization.complex_slider_widget" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.visualization.complex_slider_widget.ComplexSliderWidget">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.visualization.complex_slider_widget.</code><code class="sig-name descname">ComplexSliderWidget</code><span class="sig-paren">(</span><em class="sig-param">ax</em>, <em class="sig-param">angle</em>, <em class="sig-param">r</em>, <em class="sig-param">animated=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/complex_slider_widget.html#ComplexSliderWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.complex_slider_widget.ComplexSliderWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.widgets.AxesWidget</span></code></p>
+<p>A circular complex slider widget for manipulating complex
+values.</p>
+<p>References:
+- <a class="reference external" href="https://matplotlib.org/stable/api/widgets_api">https://matplotlib.org/stable/api/widgets_api</a>.
+- <a class="reference external" href="https://github.com/matplotlib/matplotlib/blob/">https://github.com/matplotlib/matplotlib/blob/</a>
+1ba3ff1c273bf97a65e19892b23715d19c608ae5/lib/matplotlib/widgets.py</p>
+<dl class="simple">
+<dt>widgets<span class="classifier">matplotlib.widgets.AxesWidget</span></dt><dd><p>A matplotlib widget.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="qmsolve.visualization.complex_slider_widget.ComplexSliderWidget.get_artist">
+<code class="sig-name descname">get_artist</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/complex_slider_widget.html#ComplexSliderWidget.get_artist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.complex_slider_widget.ComplexSliderWidget.get_artist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the artist.</p>
+<dl class="simple">
+<dt>matplotlib.lines.Line2D</dt><dd><p>Line plot whose length represents the magnitude
+of the complex value and its angular displacement
+represents its phase.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.complex_slider_widget.ComplexSliderWidget.on_changed">
+<code class="sig-name descname">on_changed</code><span class="sig-paren">(</span><em class="sig-param">update</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/complex_slider_widget.html#ComplexSliderWidget.on_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.complex_slider_widget.ComplexSliderWidget.on_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the update function which is used
+whenever the complex slider widget is changed.</p>
+<dl class="simple">
+<dt>update<span class="classifier">callable</span></dt><dd><p>The update function. It takes the phase
+and absolute magnitude of the complex value
+that this widget represents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.visualization.single_particle_1D">
+<span id="qmsolve-visualization-single-particle-1d-module"></span><h2>qmsolve.visualization.single_particle_1D module<a class="headerlink" href="#module-qmsolve.visualization.single_particle_1D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.visualization.single_particle_1D.</code><code class="sig-name descname">VisualizationSingleParticle1D</code><span class="sig-paren">(</span><em class="sig-param">eigenstates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_1D.html#VisualizationSingleParticle1D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.visualization.visualization.Visualization" title="qmsolve.visualization.visualization.Visualization"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.visualization.visualization.Visualization</span></code></a></p>
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.animate">
+<code class="sig-name descname">animate</code><span class="sig-paren">(</span><em class="sig-param">seconds_per_eigenstate=0.5</em>, <em class="sig-param">fps=20</em>, <em class="sig-param">max_states=None</em>, <em class="sig-param">xlim=None</em>, <em class="sig-param">save_animation=False</em>, <em class="sig-param">show_imaginary_part=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_1D.html#VisualizationSingleParticle1D.animate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show all of the available eigenstates, from the eigenstate with the lowest energy to the one with the highest.
+Note that there are transition periods where a linear combination of the two eigenstates are shown.</p>
+<dl class="simple">
+<dt>seconds_per_eigenstate<span class="classifier">float, optional</span></dt><dd><p>Number of seconds to show each eigenstate, by default 0.5</p>
+</dd>
+<dt>fps<span class="classifier">int, optional</span></dt><dd><p>Frames per second of the animation, by default 20</p>
+</dd>
+<dt>max_states<span class="classifier">[type], optional</span></dt><dd><p>The maximum number of states to show, by default None</p>
+</dd>
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>Change the minimum and maximum x values for which to plot, by default None</p>
+</dd>
+<dt>save_animation<span class="classifier">bool, optional</span></dt><dd><p>Whether to save the animation as a video file or not, by default False</p>
+</dd>
+<dt>show_imaginary_part<span class="classifier">bool, optional</span></dt><dd><p>Whether to show the imaginary part of the wavefuncgtion or not, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.plot_eigenstate">
+<code class="sig-name descname">plot_eigenstate</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">xlim=None</em>, <em class="sig-param">show_imaginary_part=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_1D.html#VisualizationSingleParticle1D.plot_eigenstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.plot_eigenstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a single energy eigenstate.</p>
+<dl class="simple">
+<dt>k<span class="classifier">int</span></dt><dd><p>Which eigenstate to plot, where k = 0 plots the ground state,
+and each subsequent value of k plots the next excited state.</p>
+</dd>
+<dt>xlim<span class="classifier">list, optional</span></dt><dd><p>Change the minimum and maximum x values for which to plot, by default None</p>
+</dd>
+<dt>show_imaginary_part<span class="classifier">bool, optional</span></dt><dd><p>Whether to show the imaginary part of the wavefuncgtion or not, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.slider_plot">
+<code class="sig-name descname">slider_plot</code><span class="sig-paren">(</span><em class="sig-param">xlim=None</em>, <em class="sig-param">show_imaginary_part=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_1D.html#VisualizationSingleParticle1D.slider_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.slider_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot with an interactive slider that changes which energy eigenstate to show.</p>
+<dl class="simple">
+<dt>xlim<span class="classifier">list, optional</span></dt><dd><p>Change the minimum and maximum x values for which to plot, by default None</p>
+</dd>
+<dt>show_imaginary_part<span class="classifier">bool, optional</span></dt><dd><p>Whether to show the imaginary part of the wavefuncgtion or not, by default False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.superpositions">
+<code class="sig-name descname">superpositions</code><span class="sig-paren">(</span><em class="sig-param">states</em>, <em class="sig-param">fps=30</em>, <em class="sig-param">total_time=20</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_1D.html#VisualizationSingleParticle1D.superpositions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_1D.VisualizationSingleParticle1D.superpositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize the time evolution of a superposition of energy eigenstates.
+The circle widgets control the relative phase of each of the eigenstates.
+These widgets are inspired by the circular phasors from the
+quantum mechanics applets by Paul Falstad:
+<a class="reference external" href="https://www.falstad.com/qm1d/">https://www.falstad.com/qm1d/</a></p>
+<dl class="simple">
+<dt>states<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>fps<span class="classifier">int, optional</span></dt><dd><p>[description], by default 30</p>
+</dd>
+<dt>total_time<span class="classifier">int, optional</span></dt><dd><p>[description], by default 20</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.visualization.single_particle_2D">
+<span id="qmsolve-visualization-single-particle-2d-module"></span><h2>qmsolve.visualization.single_particle_2D module<a class="headerlink" href="#module-qmsolve.visualization.single_particle_2D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.visualization.single_particle_2D.</code><code class="sig-name descname">VisualizationSingleParticle2D</code><span class="sig-paren">(</span><em class="sig-param">eigenstates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_2D.html#VisualizationSingleParticle2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.visualization.visualization.Visualization" title="qmsolve.visualization.visualization.Visualization"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.visualization.visualization.Visualization</span></code></a></p>
+<p>[summary]</p>
+<dl class="simple">
+<dt>Visualization<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.animate">
+<code class="sig-name descname">animate</code><span class="sig-paren">(</span><em class="sig-param">seconds_per_eigenstate=0.5</em>, <em class="sig-param">fps=20</em>, <em class="sig-param">max_states=None</em>, <em class="sig-param">xlim=None</em>, <em class="sig-param">ylim=None</em>, <em class="sig-param">save_animation=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_2D.html#VisualizationSingleParticle2D.animate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>seconds_per_eigenstate<span class="classifier">float, optional</span></dt><dd><p>[description], by default 0.5</p>
+</dd>
+<dt>fps<span class="classifier">int, optional</span></dt><dd><p>[description], by default 20</p>
+</dd>
+<dt>max_states<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>ylim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>save_animation<span class="classifier">bool, optional</span></dt><dd><p>[description], by default False</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.plot_eigenstate">
+<code class="sig-name descname">plot_eigenstate</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">xlim=None</em>, <em class="sig-param">ylim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_2D.html#VisualizationSingleParticle2D.plot_eigenstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.plot_eigenstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>k<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>ylim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.slider_plot">
+<code class="sig-name descname">slider_plot</code><span class="sig-paren">(</span><em class="sig-param">xlim=None</em>, <em class="sig-param">ylim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_2D.html#VisualizationSingleParticle2D.slider_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.slider_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>ylim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.superpositions">
+<code class="sig-name descname">superpositions</code><span class="sig-paren">(</span><em class="sig-param">states</em>, <em class="sig-param">fps=30</em>, <em class="sig-param">total_time=20</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/single_particle_2D.html#VisualizationSingleParticle2D.superpositions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.single_particle_2D.VisualizationSingleParticle2D.superpositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the time evolution of a superposition of energy eigenstates.</p>
+<dl class="simple">
+<dt>states<span class="classifier">list</span></dt><dd><p>Coefficients for the eigenstates</p>
+</dd>
+<dt>fps<span class="classifier">int, optional</span></dt><dd><p>, by default 30</p>
+</dd>
+<dt>total_time<span class="classifier">int, optional</span></dt><dd><p>[description], by default 20</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="qmsolve-visualization-single-particle-3d-module">
+<h2>qmsolve.visualization.single_particle_3D module<a class="headerlink" href="#qmsolve-visualization-single-particle-3d-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-qmsolve.visualization.two_identical_particles_1D">
+<span id="qmsolve-visualization-two-identical-particles-1d-module"></span><h2>qmsolve.visualization.two_identical_particles_1D module<a class="headerlink" href="#module-qmsolve.visualization.two_identical_particles_1D" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.visualization.two_identical_particles_1D.</code><code class="sig-name descname">VisualizationIdenticalParticles1D</code><span class="sig-paren">(</span><em class="sig-param">eigenstates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/two_identical_particles_1D.html#VisualizationIdenticalParticles1D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.visualization.visualization.Visualization" title="qmsolve.visualization.visualization.Visualization"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.visualization.visualization.Visualization</span></code></a></p>
+<dl class="method">
+<dt id="qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.animate">
+<code class="sig-name descname">animate</code><span class="sig-paren">(</span><em class="sig-param">seconds_per_eigenstate=0.5</em>, <em class="sig-param">fps=20</em>, <em class="sig-param">max_states=None</em>, <em class="sig-param">xlim=None</em>, <em class="sig-param">save_animation=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/two_identical_particles_1D.html#VisualizationIdenticalParticles1D.animate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>seconds_per_eigenstate<span class="classifier">float, optional</span></dt><dd><p>[description], by default 0.5</p>
+</dd>
+<dt>fps<span class="classifier">int, optional</span></dt><dd><p>[description], by default 20</p>
+</dd>
+<dt>max_states<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+<dt>save_animation<span class="classifier">bool, optional</span></dt><dd><p>[description], by default False</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.plot_eigenstate">
+<code class="sig-name descname">plot_eigenstate</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">xlim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/two_identical_particles_1D.html#VisualizationIdenticalParticles1D.plot_eigenstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.plot_eigenstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>k<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.slider_plot">
+<code class="sig-name descname">slider_plot</code><span class="sig-paren">(</span><em class="sig-param">xlim=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/two_identical_particles_1D.html#VisualizationIdenticalParticles1D.slider_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.slider_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>xlim<span class="classifier">[type], optional</span></dt><dd><p>[description], by default None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.superpositions">
+<code class="sig-name descname">superpositions</code><span class="sig-paren">(</span><em class="sig-param">states</em>, <em class="sig-param">fps=30</em>, <em class="sig-param">total_time=20</em>, <em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/two_identical_particles_1D.html#VisualizationIdenticalParticles1D.superpositions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.superpositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>states<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>fps<span class="classifier">int, optional</span></dt><dd><p>[description], by default 30</p>
+</dd>
+<dt>total_time<span class="classifier">int, optional</span></dt><dd><p>[description], by default 20</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.visualization.visualization">
+<span id="qmsolve-visualization-visualization-module"></span><h2>qmsolve.visualization.visualization module<a class="headerlink" href="#module-qmsolve.visualization.visualization" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.visualization.visualization.Visualization">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.visualization.visualization.</code><code class="sig-name descname">Visualization</code><span class="sig-paren">(</span><em class="sig-param">eigenstates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/visualization.html#Visualization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.visualization.Visualization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="qmsolve.visualization.visualization.Visualization.animate_eigenstates">
+<em class="property">abstract </em><code class="sig-name descname">animate_eigenstates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/visualization.html#Visualization.animate_eigenstates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.visualization.Visualization.animate_eigenstates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.visualization.Visualization.plot_eigenstate">
+<em class="property">abstract </em><code class="sig-name descname">plot_eigenstate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/visualization.html#Visualization.plot_eigenstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.visualization.Visualization.plot_eigenstate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.visualization.Visualization.slider_plot">
+<em class="property">abstract </em><code class="sig-name descname">slider_plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/visualization.html#Visualization.slider_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.visualization.Visualization.slider_plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.visualization.visualization.Visualization.superpositions">
+<em class="property">abstract </em><code class="sig-name descname">superpositions</code><span class="sig-paren">(</span><em class="sig-param">states: Union[int, List[int], Dict[int, complex]], **kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/visualization.html#Visualization.superpositions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.visualization.Visualization.superpositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear combinations of eigenstates.</p>
+<dl class="simple">
+<dt>states<span class="classifier">Union[int, List[int], Dict[int, complex]]</span></dt><dd><p>specify which eigenstates to superimpose on each other.
+If it’s a single number then superimpose eigenstates 0 to states-1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="qmsolve.visualization.visualization.init_visualization">
+<code class="sig-prename descclassname">qmsolve.visualization.visualization.</code><code class="sig-name descname">init_visualization</code><span class="sig-paren">(</span><em class="sig-param">eigenstates</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/visualization/visualization.html#init_visualization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.visualization.visualization.init_visualization" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>eigenstates<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.visualization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-qmsolve.visualization" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">qmsolve</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="qmsolve.html">qmsolve package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="qmsolve.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="qmsolve.particle_system.html">qmsolve.particle_system package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qmsolve.util.html">qmsolve.util package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">qmsolve.visualization package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.visualization.complex_slider_widget">qmsolve.visualization.complex_slider_widget module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.visualization.single_particle_1D">qmsolve.visualization.single_particle_1D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.visualization.single_particle_2D">qmsolve.visualization.single_particle_2D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qmsolve-visualization-single-particle-3d-module">qmsolve.visualization.single_particle_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.visualization.two_identical_particles_1D">qmsolve.visualization.two_identical_particles_1D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.visualization.visualization">qmsolve.visualization.visualization module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.visualization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#module-qmsolve.eigenstates">qmsolve.eigenstates module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#module-qmsolve.hamiltonian">qmsolve.hamiltonian module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#module-qmsolve">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="qmsolve.html">qmsolve package</a><ul>
+      <li>Previous: <a href="qmsolve.util.html" title="previous chapter">qmsolve.util package</a></li>
+      <li>Next: <a href="setup.html" title="next chapter">setup module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/qmsolve.visualization.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

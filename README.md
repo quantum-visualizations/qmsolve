@@ -1,7 +1,4 @@
 # QMsolve: A module for solving and visualizing the Schrödinger equation
-[![PyPi Python Versions](https://img.shields.io/badge/python-3-1abc9c.svg)](https://pypi.python.org/pypi/qmsolve/)
-[![PyPI Version](https://img.shields.io/pypi/v/qmsolve.svg)](https://pypi.python.org/pypi/qmsolve)
-[![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/xVgFfe7jQ9)
 
 ![animation](/images/3D_two_gaussian_wells.gif)
 

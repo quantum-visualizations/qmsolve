@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>qmsolve.particle_system package &#8212; qmsolve  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="qmsolve.util package" href="qmsolve.util.html" />
+    <link rel="prev" title="qmsolve package" href="qmsolve.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="qmsolve-particle-system-package">
+<h1>qmsolve.particle_system package<a class="headerlink" href="#qmsolve-particle-system-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-qmsolve.particle_system.particle_system">
+<span id="qmsolve-particle-system-particle-system-module"></span><h2>qmsolve.particle_system.particle_system module<a class="headerlink" href="#module-qmsolve.particle_system.particle_system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.particle_system.particle_system.ParticleSystem">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.particle_system.particle_system.</code><code class="sig-name descname">ParticleSystem</code><a class="reference internal" href="_modules/qmsolve/particle_system/particle_system.html#ParticleSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.particle_system.ParticleSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dl class="method">
+<dt id="qmsolve.particle_system.particle_system.ParticleSystem.get_eigenstates">
+<em class="property">abstract </em><code class="sig-name descname">get_eigenstates</code><span class="sig-paren">(</span><em class="sig-param">H</em>, <em class="sig-param">max_states</em>, <em class="sig-param">eigenvalues</em>, <em class="sig-param">eigenvectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/particle_system.html#ParticleSystem.get_eigenstates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.particle_system.ParticleSystem.get_eigenstates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.particle_system.ParticleSystem.get_kinetic_matrix">
+<em class="property">abstract </em><code class="sig-name descname">get_kinetic_matrix</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/particle_system.html#ParticleSystem.get_kinetic_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.particle_system.ParticleSystem.get_kinetic_matrix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.particle_system.ParticleSystem.get_observables">
+<em class="property">abstract </em><code class="sig-name descname">get_observables</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/particle_system.html#ParticleSystem.get_observables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.particle_system.ParticleSystem.get_observables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.particle_system.single_particle">
+<span id="qmsolve-particle-system-single-particle-module"></span><h2>qmsolve.particle_system.single_particle module<a class="headerlink" href="#module-qmsolve.particle_system.single_particle" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.particle_system.single_particle.SingleParticle">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.particle_system.single_particle.</code><code class="sig-name descname">SingleParticle</code><span class="sig-paren">(</span><em class="sig-param">m=1.0</em>, <em class="sig-param">spin=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/single_particle.html#SingleParticle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.single_particle.SingleParticle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.particle_system.particle_system.ParticleSystem" title="qmsolve.particle_system.particle_system.ParticleSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.particle_system.particle_system.ParticleSystem</span></code></a></p>
+<dl class="method">
+<dt id="qmsolve.particle_system.single_particle.SingleParticle.build_matrix_operators">
+<code class="sig-name descname">build_matrix_operators</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/single_particle.html#SingleParticle.build_matrix_operators"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.single_particle.SingleParticle.build_matrix_operators" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.single_particle.SingleParticle.get_eigenstates">
+<code class="sig-name descname">get_eigenstates</code><span class="sig-paren">(</span><em class="sig-param">H</em>, <em class="sig-param">max_states</em>, <em class="sig-param">eigenvalues</em>, <em class="sig-param">eigenvectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/single_particle.html#SingleParticle.get_eigenstates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.single_particle.SingleParticle.get_eigenstates" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>max_states<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvalues<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvectors<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.single_particle.SingleParticle.get_kinetic_matrix">
+<code class="sig-name descname">get_kinetic_matrix</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/single_particle.html#SingleParticle.get_kinetic_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.single_particle.SingleParticle.get_kinetic_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.single_particle.SingleParticle.get_observables">
+<code class="sig-name descname">get_observables</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/single_particle.html#SingleParticle.get_observables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.single_particle.SingleParticle.get_observables" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.particle_system.two_bosons">
+<span id="qmsolve-particle-system-two-bosons-module"></span><h2>qmsolve.particle_system.two_bosons module<a class="headerlink" href="#module-qmsolve.particle_system.two_bosons" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.particle_system.two_bosons.TwoBosons">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.particle_system.two_bosons.</code><code class="sig-name descname">TwoBosons</code><span class="sig-paren">(</span><em class="sig-param">m=1.0</em>, <em class="sig-param">spin=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_bosons.html#TwoBosons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_bosons.TwoBosons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.particle_system.two_particles.TwoParticles" title="qmsolve.particle_system.two_particles.TwoParticles"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.particle_system.two_particles.TwoParticles</span></code></a></p>
+<p>[summary]</p>
+<dl class="simple">
+<dt>TwoParticles<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="qmsolve.particle_system.two_bosons.TwoBosons.get_eigenstates">
+<code class="sig-name descname">get_eigenstates</code><span class="sig-paren">(</span><em class="sig-param">H</em>, <em class="sig-param">max_states</em>, <em class="sig-param">eigenvalues</em>, <em class="sig-param">eigenvectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_bosons.html#TwoBosons.get_eigenstates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_bosons.TwoBosons.get_eigenstates" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>max_states<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvalues<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvectors<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.particle_system.two_distinguishable_particles">
+<span id="qmsolve-particle-system-two-distinguishable-particles-module"></span><h2>qmsolve.particle_system.two_distinguishable_particles module<a class="headerlink" href="#module-qmsolve.particle_system.two_distinguishable_particles" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.particle_system.two_distinguishable_particles.TwoDistinguishableParticles">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.particle_system.two_distinguishable_particles.</code><code class="sig-name descname">TwoDistinguishableParticles</code><span class="sig-paren">(</span><em class="sig-param">m1=1.0</em>, <em class="sig-param">m2=1.0</em>, <em class="sig-param">spin=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_distinguishable_particles.html#TwoDistinguishableParticles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_distinguishable_particles.TwoDistinguishableParticles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.particle_system.two_particles.TwoParticles" title="qmsolve.particle_system.two_particles.TwoParticles"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.particle_system.two_particles.TwoParticles</span></code></a></p>
+<p>[summary]</p>
+<dl class="simple">
+<dt>TwoParticles<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="qmsolve.particle_system.two_distinguishable_particles.TwoDistinguishableParticles.get_energies_and_eigenstates">
+<code class="sig-name descname">get_energies_and_eigenstates</code><span class="sig-paren">(</span><em class="sig-param">H</em>, <em class="sig-param">max_states</em>, <em class="sig-param">eigenvalues</em>, <em class="sig-param">eigenvectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_distinguishable_particles.html#TwoDistinguishableParticles.get_energies_and_eigenstates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_distinguishable_particles.TwoDistinguishableParticles.get_energies_and_eigenstates" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>max_states<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvalues<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvectors<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.two_distinguishable_particles.TwoDistinguishableParticles.get_kinetic_matrix">
+<code class="sig-name descname">get_kinetic_matrix</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_distinguishable_particles.html#TwoDistinguishableParticles.get_kinetic_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_distinguishable_particles.TwoDistinguishableParticles.get_kinetic_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.particle_system.two_fermions">
+<span id="qmsolve-particle-system-two-fermions-module"></span><h2>qmsolve.particle_system.two_fermions module<a class="headerlink" href="#module-qmsolve.particle_system.two_fermions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.particle_system.two_fermions.TwoFermions">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.particle_system.two_fermions.</code><code class="sig-name descname">TwoFermions</code><span class="sig-paren">(</span><em class="sig-param">m=1.0</em>, <em class="sig-param">spin=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_fermions.html#TwoFermions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_fermions.TwoFermions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.particle_system.two_particles.TwoParticles" title="qmsolve.particle_system.two_particles.TwoParticles"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.particle_system.two_particles.TwoParticles</span></code></a></p>
+<dl class="method">
+<dt id="qmsolve.particle_system.two_fermions.TwoFermions.get_eigenstates">
+<code class="sig-name descname">get_eigenstates</code><span class="sig-paren">(</span><em class="sig-param">H</em>, <em class="sig-param">max_states</em>, <em class="sig-param">eigenvalues</em>, <em class="sig-param">eigenvectors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_fermions.html#TwoFermions.get_eigenstates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_fermions.TwoFermions.get_eigenstates" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>max_states<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvalues<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+<dt>eigenvectors<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.particle_system.two_particles">
+<span id="qmsolve-particle-system-two-particles-module"></span><h2>qmsolve.particle_system.two_particles module<a class="headerlink" href="#module-qmsolve.particle_system.two_particles" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="qmsolve.particle_system.two_particles.TwoParticles">
+<em class="property">class </em><code class="sig-prename descclassname">qmsolve.particle_system.two_particles.</code><code class="sig-name descname">TwoParticles</code><span class="sig-paren">(</span><em class="sig-param">m=1.0</em>, <em class="sig-param">spin=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_particles.html#TwoParticles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_particles.TwoParticles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qmsolve.particle_system.particle_system.ParticleSystem" title="qmsolve.particle_system.particle_system.ParticleSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">qmsolve.particle_system.particle_system.ParticleSystem</span></code></a></p>
+<dl class="method">
+<dt id="qmsolve.particle_system.two_particles.TwoParticles.get_kinetic_matrix">
+<code class="sig-name descname">get_kinetic_matrix</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_particles.html#TwoParticles.get_kinetic_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_particles.TwoParticles.get_kinetic_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>[type]</dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="qmsolve.particle_system.two_particles.TwoParticles.get_observables">
+<code class="sig-name descname">get_observables</code><span class="sig-paren">(</span><em class="sig-param">H</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/qmsolve/particle_system/two_particles.html#TwoParticles.get_observables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#qmsolve.particle_system.two_particles.TwoParticles.get_observables" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>H<span class="classifier">[type]</span></dt><dd><p>[description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-qmsolve.particle_system">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-qmsolve.particle_system" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">qmsolve</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="qmsolve.html">qmsolve package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="qmsolve.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">qmsolve.particle_system package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system.particle_system">qmsolve.particle_system.particle_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system.single_particle">qmsolve.particle_system.single_particle module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system.two_bosons">qmsolve.particle_system.two_bosons module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system.two_distinguishable_particles">qmsolve.particle_system.two_distinguishable_particles module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system.two_fermions">qmsolve.particle_system.two_fermions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system.two_particles">qmsolve.particle_system.two_particles module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-qmsolve.particle_system">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="qmsolve.util.html">qmsolve.util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="qmsolve.visualization.html">qmsolve.visualization package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#module-qmsolve.eigenstates">qmsolve.eigenstates module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#module-qmsolve.hamiltonian">qmsolve.hamiltonian module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qmsolve.html#module-qmsolve">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">setup module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="qmsolve.html">qmsolve package</a><ul>
+      <li>Previous: <a href="qmsolve.html" title="previous chapter">qmsolve package</a></li>
+      <li>Next: <a href="qmsolve.util.html" title="next chapter">qmsolve.util package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/qmsolve.particle_system.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

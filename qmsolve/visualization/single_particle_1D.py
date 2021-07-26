@@ -7,11 +7,30 @@ from ..util.constants import *
 
 class VisualizationSingleParticle1D(Visualization):
     def __init__(self,eigenstates):
+        """Visualization class for a single particle in 1D.
+
+        Parameters
+        ----------
+        eigenstates : Eigenstates
+            Eigenstates object that represents the energy eigenstates
+        """
         self.eigenstates = eigenstates
 
 
 
     def plot_eigenstate(self, k, xlim = None, show_imaginary_part = False):
+        """Plot a single energy eigenstate.
+
+        Parameters
+        ----------
+        k : int
+            Which eigenstate to plot, where k = 0 plots the ground state,
+            and each subsequent value of k plots the next excited state.
+        xlim : list, optional
+            Change the minimum and maximum x values for which to plot, by default None
+        show_imaginary_part : bool, optional
+            Whether to show the imaginary part of the wavefuncgtion or not, by default False
+        """
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
         plt.style.use("dark_background")
@@ -62,6 +81,15 @@ class VisualizationSingleParticle1D(Visualization):
 
 
     def slider_plot(self, xlim = None, show_imaginary_part = False):
+        """Plot with an interactive slider that changes which energy eigenstate to show.
+
+        Parameters
+        ----------
+        xlim : list, optional
+            Change the minimum and maximum x values for which to plot, by default None
+        show_imaginary_part : bool, optional
+            Whether to show the imaginary part of the wavefuncgtion or not, by default False
+        """
         plt.style.use("dark_background")
 
         eigenstates_array = self.eigenstates.array
@@ -138,6 +166,24 @@ class VisualizationSingleParticle1D(Visualization):
 
 
     def animate(self,  seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim = None, save_animation = False, show_imaginary_part = False):
+        """Show all of the available eigenstates, from the eigenstate with the lowest energy to the one with the highest.
+        Note that there are transition periods where a linear combination of the two eigenstates are shown.
+
+        Parameters
+        ----------
+        seconds_per_eigenstate : float, optional
+            Number of seconds to show each eigenstate, by default 0.5
+        fps : int, optional
+            Frames per second of the animation, by default 20
+        max_states : [type], optional
+            The maximum number of states to show, by default None
+        xlim : [type], optional
+            Change the minimum and maximum x values for which to plot, by default None
+        save_animation : bool, optional
+            Whether to save the animation as a video file or not, by default False
+        show_imaginary_part : bool, optional
+            Whether to show the imaginary part of the wavefuncgtion or not, by default False
+        """
 
         if max_states == None:
             max_states = len(self.eigenstates.energies)
@@ -238,12 +284,25 @@ class VisualizationSingleParticle1D(Visualization):
             plt.show()
 
     def superpositions(self, states, fps = 30, total_time = 20, **kw):
-        """
-        Visualize the time evolution of a superposition of energy eigenstates.
+        """Visualize the time evolution of a superposition of energy eigenstates.
         The circle widgets control the relative phase of each of the eigenstates.
         These widgets are inspired by the circular phasors from the
         quantum mechanics applets by Paul Falstad:
         https://www.falstad.com/qm1d/
+
+        Parameters
+        ----------
+        states : [type]
+            [description]
+        fps : int, optional
+            [description], by default 30
+        total_time : int, optional
+            [description], by default 20
+
+        Returns
+        -------
+        [type]
+            [description]
         """
 
         total_frames = fps * total_time

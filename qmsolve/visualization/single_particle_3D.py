@@ -6,15 +6,47 @@ from ..util.constants import *
 
 
 class VisualizationSingleParticle3D(Visualization):
+    """[summary]
+
+    Parameters
+    ----------
+    Visualization : [type]
+        [description]
+    """
 
     def __init__(self,eigenstates):
+        """[summary]
+
+        Parameters
+        ----------
+        eigenstates : [type]
+            [description]
+        """
         self.eigenstates = eigenstates
         self.plot_type = 'volume'
 
     def slider_plot(self):
+        """[summary]
+
+        Raises
+        ------
+        NotImplementedError
+            [description]
+        """
         raise NotImplementedError
 
     def plot_eigenstate(self, k, contrast_vals= [0.1, 0.25]):
+        """Plot a single energy eigenstate.
+
+        Parameters
+        ----------
+        k : int
+            Specifies which energy eigenstate to plot, where k = 0
+            corresponds to the ground state, k = 1 corresponds to
+            the first excited state, and so on.
+        contrast_vals : list, optional
+            [description], by default [0.1, 0.25]
+        """
         eigenstates = self.eigenstates.array
         mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
         psi = eigenstates[k]
@@ -121,6 +153,12 @@ class VisualizationSingleParticle3D(Visualization):
             mlab.show()
 
     def animate(self,  contrast_vals= [0.1, 0.25]):
+        """Show an animation of the energy from the ground state to
+        the state with the most energy.
+
+        Args:
+            contrast_vals (list, optional): [description]. Defaults to [0.1, 0.25].
+        """
         eigenstates = self.eigenstates.array
         energies = self.eigenstates.energies
         mlab.figure(1, bgcolor=(0, 0, 0), size=(700, 700))
@@ -361,6 +399,23 @@ class VisualizationSingleParticle3D(Visualization):
 
 
     def superpositions(self, states, contrast_vals= [0.1, 0.25], **kw):
+        """Visualize the time evolution of a linear combination of
+        energy eigenstates.
+
+        Parameters
+        ----------
+        states : [type]
+            [description]
+        contrast_vals : list, optional
+            [description], by default [0.1, 0.25]
+
+        Raises
+        ------
+        KeyError
+            [description]
+        NotImplementedError
+            [description]
+        """
 
         params = {'dt': 0.1}
         for k in kw.keys():

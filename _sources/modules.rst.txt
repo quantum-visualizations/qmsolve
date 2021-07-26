@@ -1,0 +1,8 @@
+qmsolve
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   qmsolve
+   setup

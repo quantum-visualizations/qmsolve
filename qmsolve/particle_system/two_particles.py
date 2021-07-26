@@ -9,15 +9,26 @@ from abc import abstractmethod
 class TwoParticles(ParticleSystem):
 
     def __init__(self, m = m_e, spin = None):
-        """
-        N: number of grid points
-        extent: spacial extent, measured in angstroms
+        """[summary]
+
+        Parameters
+        ----------
+        m : [type], optional
+            [description], by default m_e
+        spin : [type], optional
+            [description], by default None
         """
         self.m = m
         self.spin = spin
 
     def get_observables(self, H):
+        """[summary]
 
+        Parameters
+        ----------
+        H : [type]
+            [description]
+        """
         if H.spatial_ndim ==1:
             x1 = np.linspace(-H.extent/2, H.extent/2, H.N)
             x2 = np.linspace(-H.extent/2, H.extent/2, H.N)
@@ -35,6 +46,18 @@ class TwoParticles(ParticleSystem):
 
 
     def get_kinetic_matrix(self, H):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         I = eye(H.N)
         T_ =  diags([-2., 1., 1.], [0,-1, 1] , shape=(H.N, H.N))*-k/(self.m*H.dx**2)

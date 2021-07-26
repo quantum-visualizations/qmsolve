@@ -4,6 +4,15 @@ from ..eigenstates import Eigenstates
 import h5py
 
 def save_eigenstates(eigenstates, name:str):
+    """Serialize an eigenstate.
+
+    Parameters
+    ----------
+    eigenstates : [type]
+        [description]
+    name : str
+        [description]
+    """
     #create dataset
     with h5py.File(name, 'a') as f:
         dset = f.create_dataset('energies', (eigenstates.energies.shape),dtype='float64')
@@ -16,6 +25,18 @@ def save_eigenstates(eigenstates, name:str):
         f.attrs['type'] = eigenstates.type
 
 def load_eigenstates(name:str):
+    """[summary]
+
+    Parameters
+    ----------
+    name : str
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     with h5py.File(name, 'a') as f:
         energies = np.copy(f['energies'])
         array = np.copy(f['array'])

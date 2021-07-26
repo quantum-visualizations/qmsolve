@@ -24,10 +24,13 @@ class Visualization:
     @abstractmethod
     def superpositions(self, states: Union[int, List[int], Dict[int, complex]],
                        **kw):
-        """
-        states - specify which eigenstates to superimpose on each other.
-        If it's a single number then superimpose eigenstates 0 to states-1.
-        kw - additional parameters to pass to the function.
+        """Linear combinations of eigenstates.
+
+        Parameters
+        ----------
+        states : Union[int, List[int], Dict[int, complex]]
+            specify which eigenstates to superimpose on each other.
+            If it's a single number then superimpose eigenstates 0 to states-1.
         """
         pass
 
@@ -38,6 +41,18 @@ from .two_identical_particles_1D import VisualizationIdenticalParticles1D
 
 
 def init_visualization(eigenstates):
+    """[summary]
+
+    Parameters
+    ----------
+    eigenstates : [type]
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     if eigenstates.type == "SingleParticle1D":
         return VisualizationSingleParticle1D(eigenstates) 
 

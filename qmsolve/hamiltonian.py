@@ -5,10 +5,24 @@ import time
 
 class Hamiltonian:
     def __init__(self, particles, potential, N, extent, spatial_ndim, potential_type = "grid", E_min=0):
-        """
-        N: number of grid points
-        extent: spacial extent, measured in angstroms
-        E_min: Initial guess for the energy of the ground state. It's only used if potential_type = "matrix" is used
+        """Class to represent the Hamiltonian operator.
+
+        Parameters
+        ----------
+        particles : ParticleSystem
+            The particle system
+        potential : callable
+            The potential
+        N : int
+            number of grid points
+        extent : array-like
+            spacial extent, measured in angstroms
+        spatial_ndim : [type]
+            Initial guess for the energy of the ground state. It's only used if potential_type = "matrix" is used
+        potential_type : str, optional
+            The type of the potential, by default "grid"
+        E_min : int, optional
+            The minimum energy, by default 0
         """
 
         self.N = N
@@ -33,6 +47,13 @@ class Hamiltonian:
         self.V = self.get_potential_matrix()
 
     def get_potential_matrix(self):
+        """Get the potential matrix.
+
+        Returns
+        -------
+        array-like
+            The potential matrix
+        """
 
         if self.potential_type == "grid":
 
@@ -53,15 +74,20 @@ class Hamiltonian:
 
 
     def solve(self, max_states: int, method: str = 'eigsh', N0 = 30, maxiter = 30, verbose = False):
-        """
-        Diagonalize the hamiltonian and retrieve the lowest-energy eigenstates
-        Args:
-            max_states: the number of states to retreive
-            method: the solver method. Currently, 'eigsh' and 'lobpcg' are implemented. Note: 'lobpcg' is potentially
-            much faster than 'eigsh' but can fail catastrophically for some systems. Use 'lobpcg' with care.
-            N0: grid divisions for the initial eigsh computations to be used as an initial guess in lobpcg.
-        Returns:
+        """Solve the Hamiltonian for its energies and eigenstates.
 
+        Parameters
+        ----------
+        max_states : int
+            The maximum number of states to solve.
+        method : str
+            Which methods to use (currently only "eigsh", "lobpcg", and "lobpcg-cupy" are available), by default "eigsh".
+        N0 : int
+            TODO
+        maxiter : int
+            The number of iterations to perform. by default False
+        verbose : bool
+            TODO
         """
         implemented_solvers = ('eigsh', 'lobpcg', 'lobpcg-cupy')
 
@@ -85,7 +111,7 @@ class Hamiltonian:
             from scipy.sparse import diags
             if self.spatial_ndim != 3:
                 raise NotImplementedError(
-                    f"lobpcg is only implemented for a 3D single particle")
+                    "lobpcg is only implemented for a 3D single particle")
 
             from qmsolve import SingleParticle
             #First, we compute eighs eigenvectors with a grid of size N0, 
@@ -131,7 +157,7 @@ class Hamiltonian:
 
             if self.spatial_ndim != 3:
                 raise NotImplementedError(
-                    f"lobpcg is only implemented for a 3D single particle")
+                    "lobpcg is only implemented for a 3D single particle")
 
             from qmsolve import SingleParticle
             #First, we compute eighs eigenvectors with a grid of size N0, 
@@ -156,7 +182,7 @@ class Hamiltonian:
 
             elif self.potential_type == "matrix":
                 raise NotImplementedError(
-                f"lobpcg-cupy solver has not been implemented to work with complex numbers. Use lobpcg instead")
+                 "lobpcg-cupy solver has not been implemented to work with complex numbers. Use lobpcg instead")
 
 
 
@@ -184,7 +210,7 @@ class Hamiltonian:
 
         else:
             raise NotImplementedError(
-                f"{method} solver has not been implemented. Use one of {implemented_solvers}")
+                str(method) + " solver has not been implemented. Use one of " + str(implemented_solvers))
 
         """the result of this method depends of the particle system. For example if the systems are two fermions, 
         this method makes the eigenstates antisymmetric """

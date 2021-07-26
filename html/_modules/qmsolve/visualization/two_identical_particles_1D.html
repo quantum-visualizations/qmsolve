@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>qmsolve.visualization.two_identical_particles_1D &#8212; qmsolve  documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for qmsolve.visualization.two_identical_particles_1D</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">widgets</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span>
+<span class="kn">from</span> <span class="nn">.visualization</span> <span class="kn">import</span> <span class="n">Visualization</span>
+<span class="kn">from</span> <span class="nn">..util.colour_functions</span> <span class="kn">import</span> <span class="n">complex_to_rgb</span>
+<span class="kn">from</span> <span class="nn">..util.constants</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="VisualizationIdenticalParticles1D"><a class="viewcode-back" href="../../../qmsolve.visualization.html#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D">[docs]</a><span class="k">class</span> <span class="nc">VisualizationIdenticalParticles1D</span><span class="p">(</span><span class="n">Visualization</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">eigenstates</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eigenstates : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span> <span class="o">=</span> <span class="n">eigenstates</span>
+
+
+
+<div class="viewcode-block" id="VisualizationIdenticalParticles1D.plot_eigenstate"><a class="viewcode-back" href="../../../qmsolve.visualization.html#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.plot_eigenstate">[docs]</a>    <span class="k">def</span> <span class="nf">plot_eigenstate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span><span class="n">xlim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        xlim : [type], optional</span>
+<span class="sd">            [description], by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eigenstates_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">array</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;dark_background&quot;</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.5</span> <span class="p">,</span><span class="mf">7.0</span><span class="p">))</span> 
+
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">height_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span> <span class="c1"># probability density of finding any particle at x </span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;$\Psi(x_1,x_2)$&quot;</span><span class="p">)</span>
+
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Energy Level&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$E_N$ [eV]&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;${\| \Psi(x)\|}^</span><span class="si">{2}</span><span class="s2"> $&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax3</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlim</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+
+        <span class="n">E0</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">E</span> <span class="ow">in</span> <span class="n">energies</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">energies</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="n">k</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">lw</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+
+        <span class="n">L</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">10</span><span class="o">*</span><span class="n">k</span><span class="p">)),</span> <span class="n">aspect</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">],</span>  <span class="n">interpolation</span> <span class="o">=</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="n">prob_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>  <span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>  <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">prob_plot</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">prob_density</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+        <span class="n">prob_plot_fill</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">prob_density</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span> <span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">prob_density</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VisualizationIdenticalParticles1D.slider_plot"><a class="viewcode-back" href="../../../qmsolve.visualization.html#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.slider_plot">[docs]</a>    <span class="k">def</span> <span class="nf">slider_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">xlim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xlim : [type], optional</span>
+<span class="sd">            [description], by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eigenstates_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">array</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;dark_background&quot;</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.5</span> <span class="p">,</span><span class="mf">7.0</span><span class="p">))</span> 
+
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">height_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span> <span class="c1"># probability density of finding any particle at x </span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;$\Psi(x_1,x_2)$&quot;</span><span class="p">)</span>
+
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Energy Level&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$E_N$ [eV]&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;${\| \Psi(x)\|}^</span><span class="si">{2}</span><span class="s2"> $&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax3</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlim</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+
+        <span class="n">E0</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">E</span> <span class="ow">in</span> <span class="n">energies</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+        <span class="n">L</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span>
+        <span class="n">eigenstate_plot</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">10</span><span class="o">*</span><span class="mi">0</span><span class="p">)),</span> <span class="n">aspect</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">],</span>   <span class="n">interpolation</span> <span class="o">=</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="n">prob_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>  <span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">prob_plot</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">prob_density</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+        <span class="n">prob_plot_fill</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">prob_density</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span> <span class="p">)</span>
+        
+        <span class="n">line</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">lw</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">Slider</span>
+        <span class="n">slider_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">])</span>
+        <span class="n">slider</span> <span class="o">=</span> <span class="n">Slider</span><span class="p">(</span><span class="n">slider_ax</span><span class="p">,</span>      <span class="c1"># the axes object containing the slider</span>
+                          <span class="s1">&#39;state&#39;</span><span class="p">,</span>            <span class="c1"># the name of the slider parameter</span>
+                          <span class="mi">0</span><span class="p">,</span>          <span class="c1"># minimal value of the parameter</span>
+                          <span class="nb">len</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>          <span class="c1"># maximal value of the parameter</span>
+                          <span class="n">valinit</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># initial value of the parameter </span>
+                          <span class="n">valstep</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#5c05ff&#39;</span> 
+                         <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+            <span class="n">eigenstate_plot</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">state</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">10</span><span class="o">*</span><span class="n">state</span><span class="p">)))</span>
+
+
+            <span class="n">ax3</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$ [Å]&quot;</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;${\| \Psi(x)\|}^</span><span class="si">{2}</span><span class="s2"> $&quot;</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax3</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">xlim</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+                <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+                <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+                <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">prob_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>  <span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">state</span><span class="p">])</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">state</span><span class="p">])</span>  <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">prob_plot</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">prob_density</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="nb">max</span><span class="p">(</span><span class="n">prob_density</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span><span class="p">])</span>
+            <span class="n">prob_plot_fill</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">prob_density</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span> <span class="p">)</span>
+            <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">([</span><span class="n">energies</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="n">state</span><span class="p">]])</span>
+        <span class="n">slider</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">update</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+
+
+
+<div class="viewcode-block" id="VisualizationIdenticalParticles1D.animate"><a class="viewcode-back" href="../../../qmsolve.visualization.html#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.animate">[docs]</a>    <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">seconds_per_eigenstate</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">fps</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">max_states</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">xlim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_animation</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seconds_per_eigenstate : float, optional</span>
+<span class="sd">            [description], by default 0.5</span>
+<span class="sd">        fps : int, optional</span>
+<span class="sd">            [description], by default 20</span>
+<span class="sd">        max_states : [type], optional</span>
+<span class="sd">            [description], by default None</span>
+<span class="sd">        xlim : [type], optional</span>
+<span class="sd">            [description], by default None</span>
+<span class="sd">        save_animation : bool, optional</span>
+<span class="sd">            [description], by default False</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">max_states</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span><span class="p">)</span>
+
+        <span class="n">frames_per_eigenstate</span> <span class="o">=</span> <span class="n">fps</span> <span class="o">*</span> <span class="n">seconds_per_eigenstate</span>
+        <span class="n">total_time</span> <span class="o">=</span> <span class="n">max_states</span> <span class="o">*</span> <span class="n">seconds_per_eigenstate</span>
+        <span class="n">total_frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fps</span> <span class="o">*</span> <span class="n">total_time</span><span class="p">)</span>
+
+
+        <span class="n">eigenstates_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">array</span><span class="p">[:</span><span class="n">max_states</span><span class="p">]</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span><span class="p">[:</span><span class="n">max_states</span><span class="p">]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;dark_background&quot;</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.5</span> <span class="p">,</span><span class="mf">7.0</span><span class="p">))</span> 
+
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">height_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span> <span class="c1"># probability density of finding any particle at x </span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;$\Psi(x_1,x_2)$&quot;</span><span class="p">)</span>
+
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Energy Level&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$E_N$ [eV]&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;${\| \Psi(x)\|}^</span><span class="si">{2}</span><span class="s2"> $&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax3</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlim</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+
+        <span class="n">E0</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">E</span> <span class="ow">in</span> <span class="n">energies</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+        <span class="n">L</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span>
+        <span class="n">eigenstate_plot</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">aspect</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span><span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">],</span>   <span class="n">interpolation</span> <span class="o">=</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="c1">#prob_density = np.sum(  (eigenstates_array[0])*np.conjugate(eigenstates_array[0])  , axis = 1)</span>
+        <span class="c1">#ax3.set_ylim([0,max(prob_density)*1.2])</span>
+        <span class="c1">#prob_plot, = ax3.plot(x,  prob_density, color= &quot;cyan&quot;)</span>
+        <span class="c1">#prob_plot_fill = ax3.fill_between(x,prob_density, alpha=0.1, color= &quot;cyan&quot; )</span>
+        <span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">lw</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
+
+        
+
+        <span class="n">prob_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>  <span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">animation_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="mf">0.0</span> <span class="p">,</span> <span class="s1">&#39;max_prob_density&#39;</span> <span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_density</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span><span class="p">}</span>
+        <span class="n">Δn</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">frames_per_eigenstate</span>
+
+        <span class="k">def</span> <span class="nf">func_animation</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+            <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">Δn</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">%</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                <span class="n">transition_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+
+
+                <span class="n">eigenstate_combination</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">transition_time</span><span class="p">)</span><span class="o">*</span><span class="n">eigenstates_array</span><span class="p">[</span><span class="n">state</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">10</span><span class="o">*</span><span class="n">state</span><span class="p">)</span> <span class="o">+</span> 
+                                         <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">transition_time</span><span class="p">)</span><span class="o">*</span>
+                                         <span class="n">eigenstates_array</span><span class="p">[(</span><span class="n">state</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="n">state</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="p">)</span>
+
+
+
+                <span class="n">eigenstate_plot</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstate_combination</span><span class="p">))</span>
+
+                <span class="n">prob_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>  <span class="n">eigenstate_combination</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">eigenstate_combination</span><span class="p">)</span>  <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">save_animation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#avoid reseting the axis makes it faster</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$ [Å]&quot;</span><span class="p">)</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;${\| \Psi(x)\|}^</span><span class="si">{2}</span><span class="s2"> $&quot;</span><span class="p">)</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax3</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    
+                <span class="n">prob_plot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">prob_density</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+                <span class="n">prob_plot_fill</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">prob_density</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span> <span class="p">)</span>
+                <span class="n">new_prob_density</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_density</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span>
+                <span class="k">if</span> <span class="n">new_prob_density</span> <span class="o">&gt;</span> <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;max_prob_density&#39;</span><span class="p">]:</span>
+                    <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;max_prob_density&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_prob_density</span>
+
+                <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;max_prob_density&#39;</span><span class="p">]])</span>
+
+                <span class="n">E_N</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> 
+                <span class="n">E_M</span> <span class="o">=</span> <span class="n">energies</span><span class="p">[(</span><span class="n">state</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">energies</span><span class="p">)]</span>
+                <span class="n">E</span> <span class="o">=</span>  <span class="n">E_N</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">transition_time</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">E_M</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">transition_time</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">line</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">([</span><span class="n">E</span><span class="p">,</span> <span class="n">E</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">line</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">([</span><span class="n">energies</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="n">state</span><span class="p">]])</span>
+
+                <span class="n">eigenstate_combination</span> <span class="o">=</span> <span class="n">eigenstates_array</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">state</span><span class="p">)]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">10</span><span class="o">*</span><span class="n">state</span><span class="p">)</span>
+                <span class="n">eigenstate_plot</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstate_combination</span><span class="p">))</span>
+                
+                <span class="k">if</span> <span class="n">save_animation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#avoid reseting the axis makes it faster</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$ [Å]&quot;</span><span class="p">)</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;${\| \Psi(x)\|}^</span><span class="si">{2}</span><span class="s2"> $&quot;</span><span class="p">)</span>
+                    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probability density&quot;</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax3</span><span class="o">.</span><span class="n">get_yticklabels</span><span class="p">(),</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+                <span class="n">prob_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>  <span class="n">eigenstate_combination</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">eigenstate_combination</span><span class="p">)</span>  <span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">prob_plot</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">prob_density</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
+                <span class="n">prob_plot_fill</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">prob_density</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;cyan&quot;</span> <span class="p">)</span>
+                <span class="n">new_prob_density</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">prob_density</span><span class="p">)</span><span class="o">*</span><span class="mf">1.1</span>
+                <span class="k">if</span> <span class="n">new_prob_density</span> <span class="o">&gt;</span> <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;max_prob_density&#39;</span><span class="p">]:</span>
+                    <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;max_prob_density&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_prob_density</span>
+                <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;max_prob_density&#39;</span><span class="p">]])</span>
+
+            <span class="k">return</span> <span class="n">eigenstate_plot</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span><span class="n">prob_plot</span><span class="p">,</span><span class="n">prob_plot_fill</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">func_animation</span><span class="p">,</span>
+                                    <span class="n">blit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="n">total_frames</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">fps</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        
+        
+        <span class="k">if</span> <span class="n">save_animation</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">Writer</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">writers</span><span class="p">[</span><span class="s1">&#39;ffmpeg&#39;</span><span class="p">]</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">Writer</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">artist</span><span class="o">=</span><span class="s1">&#39;Me&#39;</span><span class="p">),</span> <span class="n">bitrate</span><span class="o">=</span><span class="mi">1800</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;animation.mp4&#39;</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+
+<div class="viewcode-block" id="VisualizationIdenticalParticles1D.superpositions"><a class="viewcode-back" href="../../../qmsolve.visualization.html#qmsolve.visualization.two_identical_particles_1D.VisualizationIdenticalParticles1D.superpositions">[docs]</a>    <span class="k">def</span> <span class="nf">superpositions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">fps</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        states : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        fps : int, optional</span>
+<span class="sd">            [description], by default 30</span>
+<span class="sd">        total_time : int, optional</span>
+<span class="sd">            [description], by default 20</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dt&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s1">&#39;xlim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">,</span> 
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">],</span>
+                  <span class="s1">&#39;ylim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">,</span> 
+                           <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">],</span>
+                  <span class="s1">&#39;save_animation&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                  <span class="s1">&#39;hide_controls&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                  <span class="c1"># &#39;plot_style&#39;: &#39;dark_background&#39;</span>
+                 <span class="p">}</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">total_frames</span> <span class="o">=</span> <span class="n">fps</span> <span class="o">*</span> <span class="n">total_time</span>
+        <span class="kn">from</span> <span class="nn">.complex_slider_widget</span> <span class="kn">import</span> <span class="n">ComplexSliderWidget</span>
+        <span class="n">eigenstates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">array</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">energies</span>
+        <span class="n">eigenstates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eigenstates</span><span class="p">)</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">states</span><span class="p">)],</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+            <span class="n">eigenstates</span> <span class="o">=</span> <span class="n">eigenstates</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">states</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">states</span>
+            <span class="n">eigenstates</span> <span class="o">=</span> <span class="n">eigenstates</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)]</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">eigenstates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;dark_background&quot;</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="o">/</span><span class="mi">9</span> <span class="o">*</span><span class="mf">5.804</span> <span class="o">*</span> <span class="mf">0.9</span><span class="p">,</span><span class="mf">5.804</span><span class="p">))</span>
+        <span class="n">grid_width</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">grid_length</span> <span class="o">=</span> <span class="n">states</span> <span class="k">if</span> <span class="n">states</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="k">else</span> <span class="mi">30</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">grid_width</span><span class="p">,</span> <span class="n">grid_length</span><span class="p">)</span>
+        <span class="n">grid_slice</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="mf">0.7</span><span class="o">*</span><span class="n">grid_width</span><span class="p">),</span> <span class="mi">0</span><span class="p">:</span><span class="n">grid_length</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;hide_controls&#39;</span><span class="p">]:</span>
+            <span class="n">grid_slice</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">grid_width</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">grid_length</span><span class="p">]</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid_slice</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;$\psi(x_1, x_2)$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x_1$ [Å]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$x_2$ [Å]&quot;</span><span class="p">)</span>
+        <span class="c1"># ax.set_xticks([])</span>
+        <span class="c1"># ax.set_yticks([])</span>
+        <span class="n">get_norm_factor</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">psi</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi</span><span class="p">)))</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">eigenstates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">eigenstates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">maxval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eigenstates</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">])</span><span class="o">/</span><span class="n">Å</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">eigenstates</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+                        <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">,</span> 
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">,</span>
+                                                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">,</span> 
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">eigenstates</span><span class="o">.</span><span class="n">extent</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">Å</span><span class="p">]</span>
+                        <span class="p">)</span>
+        <span class="c1"># im2 = plt.imshow(0.0*eigenstates[0], cmap=&#39;gray&#39;)</span>
+        <span class="n">animation_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">make_update</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="n">phi</span><span class="p">)</span>
+                <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> 
+                             <span class="n">eigenstates</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">states</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">]))</span>
+                <span class="n">psi</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">])</span>
+                <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_norm_factor</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>
+                <span class="n">psi</span> <span class="o">*=</span> <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span>
+                <span class="c1"># apsi = np.abs(psi)</span>
+                <span class="c1"># im.set_alpha(apsi/np.amax(apsi))</span>
+            <span class="k">return</span> <span class="n">update</span>
+
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">circle_artists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;hide_controls&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">states</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">states</span> <span class="o">&lt;=</span> <span class="mi">30</span><span class="p">:</span>
+                    <span class="n">circle_ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span><span class="p">)</span>
+                    <span class="n">circle_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;n=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1"># + &#39;\nE=&#39; + str() + &#39;$E_0$&#39;</span>
+                                        <span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">8.0</span> <span class="k">if</span> <span class="n">states</span> <span class="o">&lt;</span> <span class="mi">15</span> <span class="k">else</span> <span class="mf">6.0</span> 
+                                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">circle_ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">8</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="k">else</span> <span class="mi">9</span><span class="p">,</span>
+                                                     <span class="n">i</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="k">else</span> <span class="n">i</span><span class="o">-</span><span class="mi">30</span><span class="p">],</span> 
+                                                <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;polar&#39;</span><span class="p">)</span>
+                    <span class="n">circle_ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;n=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1"># + &#39;\nE=&#39; + str() + &#39;$E_0$&#39;</span>
+                                        <span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">8.0</span> <span class="k">if</span> <span class="n">states</span> <span class="o">&lt;</span> <span class="mi">15</span> <span class="k">else</span> <span class="mf">6.0</span> 
+                                        <span class="p">)</span>
+                <span class="n">circle_ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+                <span class="n">circle_ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+                <span class="n">widgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ComplexSliderWidget</span><span class="p">(</span><span class="n">circle_ax</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">animated</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="n">widgets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="n">make_update</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="n">circle_artists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widgets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_artist</span><span class="p">())</span>
+        <span class="n">artists</span> <span class="o">=</span> <span class="n">circle_artists</span> <span class="o">+</span> <span class="p">[</span><span class="n">im</span><span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="n">energies</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">states</span><span class="p">]</span><span class="o">*</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">coeffs</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">norm_factor</span> <span class="o">=</span> <span class="n">animation_data</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span>
+            <span class="n">psi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">coeffs</span><span class="o">*</span><span class="n">norm_factor</span><span class="p">,</span> 
+                         <span class="n">eigenstates</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span>
+                            <span class="n">states</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="p">]))</span>
+            <span class="n">psi</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">])</span>
+            <span class="n">im</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">complex_to_rgb</span><span class="p">(</span><span class="n">psi</span><span class="p">))</span>
+            <span class="c1"># apsi = np.abs(psi)</span>
+            <span class="c1"># im.set_alpha(apsi/np.amax(apsi))</span>
+            <span class="c1"># if animation_data[&#39;ticks&#39;] % 2:</span>
+            <span class="c1">#     return (im, )</span>
+            <span class="c1"># else:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;hide_controls&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coeffs</span><span class="p">):</span>
+                    <span class="n">phi</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                    <span class="n">artists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xdata</span><span class="p">([</span><span class="n">phi</span><span class="p">,</span> <span class="n">phi</span><span class="p">])</span>
+                    <span class="n">artists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ydata</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">artists</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">fps</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                                    <span class="n">frames</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;save_animation&#39;</span><span class="p">])</span> <span class="k">else</span>
+                                    <span class="n">total_frames</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;save_animation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">Writer</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">writers</span><span class="p">[</span><span class="s1">&#39;ffmpeg&#39;</span><span class="p">]</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">Writer</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">artist</span><span class="o">=</span><span class="s1">&#39;Me&#39;</span><span class="p">),</span> 
+                            <span class="n">bitrate</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;animation.mp4&#39;</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">qmsolve</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../qmsolve.html">qmsolve package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../setup.html">setup module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Author.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

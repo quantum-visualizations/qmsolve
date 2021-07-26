@@ -11,6 +11,24 @@ class TwoFermions(TwoParticles):
 
 
     def get_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+        max_states : [type]
+            [description]
+        eigenvalues : [type]
+            [description]
+        eigenvectors : [type]
+            [description]
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         eigenvectors  = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )
 

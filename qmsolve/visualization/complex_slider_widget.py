@@ -3,17 +3,35 @@ from matplotlib import widgets
 
 
 class ComplexSliderWidget(widgets.AxesWidget):
-    """
-    A circular complex slider widget for manipulating complex
+    """A circular complex slider widget for manipulating complex
     values.
 
     References:
     - https://matplotlib.org/stable/api/widgets_api.
     - https://github.com/matplotlib/matplotlib/blob/
     1ba3ff1c273bf97a65e19892b23715d19c608ae5/lib/matplotlib/widgets.py
+
+    Parameters
+    ----------
+    widgets : matplotlib.widgets.AxesWidget
+        A matplotlib widget.
     """
 
     def __init__(self, ax, angle, r, animated=False):
+        """Constructor for the complex slider widgets.
+        This takes the phase and magnitude of an initial complex number.
+
+        Parameters
+        ----------
+        ax : matplotlib.axes
+            plot object that holds the widget plot
+        angle : float
+            Phase of the initial complex number
+        r : float
+            Magnitude of the complex number
+        animated : bool, optional
+            Whether to animate this widget, by default False
+        """
         line, = ax.plot([angle, angle], [0.0, r], linewidth=2.0)
         super().__init__(ax)
         self._rotator = line
@@ -25,6 +43,15 @@ class ComplexSliderWidget(widgets.AxesWidget):
         self.connect_event('motion_notify_event', self._motion)
 
     def get_artist(self):
+        """Get the artist.
+
+        Returns
+        -------
+        matplotlib.lines.Line2D
+            Line plot whose length represents the magnitude
+            of the complex value and its angular displacement
+            represents its phase.
+        """
         return self._rotator
 
     def _click(self, event):
@@ -35,6 +62,16 @@ class ComplexSliderWidget(widgets.AxesWidget):
         self._is_click = False
 
     def on_changed(self, update):
+        """Set the update function which is used
+        whenever the complex slider widget is changed.
+
+        Parameters
+        ----------
+        update : callable
+            The update function. It takes the phase
+            and absolute magnitude of the complex value
+            that this widget represents.
+        """
         self.update = update
     
     def _motion(self, event):

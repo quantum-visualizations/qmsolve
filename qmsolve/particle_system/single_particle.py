@@ -17,6 +17,13 @@ class SingleParticle(ParticleSystem):
 
 
     def get_observables(self, H):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+        """
 
         if H.spatial_ndim ==1:
             self.x = np.linspace(-H.extent/2, H.extent/2, H.N)
@@ -34,6 +41,13 @@ class SingleParticle(ParticleSystem):
             H.ndim = 3
 
     def build_matrix_operators(self, H):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+        """
 
         if H.spatial_ndim == 1:
 
@@ -98,6 +112,18 @@ class SingleParticle(ParticleSystem):
             self.I = kron(I,kron(I,I))
 
     def get_kinetic_matrix(self, H):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         I = eye(H.N)
         T_ =  diags([-2., 1., 1.], [0,-1, 1] , shape=(H.N, H.N))*-k/(self.m*H.dx**2)
@@ -113,6 +139,24 @@ class SingleParticle(ParticleSystem):
         return T
 
     def get_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+        max_states : [type]
+            [description]
+        eigenvalues : [type]
+            [description]
+        eigenvectors : [type]
+            [description]
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         energies = eigenvalues
         eigenstates_array = np.moveaxis(eigenvectors.reshape(  *[H.N]*H.ndim , max_states), -1, 0)

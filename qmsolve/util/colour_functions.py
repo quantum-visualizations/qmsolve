@@ -2,6 +2,18 @@ from matplotlib.colors import hsv_to_rgb
 import numpy as np
 
 def complex_to_rgb(Z):
+    """Convert complex values to their rgb equivalent.
+
+    Parameters
+    ----------
+    Z : array_like
+        The complex values.
+
+    Returns
+    -------
+    array_like
+        The rgb values.
+    """
     #using HSV space
     r = np.abs(Z)
     arg = np.angle(Z)

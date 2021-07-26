@@ -7,6 +7,13 @@ from ..util.constants import *
 from .. import Eigenstates
 
 class TwoDistinguishableParticles(TwoParticles):
+    """[summary]
+
+    Parameters
+    ----------
+    TwoParticles : [type]
+        [description]
+    """
 
     def __init__(self, m1 = m_e, m2 = m_e, spin = None):
         """
@@ -19,6 +26,18 @@ class TwoDistinguishableParticles(TwoParticles):
         self.spin = spin
 
     def get_kinetic_matrix(self, H):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         I = eye(H.N)
         T_ =  diags([-2., 1., 1.], [0,-1, 1] , shape=(H.N, H.N))*-k/(H.dx**2)
@@ -33,6 +52,24 @@ class TwoDistinguishableParticles(TwoParticles):
 
 
     def get_energies_and_eigenstates(self, H, max_states, eigenvalues, eigenvectors):
+        """[summary]
+
+        Parameters
+        ----------
+        H : [type]
+            [description]
+        max_states : [type]
+            [description]
+        eigenvalues : [type]
+            [description]
+        eigenvectors : [type]
+            [description]
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         energies = eigenvalues
         eigenstates = eigenvectors.T.reshape(( max_states, *[H.N]*H.ndim) )

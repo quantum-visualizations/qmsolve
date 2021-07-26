@@ -8,12 +8,37 @@ from ..util.constants import *
 
 
 class VisualizationSingleParticle2D(Visualization):
+    """[summary]
+
+    Parameters
+    ----------
+    Visualization : [type]
+        [description]
+    """
     def __init__(self,eigenstates):
+        """[summary]
+
+        Parameters
+        ----------
+        eigenstates : [type]
+            [description]
+        """
         self.eigenstates = eigenstates
 
 
 
     def plot_eigenstate(self, k, xlim=None, ylim=None):
+        """[summary]
+
+        Parameters
+        ----------
+        k : [type]
+            [description]
+        xlim : [type], optional
+            [description], by default None
+        ylim : [type], optional
+            [description], by default None
+        """
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
 
@@ -52,6 +77,15 @@ class VisualizationSingleParticle2D(Visualization):
 
 
     def slider_plot(self, xlim=None, ylim=None):
+        """[summary]
+
+        Parameters
+        ----------
+        xlim : [type], optional
+            [description], by default None
+        ylim : [type], optional
+            [description], by default None
+        """
 
         eigenstates_array = self.eigenstates.array
         energies = self.eigenstates.energies
@@ -115,6 +149,28 @@ class VisualizationSingleParticle2D(Visualization):
 
 
     def animate(self,seconds_per_eigenstate = 0.5, fps = 20, max_states = None, xlim=None, ylim=None, save_animation = False):
+        """[summary]
+
+        Parameters
+        ----------
+        seconds_per_eigenstate : float, optional
+            [description], by default 0.5
+        fps : int, optional
+            [description], by default 20
+        max_states : [type], optional
+            [description], by default None
+        xlim : [type], optional
+            [description], by default None
+        ylim : [type], optional
+            [description], by default None
+        save_animation : bool, optional
+            [description], by default False
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
 
         if max_states == None:
             max_states = len(self.eigenstates.energies)
@@ -198,6 +254,22 @@ class VisualizationSingleParticle2D(Visualization):
 
 
     def superpositions(self, states, fps = 30, total_time = 20, **kw):
+        """Show the time evolution of a superposition of energy eigenstates.
+
+        Parameters
+        ----------
+        states : list
+            Coefficients for the eigenstates
+        fps : int, optional
+            , by default 30
+        total_time : int, optional
+            [description], by default 20
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
         params = {'dt': 0.001, 'xlim': [-self.eigenstates.extent/2, 
                                         self.eigenstates.extent/2],
                   'ylim': [-self.eigenstates.extent/2, 
