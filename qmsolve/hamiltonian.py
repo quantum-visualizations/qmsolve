@@ -17,12 +17,12 @@ class Hamiltonian:
             number of grid points
         extent : array-like
             spacial extent, measured in angstroms
-        spatial_ndim : [type]
-            Initial guess for the energy of the ground state. It's only used if potential_type = "matrix" is used
+        spatial_ndim : int
+            Number of spatial dimensions of the Hamiltonian
         potential_type : str, optional
             The type of the potential, by default "grid"
         E_min : int, optional
-            The minimum energy, by default 0
+            Initial guess for the energy of the ground state measured in hartrees (energy atomic unit). It's only used if potential_type = "matrix" is used
         """
 
         self.N = N
@@ -73,8 +73,8 @@ class Hamiltonian:
 
 
 
-    def solve(self, max_states: int, method: str = 'eigsh', N0 = 30, maxiter = 30, verbose = False):
-        """Solve the Hamiltonian for its energies and eigenstates.
+    def solve(self, max_states: int, method: str = 'eigsh',  verbose = False, lobpcg_args = {'N0': 30, 'preconditioner' : 'jacobi', 'maxiter' : 30}):
+        """Diagonalize the Hamiltonian for its energies and eigenstates.
 
         Parameters
         ----------
@@ -82,14 +82,22 @@ class Hamiltonian:
             The maximum number of states to solve.
         method : str
             Which methods to use (currently only "eigsh", "lobpcg", and "lobpcg-cupy" are available), by default "eigsh".
-        N0 : int
-            TODO
-        maxiter : int
-            The number of iterations to perform. by default False
         verbose : bool
-            TODO
-        """
+            TODO  
+        lobpcg_args : dict
+                N0 : int 
+                    grid divisions for the initial eigsh computations to be used as an initial guess in lobpcg.
+                preconditioner : str 
+                    lobpcg preconditioner. 'pyamg' convergence is faster but requires having installed pyamg and may fail for some hamiltonians.
+                    Default preconditioner is 'jacobi'.
+                maxiter : int 
+                maximum number of iterations. 
+        Returns
+        -------
+        Eigenstates"""
+
         implemented_solvers = ('eigsh', 'lobpcg', 'lobpcg-cupy')
+        
 
         H = self.T + self.V
         print("Computing...")
@@ -109,19 +117,21 @@ class Hamiltonian:
         elif method == 'lobpcg':
             from scipy.sparse.linalg import eigsh, lobpcg, LinearOperator
             from scipy.sparse import diags
+            implemented_lobpcg_preconditioners = ('jacobi', 'pyamg')
+
             if self.spatial_ndim != 3:
                 raise NotImplementedError(
-                    "lobpcg is only implemented for a 3D single particle")
+                    f"lobpcg is only implemented for a 3D single particle")
 
             from qmsolve import SingleParticle
             #First, we compute eighs eigenvectors with a grid of size N0, 
             H_eigsh = Hamiltonian(particles = SingleParticle(), 
                                   potential = self.potential, 
-                                  spatial_ndim = 3, N = N0, extent = self.extent, potential_type = self.potential_type, E_min = self.E_min)
+                                  spatial_ndim = 3, N = lobpcg_args['N0'], extent = self.extent, potential_type = self.potential_type, E_min = self.E_min)
 
             eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.E_min))
 
-            eigenvectors_eigsh = eigenvectors_eigsh.reshape(  *[N0]*3 , max_states)
+            eigenvectors_eigsh = eigenvectors_eigsh.reshape(  *[lobpcg_args['N0']]*3 , max_states)
 
             if verbose == True:
                 print("Initial eigsh computation completed")
@@ -130,23 +140,34 @@ class Hamiltonian:
             #Now, we interpolate them to a grid of size N and then use it as an initial guess to the lobpcg solver.
             from scipy.interpolate import interpn
             new_xx, new_yy, new_zz, states = np.mgrid[ -1:1:self.N*1j, -1:1:self.N*1j, -1:1:self.N*1j, -1:1:max_states*1j]
-            eigenvectors_eigsh_interpolated = interpn((np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,max_states)), 
+            eigenvectors_eigsh_interpolated = interpn((np.linspace(-1,1,lobpcg_args['N0']), np.linspace(-1,1,lobpcg_args['N0']), np.linspace(-1,1,lobpcg_args['N0']), np.linspace(-1,1,max_states)), 
                                                       eigenvectors_eigsh, 
                                                       np.array([new_xx, new_yy, new_zz, states]).T).T
+            eigenvectors_guess = eigenvectors_eigsh_interpolated.reshape(  self.N**self.ndim , max_states)
+
             if verbose == True:
                 print("Interpolation completed")
 
-            # preconditioning matrix should approximate the inverse of the hamiltonian
-            # we naively construct this by taking the inverse of diagonal elements
-            # and setting all others to zero. This is called the Jacobi or diagonal preconditioner.
-            A = diags([1 / H.diagonal()], [0])
-            precond = lambda x: A @ x
-            M = LinearOperator(H.shape, matvec=precond, matmat=precond)
-            # guess for eigenvectors is computed from random numbers
-            # TODO: a better guess would be to use the eigenstates of a reference system like a square well
-            eigenvectors_guess = eigenvectors_eigsh_interpolated.reshape(  self.N**self.ndim , max_states)
+            
+            if lobpcg_args['preconditioner'] == 'jacobi':
+                # preconditioning matrix should approximate the inverse of the hamiltonian
+                # we naively construct this by taking the inverse of diagonal elements
+                # and setting all others to zero. This is called the Jacobi or diagonal preconditioner.
+                A = diags([1 / H.diagonal()], [0])
+                precond = lambda x: A @ x
+                M = LinearOperator(H.shape, matvec=precond, matmat=precond)
 
-            sol = lobpcg(H, eigenvectors_guess, largest=False, M=M, tol=1e-15, maxiter = maxiter)
+            elif lobpcg_args['preconditioner'] == 'pyamg':
+                # to install pyamg run 'pip install pyamg'
+                from pyamg import smoothed_aggregation_solver
+                ml = smoothed_aggregation_solver(H)
+                M = ml.aspreconditioner()
+            else:
+                raise NotImplementedError(
+                    str(lobpcg_args['preconditioner']) + "preconditioner has not been implemented. Use one of the implemented lobpcg preconditioners:" + str(implemented_lobpcg_preconditioners))
+
+
+            sol = lobpcg(H, eigenvectors_guess, largest=False, M=M, tol=1e-15, maxiter = lobpcg_args['maxiter'])
             eigenvalues, eigenvectors = sol[0], sol[1]
 
             if verbose == True:
@@ -154,20 +175,21 @@ class Hamiltonian:
 
         elif method == 'lobpcg-cupy':
             from scipy.sparse.linalg import eigsh
+            implemented_lobpcg_preconditioners = ('jacobi')
 
             if self.spatial_ndim != 3:
                 raise NotImplementedError(
-                    "lobpcg is only implemented for a 3D single particle")
+                    f"lobpcg is only implemented for a 3D single particle")
 
             from qmsolve import SingleParticle
             #First, we compute eighs eigenvectors with a grid of size N0, 
             H_eigsh = Hamiltonian(particles = SingleParticle(), 
                                   potential = self.potential, 
-                                  spatial_ndim = 3, N = N0, extent = self.extent, potential_type = self.potential_type, E_min = self.E_min)
+                                  spatial_ndim = 3, N = lobpcg_args['N0'], extent = self.extent, potential_type = self.potential_type, E_min = self.E_min)
 
             eigenvalues_eigsh, eigenvectors_eigsh = eigsh(H_eigsh.V + H_eigsh.T, k=max_states, which='LM', sigma=min(0, self.E_min))
 
-            eigenvectors_eigsh = eigenvectors_eigsh.reshape(  *[N0]*3 , max_states)
+            eigenvectors_eigsh = eigenvectors_eigsh.reshape(  *[lobpcg_args['N0']]*3 , max_states)
 
             if verbose == True:
                 print("Initial eigsh computation completed")
@@ -176,41 +198,44 @@ class Hamiltonian:
                 #Now, we interpolate them to a grid of size N and then use it as an initial guess to the lobpcg solver.
                 from scipy.interpolate import interpn
                 new_xx, new_yy, new_zz, states = np.mgrid[ -1:1:self.N*1j, -1:1:self.N*1j, -1:1:self.N*1j, -1:1:max_states*1j]
-                eigenvectors_eigsh_interpolated = interpn((np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,N0), np.linspace(-1,1,max_states)), 
+                eigenvectors_eigsh_interpolated = interpn((np.linspace(-1,1,lobpcg_args['N0']), np.linspace(-1,1,lobpcg_args['N0']), np.linspace(-1,1,lobpcg_args['N0']), np.linspace(-1,1,max_states)), 
                                                           eigenvectors_eigsh, 
                                                           np.array([new_xx, new_yy, new_zz, states]).T).T
 
             elif self.potential_type == "matrix":
                 raise NotImplementedError(
-                 "lobpcg-cupy solver has not been implemented to work with complex numbers. Use lobpcg instead")
+                f"lobpcg-cupy solver has not been implemented to work with complex numbers. Use lobpcg instead")
 
 
 
             if verbose == True:
                 print("Interpolation completed")
-            eigenvectors_guess = eigenvectors_eigsh_interpolated.reshape(  self.N**self.ndim , max_states)
+            eigenvectors_guess = eigenvectors_eigsh_interpolated.reshape(self.N**self.ndim , max_states)
 
             from cupyx.scipy.sparse.linalg import lobpcg, LinearOperator
             from cupyx.scipy.sparse import diags
             from cupyx.scipy.sparse.csr import csr_matrix
-            # preconditioning matrix should approximate the inverse of the hamiltonian
-            # we naively construct this by taking the inverse of diagonal elements
-            # and setting all others to zero. This is called the Jacobi or diagonal preconditioner.
             H = csr_matrix(H)
-            A = diags([1 / H.diagonal()], [0]).tocsc()
-            precond = lambda x: A @ x
-            M = LinearOperator(H.shape, matvec=precond, matmat=precond)
 
-            # guess for eigenvectors is computed from random numbers
-            # TODO: a better guess would be to use the eigenstates of a reference system like a square well
+            if lobpcg_args['preconditioner'] == 'jacobi':
+                # preconditioning matrix should approximate the inverse of the hamiltonian
+                # we naively construct this by taking the inverse of diagonal elements
+                # and setting all others to zero. This is called the Jacobi or diagonal preconditioner.
+                A = diags([1 / H.diagonal()], [0]).tocsc()
+                precond = lambda x: A @ x
+                M = LinearOperator(H.shape, matvec=precond, matmat=precond)
+            else:
+                raise NotImplementedError(
+                    str(lobpcg_args['preconditioner']) + "preconditioner has not been implemented. Use one of the implemented lobpcg preconditioners:" + str(implemented_lobpcg_preconditioners))
+
             import cupy as cp
-            sol = lobpcg(H, cp.array(eigenvectors_guess), largest=False, M=M, tol=1e-15, maxiter = maxiter)
+            sol = lobpcg(H, cp.array(eigenvectors_guess), largest=False, M=M, tol=1e-15, maxiter = lobpcg_args['maxiter'])
             eigenvalues, eigenvectors = sol[0].get(), sol[1].get()
 
 
         else:
             raise NotImplementedError(
-                str(method) + " solver has not been implemented. Use one of " + str(implemented_solvers))
+                str(method) + " solver has not been implemented. Use one of implemented solvers:" + str(implemented_solvers))
 
         """the result of this method depends of the particle system. For example if the systems are two fermions, 
         this method makes the eigenstates antisymmetric """

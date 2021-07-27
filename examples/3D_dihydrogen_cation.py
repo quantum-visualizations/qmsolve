@@ -24,7 +24,7 @@ H = Hamiltonian(particles = SingleParticle(),
 				spatial_ndim = 3, N = 150, extent = 9*Å)
 
 
-eigenstates = H.solve(max_states = 5, N0 = 30, method ='lobpcg')
+eigenstates = H.solve(max_states = 5, method ='lobpcg')
 print(eigenstates.energies)
 
 visualization = init_visualization(eigenstates)
