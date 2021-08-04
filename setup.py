@@ -27,7 +27,7 @@ For a quick start, take a look to the examples found in the examples subdirector
 
 setup(
     name='qmsolve',
-    version='1.0.0',
+    version='1.0.1',
     description='A module for solving and visualizing the Schrödinger equation',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -38,7 +38,9 @@ setup(
     author_email='rafael.fuente.herrezuelo@gmail.com, lammarlonaurel123456789@gmail.com, dhudsmith@gmail.com',
     license='BSD-3-Clause',
     packages=find_packages(),
-    install_requires=['numpy', 'scipy', 'matplotlib', 'mayavi', 'h5py'],
+    install_requires=['numpy', 'scipy', 'matplotlib', 'h5py' ],
+    extras_require = {'with_mayavi:python_version=="3.7"': ['vtk == 8.1.2', 'mayavi >= 4.7.1', 'PyQt5 >= 5.14.1'],
+                      'with_mayavi:python_version>="3.8"': ['vtk == 9.0.1', 'mayavi >= 4.7.1', 'PyQt5 >= 5.14.1'] },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
 

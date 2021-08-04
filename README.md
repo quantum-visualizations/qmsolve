@@ -15,6 +15,12 @@ and creating descriptive and stunning visualizations of its solutions both in 1D
 pip install qmsolve
 ```
 
+3D plotting requires to have installed [Mayavi](https://docs.enthought.com/mayavi/mayavi/installation.html). To install Mayavi directly along with QMsolve, you can type:
+
+```
+pip install qmsolve[with_mayavi]
+```
+
 ## How it works
 
 The way this simulator works is by discretizing the Hamiltonian with an arbitrary potential, 
