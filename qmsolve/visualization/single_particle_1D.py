@@ -348,3 +348,123 @@ class VisualizationSingleParticle1D(Visualization):
             a.save('animation.mp4', writer=writer)
             return
         plt.show()
+
+
+
+
+
+from .visualization import TimeVisualization
+
+class TimeVisualizationSingleParticle1D(TimeVisualization):
+    def __init__(self,simulation):
+        self.simulation = simulation
+        self.H = simulation.H
+
+    def plot(self, t, xlim=None, figsize=(16/9 *5.804 * 0.9,5.804)):
+
+
+        self.simulation.Ψ_plot = self.simulation.Ψ/self.simulation.Ψmax
+        plt.style.use("dark_background")
+
+        fig = plt.figure(figsize=figsize)
+        
+        ax = fig.add_subplot(1, 1, 1)
+
+        ax.set_xlabel("[Å]")
+        ax.set_title("$\psi(x,t)$")
+
+        time_ax = ax.text(0.97,0.97, "",  color = "white",
+                        transform=ax.transAxes, ha="right", va="top")
+        time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (t/femtoseconds)))
+
+
+
+        if xlim != None:
+            ax.set_xlim(np.array(xlim)/Å)
+
+
+        index = int((self.simulation.store_steps)/self.simulation.total_time*t)
+        
+        L = self.simulation.H.extent/Å
+
+        x = np.linspace(-self.simulation.H.extent/2, self.simulation.H.extent/2, self.simulation.H.N)
+
+
+        potential_plot = ax.plot(x/Å, (self.simulation.H.Vgrid + self.simulation.Vmin)/(self.simulation.Vmax-self.simulation.Vmin), label='$V(x)$')  
+        real_plot = ax.plot(x/Å, np.real(self.simulation.Ψ_plot[index]), label='$Re|\psi(x)|$')
+        imag_plot = ax.plot(x/Å, np.imag(self.simulation.Ψ_plot[index]), label='$Im|\psi(x)|$')
+        abs_plot = ax.plot(x/Å, np.abs(self.simulation.Ψ_plot[index]), label='$|\psi(x)|$', color='white')
+        ax.legend('lower left')
+
+        plt.show()
+
+
+    def animate(self,xlim=None, figsize=(16/9 *5.804 * 0.9,5.804), animation_duration = 5, fps = 20, save_animation = False):
+        total_frames = int(fps * animation_duration)
+        dt = self.simulation.total_time/total_frames
+        self.simulation.Ψ_plot = self.simulation.Ψ/self.simulation.Ψmax
+        plt.style.use("dark_background")
+
+        fig = plt.figure(figsize=figsize)
+        ax = fig.add_subplot(1, 1, 1)
+        index = 0
+        
+        ax.set_xlabel("[Å]")
+        ax.set_title("$\psi(x,t)$")
+
+        time_ax = ax.text(0.97,0.97, "",  color = "white",
+                        transform=ax.transAxes, ha="right", va="top")
+        time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (0./femtoseconds)))
+
+
+
+        if xlim != None:
+            ax.set_xlim(np.array(xlim)/Å)
+
+
+        index = 0
+        
+        L = self.simulation.H.extent/Å
+
+        x = np.linspace(-self.simulation.H.extent/2, self.simulation.H.extent/2, self.simulation.H.N)
+
+
+        potential_plot = ax.plot(x/Å, (self.simulation.H.Vgrid + self.simulation.Vmin)/(self.simulation.Vmax-self.simulation.Vmin), label='$V(x)$')  
+        real_plot, = ax.plot(x/Å, np.real(self.simulation.Ψ_plot[index]), label='$Re|\psi(x)|$')
+        imag_plot, = ax.plot(x/Å, np.imag(self.simulation.Ψ_plot[index]), label='$Im|\psi(x)|$')
+        abs_plot, = ax.plot(x/Å, np.abs(self.simulation.Ψ_plot[index]), label='$|\psi(x)|$', color='white')
+        ax.legend(loc = 'lower left')
+
+        import matplotlib.animation as animation
+
+
+        #print(total_frames)
+        animation_data = {'t': 0.0, 'x' :x, 'ax':ax ,'frame' : 0}
+        def func_animation(*arg):
+            
+            time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (animation_data['t']/femtoseconds)))
+
+            animation_data['t'] = animation_data['t'] + dt
+            if animation_data['t'] > self.simulation.total_time:
+                animation_data['t'] = 0.0
+
+            #print(animation_data['frame'])
+            animation_data['frame'] +=1
+            index = int((self.simulation.store_steps)/self.simulation.total_time * animation_data['t'])
+
+            real_plot.set_ydata(np.real(self.simulation.Ψ_plot[index]))
+            imag_plot.set_ydata(np.imag(self.simulation.Ψ_plot[index]))
+            abs_plot.set_ydata(np.abs(self.simulation.Ψ_plot[index]))
+
+
+            return potential_plot,real_plot,imag_plot,abs_plot, time_ax
+
+        frame = 0
+        a = animation.FuncAnimation(fig, func_animation,
+                                    blit=False, frames=total_frames, interval= 1/fps * 1000)
+        if save_animation == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), bitrate=1800)
+            a.save('animation.mp4', writer=writer)
+        else:
+            plt.show()

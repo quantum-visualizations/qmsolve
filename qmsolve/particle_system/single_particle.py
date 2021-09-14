@@ -33,6 +33,44 @@ class SingleParticle(ParticleSystem):
             self.x, self.y, self.z  = np.mgrid[ -H.extent/2: H.extent/2:H.N*1j, -H.extent/2: H.extent/2:H.N*1j, -H.extent/2: H.extent/2:H.N*1j]
             H.ndim = 3
 
+    def compute_momentum_space(self, H):
+        """
+        Used for split operator method
+        """
+
+        if H.spatial_ndim == 1:
+
+            self.px = np.linspace(
+                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                H.N,
+            )
+            self.p2 = self.px**2
+
+
+        elif H.spatial_ndim ==2:
+
+            px = np.linspace(
+                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                H.N,
+            )
+            py = np.linspace(
+                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                H.N,
+            )
+            px, py = np.meshgrid(px, py)
+
+
+            self.p2 = (px**2 + py**2)
+
+        elif self.H.spatial_ndim == 3:
+            raise NotImplementedError(
+                f"split-step isn't implemented for a 3D single particle")
+
+
+
     def build_matrix_operators(self, H):
 
         if H.spatial_ndim == 1:

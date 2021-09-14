@@ -32,12 +32,29 @@ class Visualization:
         pass
 
 
+class TimeVisualization:
+    @abstractmethod
+    def __init__(self,simulation):
+        pass
+
+    @abstractmethod
+    def plot(self):
+        pass
+
+    @abstractmethod
+    def animate(self):
+        pass
+
+
+
 from .single_particle_1D import VisualizationSingleParticle1D
 from .single_particle_2D import VisualizationSingleParticle2D
 from .two_identical_particles_1D import VisualizationIdenticalParticles1D
+from ..eigenstates import Eigenstates
 
 
-def init_visualization(eigenstates):
+def init_eigenstate_visualization(eigenstates):
+
     if eigenstates.type == "SingleParticle1D":
         return VisualizationSingleParticle1D(eigenstates) 
 
@@ -49,4 +66,38 @@ def init_visualization(eigenstates):
         return VisualizationSingleParticle3D(eigenstates)
 
     elif eigenstates.type == "TwoIdenticalParticles1D":
-        return VisualizationIdenticalParticles1D(eigenstates)
+        return VisualizationIdenticalParticles1D
+
+from .single_particle_1D import TimeVisualizationSingleParticle1D
+from .single_particle_2D import TimeVisualizationSingleParticle2D
+#from .two_identical_particles_1D import TimeVisualizationTwoParticles
+from ..particle_system import SingleParticle, TwoParticles
+from ..time_dependent_solver import TimeSimulation
+
+def init_timesimulation_visualization(simulation):
+
+    if (isinstance(simulation.H.particle_system ,SingleParticle) and (simulation.H.spatial_ndim == 1)):
+        return TimeVisualizationSingleParticle1D(simulation) 
+
+    elif (isinstance(simulation.H.particle_system , SingleParticle) and (simulation.H.spatial_ndim == 2)):
+        return TimeVisualizationSingleParticle2D(simulation) 
+
+    elif (isinstance(simulation.H.particle_system , SingleParticle) and (simulation.H.spatial_ndim == 3)):
+        raise NotImplementedError()
+        #from .single_particle_3D import TimeVisualizationSingleParticle3D
+        #return TimeVisualizationSingleParticle3D(simulation)
+
+    elif isinstance(simulation.H.particle_system , TwoParticles):
+        raise NotImplementedError()
+        #return TimeVisualizationIdenticalParticles1D(simulation)
+
+
+def init_visualization(argument):
+
+    if isinstance(argument, Eigenstates):
+        eigenstates = argument
+        return init_eigenstate_visualization(eigenstates)
+
+    elif isinstance(argument, TimeSimulation):
+        simulation = argument
+        return init_timesimulation_visualization(simulation)

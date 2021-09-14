@@ -42,6 +42,7 @@ class Hamiltonian:
                 return V
             else: 
                 V = self.potential(self.particle_system)
+                self.Vgrid = V
                 self.E_min = np.amin(V)
                 V = V.reshape(self.N ** self.ndim)
                 V = diags([V], [0])
