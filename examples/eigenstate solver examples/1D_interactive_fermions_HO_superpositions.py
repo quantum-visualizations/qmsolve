@@ -38,6 +38,7 @@ mu0 = 2.0*Å
 
 #compute the inner product of the initial state 𝜓0(x1,x2) with the eigenstates 𝜓_n(x1,x2):  
 #coeffs = <𝜓_n(x1,x2)|𝜓0(x1,x2)>
+
 coeffs = np.tensordot(eigenstates.array, 𝜓0, axes=([1, 2], [0,1]))*1.0j
 #visualize a superposition of the eigenstates
 visualization.superpositions(coeffs,xlim=[-3.5*Å, 3.5*Å], hide_controls = True)

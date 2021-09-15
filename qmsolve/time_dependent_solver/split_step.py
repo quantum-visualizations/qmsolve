@@ -2,6 +2,7 @@ import numpy as np
 from .method import Method
 import time
 from ..util.constants import hbar, Å, femtoseconds
+from ..particle_system import SingleParticle, TwoParticles
 
 
 class SplitStep(Method):
@@ -28,8 +29,12 @@ class SplitStep(Method):
         #time/dt and dt_store/dt must be integers. Otherwise dt is rounded to match that the Nt_per_store_stepdivisions are integers
         self.simulation.dt = dt_store/Nt_per_store_step
 
+        if isinstance(self.simulation.H.particle_system ,SingleParticle):
+            Ψ = np.zeros((store_steps + 1, *([self.H.N] *self.H.ndim )), dtype = np.complex128)
 
-        Ψ = np.zeros((store_steps + 1, *([self.H.N] *self.H.ndim )), dtype = np.complex128)
+        elif isinstance(self.simulation.H.particle_system,TwoParticles):
+            Ψ = np.zeros((store_steps + 1, *([self.H.N] * 2)), dtype = np.complex128)
+
         Ψ[0] = np.array(initial_wavefunction(self.H.particle_system))
 
 
@@ -64,7 +69,6 @@ class SplitStepCupy(Method):
         self.H = simulation.H
         self.simulation.Vmin = np.amin(self.H.Vgrid)
         self.simulation.Vmax = np.amax(self.H.Vgrid)
-        print(self.simulation.Vmin, self.simulation.Vmax)
 
         self.H.particle_system.compute_momentum_space(self.H)
         self.p2 = self.H.particle_system.p2

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import widgets
 from matplotlib import animation
 from .visualization import Visualization
-from ..util.colour_functions import complex_to_rgb
+from ..util.colour_functions import complex_to_rgb, complex_to_rgba
 from ..util.constants import *
 
 
@@ -423,3 +423,164 @@ class VisualizationIdenticalParticles1D(Visualization):
 
 
 
+from .visualization import TimeVisualization
+
+class TimeVisualizationTwoIdenticalParticles1D(TimeVisualization):
+    def __init__(self,simulation):
+        self.simulation = simulation
+        self.H = simulation.H
+
+    def plot(self, t, xlim=None, figsize=(10, 5), potential_saturation=0.8, wavefunction_saturation=1.0):
+
+
+        self.simulation.Ψ_plot = self.simulation.Ψ/self.simulation.Ψmax
+        plt.style.use("dark_background")
+
+        fig = plt.figure(figsize=figsize)
+        
+        grid = plt.GridSpec(10, 10, hspace=0.4, wspace=6.0)
+        ax1 = fig.add_subplot(grid[0:10, 0:5])
+        ax2 = fig.add_subplot(grid[3:7, 5:10], sharex=ax1) # probability density of finding any particle at x 
+
+        ax1.set_xlabel("$x_1$ [Å]")
+        ax1.set_ylabel("$x_2$ [Å]")
+        ax1.set_title("$\psi(x_1,x_2)$")
+
+        ax2.set_xlabel("$x$ [Å]")
+        ax2.set_ylabel("${\| \Psi(x)\|}^{2} $")
+        ax2.set_title("Probability density")
+
+
+        time_ax = ax2.text(0.97,0.97, "",  color = "white",
+                        transform=ax2.transAxes, ha="right", va="top")
+        time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (t/femtoseconds)))
+
+
+
+        if xlim != None:
+            ax1.set_xlim(np.array(xlim)/Å)
+            ax1.set_ylim(np.array(xlim)/Å)
+            ax2.set_xlim(np.array(xlim)/Å)
+
+
+        index = int((self.simulation.store_steps)/self.simulation.total_time*t)
+        
+        L = self.simulation.H.extent/Å
+        ax1.imshow((self.simulation.H.Vgrid + self.simulation.Vmin)/(self.simulation.Vmax-self.simulation.Vmin), vmax = 1.0/potential_saturation, vmin = 0, cmap = "gray", origin = "lower", interpolation = "bilinear", extent = [-L/2, L/2, -L/2, L/2])  
+
+        ax1.imshow(complex_to_rgba(self.simulation.Ψ_plot[index], max_val= wavefunction_saturation), origin = "lower", interpolation = "bilinear", extent = [-L/2, L/2, -L/2, L/2])  
+        
+        prob_density = np.abs(np.sum(  (self.simulation.Ψ_plot[index])*np.conjugate(self.simulation.Ψ_plot[index])  , axis = 1))
+        x = np.linspace(-L/2, L/2, self.simulation.H.N)
+        prob_plot = ax2.plot(x,  prob_density, color= "cyan")
+        prob_plot_fill = ax2.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
+        #ax1.set_aspect('equal', adjustable='box')
+        #ax2.set_aspect('equal', adjustable='box')
+
+        ax2.set_ylim([0,np.amax(prob_density)*1.3])
+
+
+        plt.show()
+
+
+    def animate(self,xlim=None, ylim=None, figsize=(10, 6), animation_duration = 5, fps = 20, save_animation = False, potential_saturation=0.8, wavefunction_saturation=0.8):
+        total_frames = int(fps * animation_duration)
+        dt = self.simulation.total_time/total_frames
+        self.simulation.Ψ_plot = self.simulation.Ψ/self.simulation.Ψmax
+        plt.style.use("dark_background")
+
+        fig = plt.figure(figsize=figsize)
+        
+        grid = plt.GridSpec(10, 10, hspace=0.4, wspace=6.0)
+        ax1 = fig.add_subplot(grid[0:10, 0:5])
+        ax2 = fig.add_subplot(grid[3:7, 5:10], sharex=ax1) # probability density of finding any particle at x 
+        index = 0
+        
+        L = self.simulation.H.extent/Å
+        potential_plot = ax1.imshow((self.simulation.H.Vgrid + self.simulation.Vmin)/(self.simulation.Vmax-self.simulation.Vmin), vmax = 1.0/potential_saturation, vmin = 0, cmap = "gray", origin = "lower", interpolation = "bilinear", extent = [-L/2, L/2, -L/2, L/2])  
+        wavefunction_plot = ax1.imshow(complex_to_rgba(self.simulation.Ψ_plot[0], max_val= wavefunction_saturation), origin = "lower", interpolation = "bilinear", extent=[-L / 2,L / 2,-L / 2,L / 2])
+
+
+        ax1.set_xlabel("$x_1$ [Å]")
+        ax1.set_ylabel("$x_2$ [Å]")
+        ax1.set_title("$\psi(x_1,x_2)$")
+
+        ax2.set_xlabel("$x$ [Å]")
+        ax2.set_ylabel("${\| \Psi(x)\|}^{2} $")
+        ax2.set_title("Probability density")
+
+
+        time_ax = ax2.text(0.97,0.97, "",  color = "white",
+                        transform=ax2.transAxes, ha="right", va="top")
+        time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (0.00/femtoseconds)))
+
+
+
+        if xlim != None:
+            ax1.set_xlim(np.array(xlim)/Å)
+            ax1.set_ylim(np.array(xlim)/Å)
+            ax2.set_xlim(np.array(xlim)/Å)
+
+        prob_density = np.abs(np.sum(  (self.simulation.Ψ_plot[index])*np.conjugate(self.simulation.Ψ_plot[index])  , axis = 1))
+
+        x = np.linspace(-L/2, L/2, self.simulation.H.N)
+        #prob_plot, = ax2.plot(x,  prob_density, color= "cyan")
+        #prob_plot_fill = ax2.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
+        #ax1.set_aspect('equal', adjustable='box')
+
+        ax2.set_ylim([0,np.amax(prob_density)*1.3])
+
+
+
+
+        #print(total_frames)
+        animation_data = {'t': 0.0, 'ax1':ax1 , 'ax2':ax2 ,'frame' : 0, 'max_prob_density' : max(prob_density)*1.3}
+        def func_animation(*arg):
+            
+            time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (animation_data['t']/femtoseconds)))
+
+            animation_data['t'] = animation_data['t'] + dt
+            if animation_data['t'] > self.simulation.total_time:
+                animation_data['t'] = 0.0
+
+            #print(animation_data['frame'])
+            animation_data['frame'] +=1
+            index = int((self.simulation.store_steps)/self.simulation.total_time * animation_data['t'])
+
+            wavefunction_plot.set_data(complex_to_rgba(self.simulation.Ψ_plot[index], max_val= wavefunction_saturation))
+            
+            if save_animation == True: #avoid reseting the axis makes it faster
+                ax2.clear()
+                ax2.set_xlabel("$x$ [Å]")
+                ax2.set_ylabel("${\| \Psi(x)\|}^{2} $")
+                ax2.set_title("Probability density")
+
+            prob_density = np.abs(np.sum(  (self.simulation.Ψ_plot[index])*np.conjugate(self.simulation.Ψ_plot[index])  , axis = 1))
+
+            prob_plot, = ax2.plot(x,  prob_density, color= "cyan")
+            prob_plot_fill = ax2.fill_between(x,prob_density, alpha=0.1, color= "cyan" )
+            new_prob_density = max(prob_density)*1.3
+            if new_prob_density > animation_data['max_prob_density']:
+                animation_data['max_prob_density'] = new_prob_density
+
+            ax2.set_ylim([0,animation_data['max_prob_density']])
+
+
+
+
+
+            return potential_plot,wavefunction_plot, time_ax, prob_plot, prob_plot_fill
+
+
+
+
+
+        frame = 0
+        a = animation.FuncAnimation(fig, func_animation,
+                                    blit=True, frames=total_frames, interval= 1/fps * 1000)
+        if save_animation == True:
+            Writer = animation.writers['ffmpeg']
+            writer = Writer(fps=fps, metadata=dict(artist='Me'), bitrate=1800)
+            a.save('animation.mp4', writer=writer)
+        else:
+            plt.show()

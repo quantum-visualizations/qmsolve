@@ -1,6 +1,9 @@
 import numpy as np
 from qmsolve import Hamiltonian, SingleParticle, TimeSimulation, init_visualization, femtoseconds, m_e, Å
 
+#=========================================================================================================#
+# First, we define the Hamiltonian of a single particle confined in an harmonic oscillator potential. 
+#=========================================================================================================#
 
 #interaction potential
 def harmonic_oscillator(particle):
@@ -17,7 +20,10 @@ H = Hamiltonian(particles = SingleParticle(m = m_e),
                 spatial_ndim = 1, N = 500, extent = 30 * Å)
 
 
-#wavefunction at t = 0. 
+#=========================================================================================================#
+# Define the wavefunction at t = 0  (initial condition)
+#=========================================================================================================#
+
 def initial_wavefunction(particle):
     #This wavefunction correspond to a gaussian wavepacket with a mean X momentum equal to p_x0
     σ = 0.7 * Å
@@ -25,14 +31,19 @@ def initial_wavefunction(particle):
     p_x0 = m_e * v0
     return np.exp( -1/(4* σ**2) * ((particle.x-0)**2) / np.sqrt(2*np.pi* σ**2))  *np.exp(p_x0*particle.x*1j)
 
+#=========================================================================================================#
+# Set and run the simulation
+#=========================================================================================================#
 
 total_time = 18 * femtoseconds
-
 #set the time dependent simulation
 sim = TimeSimulation(hamiltonian = H, method = "split-step-cupy")
 sim.run(initial_wavefunction, total_time = total_time, dt = total_time/1600., store_steps = 800)
 
-#visualize the time dependent simulation
+#=========================================================================================================#
+# Finally, we visualize the time dependent simulation
+#=========================================================================================================#
+
 visualization = init_visualization(sim)
 visualization.animate(xlim=[-15* Å,15* Å], animation_duration = 10, save_animation = True, fps = 30)
 

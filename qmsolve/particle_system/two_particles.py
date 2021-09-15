@@ -33,6 +33,33 @@ class TwoParticles(ParticleSystem):
 
             self.x1, self.y1, self.x2, self.y2 = np.meshgrid(x1,y1,x2,y2)
 
+    def compute_momentum_space(self, H):
+        """
+        Used for split step method
+        """
+
+        if H.spatial_ndim == 1:
+
+            p1 = np.linspace(
+                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                H.N,
+            )
+            p2 = np.linspace(
+                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                np.pi * H.N // 2 / (H.extent / 2) * hbar,
+                H.N,
+            )
+            p1, p2 = np.meshgrid(p1, p2)
+
+
+            self.p2 = (p1**2 + p2**2)
+
+        elif self.H.spatial_ndim == 2:
+            raise NotImplementedError(
+                f"split-step isn't implemented for a 2D two particle")
+
+
 
     def get_kinetic_matrix(self, H):
 

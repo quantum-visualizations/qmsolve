@@ -35,7 +35,7 @@ class SingleParticle(ParticleSystem):
 
     def compute_momentum_space(self, H):
         """
-        Used for split operator method
+        Used for split step method
         """
 
         if H.spatial_ndim == 1:
