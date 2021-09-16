@@ -66,7 +66,7 @@ def init_eigenstate_visualization(eigenstates):
         return VisualizationSingleParticle3D(eigenstates)
 
     elif eigenstates.type == "TwoIdenticalParticles1D":
-        return VisualizationIdenticalParticles1D
+        return VisualizationIdenticalParticles1D(eigenstates)
 
 from .single_particle_1D import TimeVisualizationSingleParticle1D
 from .single_particle_2D import TimeVisualizationSingleParticle2D
