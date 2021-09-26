@@ -1,6 +1,7 @@
 numpy >= 1.18.5
 matplotlib >= 3.3.4
 scipy >= 1.4.1
+progressbar>=2.5
 
 # The following is necessary
 # for 3D graphics.
