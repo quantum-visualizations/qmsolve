@@ -34,8 +34,8 @@ def initial_wavefunction(particle):
             - np.exp(-(x1 - 𝜇02)**2/(4*σ**2))*np.exp(-(x2 - 𝜇01)**2/(4*σ**2)))
 
 
-total_time = 10 * femtoseconds
-sim = TimeSimulation(hamiltonian = H, method = "split-step-cupy")
+total_time = 1. * femtoseconds
+sim = TimeSimulation(hamiltonian = H, method = "split-step")
 sim.run(initial_wavefunction, total_time = total_time, dt = total_time/8000., store_steps = 400)
 
 visualization = init_visualization(sim)

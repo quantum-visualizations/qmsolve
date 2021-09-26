@@ -8,9 +8,13 @@ from qmsolve import Hamiltonian, SingleParticle, TimeSimulation, init_visualizat
 #interaction potential
 def harmonic_oscillator(particle):
     m = m_e
-    T = 5*femtoseconds
+    T = 0.5*femtoseconds
     w = 2*np.pi/T
     k = m* w**2
+
+    v0 = 64. * Å / femtoseconds
+    print("oscillation_amplitude ", np.sqrt(m/k) *v0/Å, " amstrongs")
+
     return 0.5 * k * particle.x**2    +    0.5 * k * particle.y**2
 
 
@@ -28,7 +32,7 @@ H = Hamiltonian(particles = SingleParticle(m = m_e),
 def initial_wavefunction(particle):
     #This wavefunction correspond to a gaussian wavepacket with a mean X momentum equal to p_x0
     σ = 1.0 * Å
-    v0 = 8 * Å / femtoseconds
+    v0 = 64. * Å / femtoseconds
     p_x0 = m_e * v0
     return np.exp( -1/(4* σ**2) * ((particle.x-0)**2+(particle.y-0)**2)) / np.sqrt(2*np.pi* σ**2)  *np.exp(p_x0*particle.x*1j)
 
@@ -38,8 +42,8 @@ def initial_wavefunction(particle):
 #=========================================================================================================#
 
 
-total_time = 15 * femtoseconds
-sim = TimeSimulation(hamiltonian = H, method = "split-step-cupy")
+total_time = 1.5 * femtoseconds
+sim = TimeSimulation(hamiltonian = H, method = "split-step")
 sim.run(initial_wavefunction, total_time = total_time, dt = total_time/1000., store_steps = 400)
 
 

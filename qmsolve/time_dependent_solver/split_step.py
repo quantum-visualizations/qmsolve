@@ -3,7 +3,17 @@ from .method import Method
 import time
 from ..util.constants import hbar, Å, femtoseconds
 from ..particle_system import SingleParticle, TwoParticles
+import progressbar
 
+"""
+Split-operator method for the Schrödinger equation.
+References:
+https://www.algorithm-archive.org/contents/
+split-operator_method/split-operator_method.html
+https://en.wikipedia.org/wiki/Split-step_method
+Original implementation:
+https://github.com/marl0ny/split-operator-simulations
+"""
 
 class SplitStep(Method):
     def __init__(self, simulation):
@@ -46,7 +56,8 @@ class SplitStep(Method):
         Uk = np.exp(-0.5j*(self.simulation.dt/(m*hbar))*self.p2)
 
         t0 = time.time()
-        for i in range(store_steps):
+        bar = progressbar.ProgressBar()
+        for i in bar(range(store_steps)):
             tmp = np.copy(Ψ[i])
             for j in range(Nt_per_store_step):
                 c = np.fft.fftshift(np.fft.fftn(Ur*tmp))
@@ -103,7 +114,8 @@ class SplitStepCupy(Method):
         Uk = cp.exp(-0.5j*(self.simulation.dt/(m*hbar))*self.p2)
 
         t0 = time.time()
-        for i in range(store_steps):
+        bar = progressbar.ProgressBar()
+        for i in bar(range(store_steps)):
             tmp = cp.copy(Ψ[i])
             for j in range(Nt_per_store_step):
                 c = cp.fft.fftshift(cp.fft.fftn(Ur*tmp))

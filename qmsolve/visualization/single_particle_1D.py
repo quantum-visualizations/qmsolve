@@ -375,7 +375,7 @@ class TimeVisualizationSingleParticle1D(TimeVisualization):
 
         time_ax = ax.text(0.97,0.97, "",  color = "white",
                         transform=ax.transAxes, ha="right", va="top")
-        time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (t/femtoseconds)))
+        time_ax.set_text(u"t = {} femtoseconds".format("%.3f"  % (t/femtoseconds)))
 
 
 
@@ -414,7 +414,7 @@ class TimeVisualizationSingleParticle1D(TimeVisualization):
 
         time_ax = ax.text(0.97,0.97, "",  color = "white",
                         transform=ax.transAxes, ha="right", va="top")
-        time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (0./femtoseconds)))
+        time_ax.set_text(u"t = {} femtoseconds".format("%.3f"  % (0./femtoseconds)))
 
 
 
@@ -442,7 +442,7 @@ class TimeVisualizationSingleParticle1D(TimeVisualization):
         animation_data = {'t': 0.0, 'x' :x, 'ax':ax ,'frame' : 0}
         def func_animation(*arg):
             
-            time_ax.set_text(u"t = {} femtoseconds".format("%.2f"  % (animation_data['t']/femtoseconds)))
+            time_ax.set_text(u"t = {} femtoseconds".format("%.3f"  % (animation_data['t']/femtoseconds)))
 
             animation_data['t'] = animation_data['t'] + dt
             if animation_data['t'] > self.simulation.total_time:

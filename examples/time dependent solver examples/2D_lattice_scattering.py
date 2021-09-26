@@ -32,18 +32,18 @@ H = Hamiltonian(particles = SingleParticle(m = m_e),
 def initial_wavefunction(particle):
     #This wavefunction correspond to a gaussian wavepacket with a mean X momentum equal to p_x0
     σ = 1.0 * Å
-    v0 = 8 * Å / femtoseconds
+    v0 = 80 * Å / femtoseconds
     p_x0 = m_e * v0
     return np.exp( -1/(4* σ**2) * ((particle.x+15)**2+(particle.y-0)**2)) / np.sqrt(2*np.pi* σ**2)  *np.exp(p_x0*particle.x*1j)
 
 
 
 # Set and run the simulation
-total_time = 4 * femtoseconds
-sim = TimeSimulation(hamiltonian = H, method = "split-step-cupy")
+total_time = 0.4 * femtoseconds
+sim = TimeSimulation(hamiltonian = H, method = "split-step")
 sim.run(initial_wavefunction, total_time = total_time, dt = total_time/2000., store_steps = 500)
 
 
 # Finally, we visualize the time dependent simulation
 visualization = init_visualization(sim)
-visualization.animate(xlim=[-25* Å,25* Å], ylim=[-25* Å,25* Å], potential_saturation = 0.5, wavefunction_saturation = 0.2, animation_duration = 10, fps = 20)
+visualization.animate(xlim=[-25* Å,25* Å], ylim=[-25* Å,25* Å], potential_saturation = 1.0, wavefunction_saturation = 0.1, animation_duration = 10, fps = 20)

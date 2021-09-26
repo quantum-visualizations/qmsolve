@@ -6,9 +6,9 @@ from qmsolve import Hamiltonian, SingleParticle, TimeSimulation, init_visualizat
 def potential_barrier(particle):
     #This wavefunction correspond to a gaussian wavepacket with a mean X momentum equal to p_x0
     V0 = 2
-    a = 1
-    x0 = 2
-    barrier = np.where((particle.x > x0 - a/2 * Å) & (particle.x < x0 + a/2 * Å), V0, 0)
+    a = 1  * Å
+    x0 = 4  * Å
+    barrier = np.where((particle.x > x0 - a/2) & (particle.x < x0 + a/2), V0, 0)
     return barrier
 
 
@@ -22,12 +22,12 @@ H = Hamiltonian(particles = SingleParticle(m = m_e),
 def initial_wavefunction(particle):
     #This wavefunction correspond to a gaussian wavepacket with a mean X momentum equal to p_x0
     σ = 0.7 * Å
-    v0 = 4 * Å / femtoseconds
+    v0 = 40 * Å / femtoseconds
     p_x0 = m_e * v0
     return np.exp( -1/(4* σ**2) * ((particle.x+10)**2) / np.sqrt(2*np.pi* σ**2))  *np.exp(p_x0*particle.x*1j)
 
 
-total_time = 5 * femtoseconds
+total_time = 0.5 * femtoseconds
 
 #set the time dependent simulation
 sim = TimeSimulation(hamiltonian = H, method = "split-step")

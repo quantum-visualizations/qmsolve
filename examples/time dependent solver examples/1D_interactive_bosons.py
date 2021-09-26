@@ -19,7 +19,7 @@ def harmonic_oscillator_plus_coulomb_interaction(fermions):
 #build the Hamiltonian of the system
 H = Hamiltonian(particles = TwoBosons(), 
 				potential = harmonic_oscillator_plus_coulomb_interaction, 
-				spatial_ndim = 1, N = 300, extent = 25*Å)
+				spatial_ndim = 1, N = 256, extent = 25*Å)
 
 
 def initial_wavefunction(particle):
@@ -34,8 +34,8 @@ def initial_wavefunction(particle):
             + np.exp(-(x1 - 𝜇02)**2/(4*σ**2))*np.exp(-(x2 - 𝜇01)**2/(4*σ**2)))
 
 
-total_time = 10 * femtoseconds
-sim = TimeSimulation(hamiltonian = H, method = "split-step-cupy")
+total_time = 0.5 * femtoseconds
+sim = TimeSimulation(hamiltonian = H, method = "split-step")
 sim.run(initial_wavefunction, total_time = total_time, dt = total_time/8000., store_steps = 400)
 
 visualization = init_visualization(sim)
