@@ -61,7 +61,7 @@ def initial_wavefunction(particle):
 
 
 total_time = 1.0 * femtoseconds 
-sim = TimeSimulation(hamiltonian = H, method = "crank-nicolson-cupy")
+sim = TimeSimulation(hamiltonian = H, method = "crank-nicolson")
 sim.run(initial_wavefunction, total_time = total_time, dt = total_time/(4000), store_steps = 200)
 
 

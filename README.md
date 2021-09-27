@@ -57,6 +57,7 @@ Because we have two 1D particles, we need a two-dimensional space to represent i
 
 An interesting characteristic that can be observed in these examples is how in the non interactive case the energy levels are equally spaced and degenerated, while in the interactive case the degeneracy is broken.
 As a starting point we suggest you to modify the confinement and the interaction potential to see what happens!
+
 The time dependent version of this example can be found in `1D_interactive_fermions_HO_superpositions.py`
 
 
@@ -91,16 +92,17 @@ eigenstates = H.solve( max_states = 50, method ='lobpcg-cupy')
 
 ## Time Dependent Examples
 
-These examples use the `TimeSimulation` class. This class takes as an argument the Hamiltonian you hacve previously defined, and the method you desire to use. Currently, there are two methods implemented: [Split-Step Fourier](https://en.wikipedia.org/wiki/Split-step_method) and [Cayley-Crank-Nicolson](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method). To specify the method you want to use, use the arguments `method ='split-step'` and `method ='crank-nicolson'` respectively.
+These examples use the `TimeSimulation` class. This class takes as arguments the Hamiltonian you have previously defined, and the method you desire to use. Currently, there are two methods implemented: [Split-Step Fourier](https://en.wikipedia.org/wiki/Split-step_method) and [Cayley-Crank-Nicolson](https://en.wikipedia.org/wiki/Crank%E2%80%93Nicolson_method). To specify the method you want to use, use the arguments `method ='split-step'` and `method ='crank-nicolson'` respectively.
 
-Once the `TimeSimulation` is set up, you need to use `TimeSimulation.run()` to perform the simulation. It takes the following arguments: 
+Once the `TimeSimulation` is set up, you need to use `TimeSimulation.run` method to perform the simulation. It takes the following arguments: 
 
- - `initial_wavefunction`: State of the system at t=0, specified as a function of the particle observables.
- - `dt`: size of simulation time step, 
- - `total_time`: amount of time to evolve the wavefunction
- - `store_steps`: number of time steps to save to later visualize.
+ - `initial_wavefunction`: State of the system at `t=0`, specified as a function of the particle observables.
+ - `dt`: size of simulation time step.
+ - `total_time`: amount of time to evolve the wavefunction.
+ - `store_steps`: number of time steps to save in the array denoted by `TimeSimulation.Ψ` to later visualize or analyze. 
+ `total_time`/`store_steps` must be larger or equal to `dt`.
 
-All examples as `initial_wavefunction` use a Gaussian wave-packet with standard deviation of position `σ` and initial momentum `p_x0` and `p_y0`
+By default in the examples, `initial_wavefunction` initializes a Gaussian wave-packet with a spatial standard deviation equal to `σ` and initial momentum `p_x0` and `p_y0`.
 
 ```
 python 2D_double_slit.py
