@@ -73,7 +73,7 @@ python 1D_non_interactive_fermions_HO.py
 ```
 python 3D_four_gaussian_wells.py
 ```
-This example serves to illustrate how to use the 3D solver. The results for other number of Gaussian wells are presented in [this video](https://www.youtube.com/watch?v=eCk8aIIEZSg). Gaussian wells are preferred as didactic examples because they are absence of a singularity in their potential makes the computations easier. For realistic atomic examples, you can take a look at `3D_hydrogen_atom.py` and `3D_dihydrogen_cation.py` which use Coulomb potential.
+This example serves to illustrate how to use the 3D solver. The results for other number of Gaussian wells are presented in [this video](https://www.youtube.com/watch?v=eCk8aIIEZSg). Gaussian wells are preferred as didactic examples because the absence of a singularities in its potential makes the computations easier. For realistic atomic examples, you can take a look at `3D_hydrogen_atom.py` and `3D_dihydrogen_cation.py` which use Coulomb potential.
 
 Furthermore, in the hydrogen atom example you can turn on an electric field to visualize the [Stark effect](https://en.wikipedia.org/wiki/Stark_effect), or a magnetic field in  `3D_hydrogen_atom_magnetic_field.py` to visualize the [Zeeman effect](https://en.wikipedia.org/wiki/Zeeman_effect).
 
@@ -121,7 +121,7 @@ Generally, the Split Step method is preferred over Crank Nicolson both because o
 
 Both methods are also implemented to be GPU-accelerated with cupy. Specifically, the speed boost of the cupy split-step is tested to be one and two orders of magnitudes faster than the CPU implementation, depending of the GPU and the grid size used. To use GPU acceleration in your simulations, use the arguments `method ='split-step-cupy'` and `method ='crank-nicolson-cupy'` in the TimeSimulation constructor.
 
-The interface use [Hartree atomic units](https://en.wikipedia.org/wiki/Hartree_atomic_units) for input. In the file [constants.py](https://github.com/quantum-visualizations/qmsolve/blob/main/qmsolve/util/constants.py) there is a list of common conversion factors from other units, that can be imported and used to build your potential.
+The interface uses [Hartree atomic units](https://en.wikipedia.org/wiki/Hartree_atomic_units) for input. In the file [constants.py](https://github.com/quantum-visualizations/qmsolve/blob/main/qmsolve/util/constants.py) there is a list of common conversion factors from other units, that can be imported and used to build your potential.
 
 ## Main developers
 
