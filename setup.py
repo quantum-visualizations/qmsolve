@@ -21,6 +21,8 @@ Finally, the eigenstates can be plotted with the `visualization` class.
 The `visualization.superpositions` method features the possibility of interactively visualizing a superposition of the computed eigenstates and studying 
 the time dependence of the resulting wavefunction. 
 
+For efficiently solving the time dependent Schrödinger equation, `TimeSimulation` class must be used. It takes as an argument the Hamiltonian you have previously defined, and the method you desire to use.
+
 For a quick start, take a look to the examples found in the examples subdirectory.
 """
 

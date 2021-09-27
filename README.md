@@ -117,7 +117,7 @@ This script shows an example where Crank Nicolson method is required. It present
 
 ![animation](/images/2D_cyclotron_orbit_magneticfield.gif)
 
-Generally, the Split Step method is preferred over Crank Nicolson both because of the computational cost of the time step and its associated error. Split Step has a time step error of cubic order O(Δt^3) while Crank Nicolson time step error is quadratic O(Δt^2). Thus Crank Nicolson requires more time steps to achieve the Split Step accuracy. However, Split Step can only be used for potentials of the form `V(x,y,z)`. Therefore, Crank Nicolson use is necessary when the potential is also dependent of the particles momentum, like in the cyclotron orbit example.
+Generally, the Split Step method is preferred over Crank Nicolson both because of the computational cost of the time step and its associated error. Split Step has a time step error of cubic order `O(Δt^3)` while Crank Nicolson time step error is quadratic `O(Δt^2)`. Thus Crank Nicolson requires more time steps to achieve the Split Step accuracy. However, Split Step can only be used for potentials of the form `V(x,y,z)` and Crank Nicolson use is necessary when the potential is also dependent of the particles momentum, like in the cyclotron orbit example.
 
 Both methods are also implemented to be GPU-accelerated with cupy. Specifically, the speed boost of the cupy split-step is tested to be one and two orders of magnitudes faster than the CPU implementation, depending of the GPU and the grid size used. To use GPU acceleration in your simulations, use the arguments `method ='split-step'` and `method ='crank-nicolson'` in the TimeSimulation constructor.
 
