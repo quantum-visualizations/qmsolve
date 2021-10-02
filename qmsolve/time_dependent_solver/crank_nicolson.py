@@ -8,8 +8,8 @@ from scipy.sparse import linalg
 import progressbar
 
 """
-Crank-Nicolson method for the Schrödinger equation.
-Original implementation: https://gist.github.com/marl0ny/23947165652ccad73e55b01241afbe77 
+Crank-Nicolson method for the Schrödinger equation: https://imsc.uni-graz.at/haasegu/Lectures/HPC-II/SS17/presentation1_Schroedinger-Equation_HPC2-seminar.pdf
+Prototype and original implementation: https://gist.github.com/marl0ny/23947165652ccad73e55b01241afbe77 
 
 Jacobi iteration can be used to solve for the system of equations that occurs
 when using the Crank-Nicolson method. This is following an
@@ -87,13 +87,6 @@ class CrankNicolson(Method):
 
         BETA = 0.5j*self.simulation.dt/hbar
 
-
-        #I = sparse.eye(self.H.N)
-        #T_ =  sparse.diags([-2., 1., 1.], [0,-1, 1] , shape=(self.H.N, self.H.N))*-k/(m*self.H.dx**2)
-
-        #T =  sparse.kron(T_,I) + sparse.kron(I,T_)
-
-        #I = sparse.eye(self.H.N ** 2)
         H_matrix = self.H.T + self.H.V
         A = I + BETA*H_matrix
         B = I - BETA*H_matrix

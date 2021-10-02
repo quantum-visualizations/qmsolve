@@ -7,12 +7,14 @@ import progressbar
 
 """
 Split-operator method for the Schrödinger equation.
+
+Prototype and original implementation:
+https://github.com/marl0ny/split-operator-simulations
+
 References:
 https://www.algorithm-archive.org/contents/
 split-operator_method/split-operator_method.html
 https://en.wikipedia.org/wiki/Split-step_method
-Original implementation:
-https://github.com/marl0ny/split-operator-simulations
 """
 
 class SplitStep(Method):
