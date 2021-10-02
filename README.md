@@ -35,12 +35,13 @@ For efficiently solving the time dependent Schrödinger equation, `TimeSimulatio
 
 For a quick start, take a look to the examples found in the [examples subdirectory](https://github.com/quantum-visualizations/qmsolve/tree/main/examples).
 
+
 ## Eigenstate Solver Examples
 
 To perform the simulations, just run from the corresponding Python scripts on the command prompt.
 
 ```
-[python 1D_harmonic_oscillator.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator.py)
+python 1D_harmonic_oscillator.py
 ```
 This is the simplest example and one of the most well-studied Hamiltonians. The script uploaded serves as an example of how to use the interface of the Eigenstate solver. The first part of the script returns the energies and the visualization of the eigenstates of the harmonic oscillator. The second part returns a simulation of a superposition of the computed eigenstates, whose coefficients can be interactively modified using the circular widgets presented below the animation.
  
@@ -48,7 +49,7 @@ This is the simplest example and one of the most well-studied Hamiltonians. The 
 
 ---
 ```
-[python 1D_interactive_fermions_HO.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_interactive_fermions_HO.py)
+python 1D_interactive_fermions_HO.py
 ```
 
 These two examples show two fermions confined in 1D harmonic oscillator. The top-left plot represents the configuration space of the system. 
@@ -58,25 +59,25 @@ Because we have two 1D particles, we need a two-dimensional space to represent i
 An interesting characteristic that can be observed in these examples is how in the non interactive case the energy levels are equally spaced and degenerated, while in the interactive case the degeneracy is broken.
 As a starting point we suggest you to modify the confinement and the interaction potential to see what happens!
 
-The time dependent version of this example can be found in `[1D_interactive_fermions_HO_superpositions.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_interactive_fermions_HO_superpositions.py)`
+The time dependent version of this example can be found in `1D_interactive_fermions_HO_superpositions.py`
 
 
 ![animation](/images/1D_interactive_fermions.gif)
 
 ---
 ```
-[python 1D_non_interactive_fermions_HO.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_interactive_fermions_HO_superpositions.py)
+python 1D_non_interactive_fermions_HO.py
 ```
 
 ![animation](/images/1D_non_interactive_fermions.gif)
 
 ---
 ```
-[python 3D_four_gaussian_wells.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/2D_four_gaussian_wells.py)
+python 3D_four_gaussian_wells.py
 ```
-This example serves to illustrate how to use the 3D solver. The results for other number of Gaussian wells are presented in [this video](https://www.youtube.com/watch?v=eCk8aIIEZSg). Gaussian wells are preferred as didactic examples because the absence of a singularities in its potential makes the computations easier. For realistic atomic examples, you can take a look at `[3D_hydrogen_atom.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/3D_hydrogen_atom.py)` and `[3D_dihydrogen_cation.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/3D_dihydrogen_cation.py)` which use Coulomb potential.
+This example serves to illustrate how to use the 3D solver. The results for other number of Gaussian wells are presented in [this video](https://www.youtube.com/watch?v=eCk8aIIEZSg). Gaussian wells are preferred as didactic examples because the absence of a singularities in its potential makes the computations easier. For realistic atomic examples, you can take a look at `3D_hydrogen_atom.py` and `3D_dihydrogen_cation.py` which use Coulomb potential.
 
-Furthermore, in the hydrogen atom example you can turn on an electric field to visualize the [Stark effect](https://en.wikipedia.org/wiki/Stark_effect), or a magnetic field in  `[3D_hydrogen_atom_magnetic_field.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/3D_hydrogen_atom_magnetic_field.py)` to visualize the [Zeeman effect](https://en.wikipedia.org/wiki/Zeeman_effect).
+Furthermore, in the hydrogen atom example you can turn on an electric field to visualize the [Stark effect](https://en.wikipedia.org/wiki/Stark_effect), or a magnetic field in  `3D_hydrogen_atom_magnetic_field.py` to visualize the [Zeeman effect](https://en.wikipedia.org/wiki/Zeeman_effect).
 
 ![animation](/images/3D_four_gaussian_wells.gif)
 
@@ -105,7 +106,7 @@ Once the `TimeSimulation` is set up, you need to use `TimeSimulation.run` method
 By default in the examples, `initial_wavefunction` initializes a Gaussian wave-packet with a spatial standard deviation equal to `σ` and initial momentum `p_x0` and `p_y0`.
 
 ```
-[python 2D_double_slit.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/time%20dependent%20solver%20examples/2D_double_slit.py)
+python 2D_double_slit.py
 ```
 This is a famous example, which was used to demonstrate the wave-like behavior of matter. In this script, the user can vary the slits separation, width, and depth to study their effect on the diffracted wavefunction.
 
@@ -113,7 +114,7 @@ This is a famous example, which was used to demonstrate the wave-like behavior o
 
 ---
 ```
-[python 2D_cyclotron_orbit_magneticfield.py](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/time%20dependent%20solver%20examples/2D_cyclotron_orbit_magneticfield.py)
+python 2D_cyclotron_orbit_magneticfield.py
 ```
 This script shows an example where Crank Nicolson method is required. It presents a charged particle under a strong and uniform magnetic field, being confined in a quantum mechanical cyclotron orbit. The period and the radius of the orbit are compared with the classical values. Unlike other confinement potentials like the harmonic oscillator, the initial wavepacket is greatly dispersed over time.
 
