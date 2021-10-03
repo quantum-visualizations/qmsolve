@@ -58,7 +58,7 @@ python 1D_harmonic_oscillator.py
 ```
 [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator.py)
 
-This is the simplest example and one of the most well-studied Hamiltonians. The script uploaded serves as an example of how to use the interface of the Eigenstate solver. This script returns the energies and a visualization of the eigenstates of the harmonic oscillator with an interactive slider. The second script, `1D_harmonic_oscillator_superpositions.py` [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator_superpositions.py) uses exactly the same Hamiltonian, but this time returns a simulation of a superposition of the computed eigenstates, whose coefficients can be interactively modified using the circular widgets presented below the following animation.
+This is the simplest example and one of the most well-studied Hamiltonians. The script uploaded serves as an example of how to use the interface of the Eigenstate solver. This script returns the energies and a visualization of the eigenstates of the harmonic oscillator with an interactive slider. The second script, `1D_harmonic_oscillator_superpositions.py` [(link to the example)](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator_superpositions.py) uses exactly the same Hamiltonian, but this time returns a simulation of a superposition of the computed eigenstates, whose coefficients can be interactively modified using the circular widgets presented below the following animation.
  
 ![animation](/images/1D_harmonic_oscillator.gif)
 
