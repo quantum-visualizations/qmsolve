@@ -24,9 +24,22 @@ pip install qmsolve[with_mayavi]
 ## Usage
 
 The way this simulator works is by discretizing the Hamiltonian with an arbitrary potential, 
-specified as a function of the particle observables. This is achieved with the `Hamiltonian` constructor.
+that you can specify as a function of the particle observables. This is achieved with the `Hamiltonian` constructor.
 
-The method `Hamiltonian.solve` efficiently diagonalizes the Hamiltonian and outputs the energies and the eigenstates of the system.
+For example:
+```python
+#define the interaction potential
+def harmonic_oscillator(particle):
+    k = 1.029
+    return 0.5 * k * particle.x**2
+
+#define the Hamiltonian
+H = Hamiltonian(particles = SingleParticle(), 
+                potential = harmonic_oscillator, 
+                spatial_ndim = 1, N = 512, extent = 20*Å)
+```
+
+Then the method `Hamiltonian.solve` can be used to efficiently diagonalize the Hamiltonian and output the energies and the eigenstates of the system.
 Finally, the eigenstates can be plotted with the use of the `visualization` class.
 
 The `visualization.superpositions` method features the possibility of interactively visualizing a superposition of the computed eigenstates and studying the time dependence of the resulting wavefunction. 
@@ -45,7 +58,7 @@ python 1D_harmonic_oscillator.py
 ```
 [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator.py)
 
-This is the simplest example and one of the most well-studied Hamiltonians. The script uploaded serves as an example of how to use the interface of the Eigenstate solver. This script returns the energies and a visualization of the eigenstates of the harmonic oscillator with an interactive slider. The second script, `1D_harmonic_oscillator_superpositions.py` (Link to the example)[https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator_superpositions.py] uses exactly the same Hamiltonian, but this time returns a simulation of a superposition of the computed eigenstates, whose coefficients can be interactively modified using the circular widgets presented below the following animation.
+This is the simplest example and one of the most well-studied Hamiltonians. The script uploaded serves as an example of how to use the interface of the Eigenstate solver. This script returns the energies and a visualization of the eigenstates of the harmonic oscillator with an interactive slider. The second script, `1D_harmonic_oscillator_superpositions.py` [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator_superpositions.py) uses exactly the same Hamiltonian, but this time returns a simulation of a superposition of the computed eigenstates, whose coefficients can be interactively modified using the circular widgets presented below the following animation.
  
 ![animation](/images/1D_harmonic_oscillator.gif)
 
