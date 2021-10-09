@@ -1,5 +1,5 @@
 import numpy as np
-from qmsolve import Hamiltonian,  SingleParticle, init_visualization, Å
+from qmsolve import Hamiltonian,  SingleParticle, init_visualization, Å, eV
 
 
 #=========================================================================================================#
@@ -10,7 +10,7 @@ from qmsolve import Hamiltonian,  SingleParticle, init_visualization, Å
 
 #interaction potential
 def harmonic_oscillator(particle):
-	k = 1.029
+	k = 100 * eV / Å**2
 	return 0.5 * k * particle.x**2
 
 
