@@ -62,8 +62,8 @@ For a quick start, take a look to the examples found in the [examples subdirecto
 To perform the example simulations, just run from the corresponding Python example scripts on the command prompt.
 
 
-![animation](https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_harmonic_oscillator_eigenstates.gif) | ![animation](https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_harmonic_oscillator.gif) |
-:-----------------------:|:--------------------:|
+|<img src="https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_harmonic_oscillator_eigenstates.gif" width="100%">|<img src="https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_harmonic_oscillator.gif" width="82%">
+|:--------------------:|:--------------------:|
 `python 1D_harmonic_oscillator.py` | `python 1D_harmonic_oscillator_superpositions.py` |
 [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator.py)| [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_harmonic_oscillator_superpositions.py)|
 
@@ -71,8 +71,8 @@ This is the simplest example and one of the most well-studied Hamiltonians. The 
  
 
 ---
-![animation](https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_interactive_fermions.gif) | ![animation](https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_non_interactive_fermions.gif) |
-:-----------------------:|:--------------------:|
+|<img src="https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_interactive_fermions.gif" width="100%">|<img src="https://github.com/quantum-visualizations/qmsolve/blob/main/images/1D_non_interactive_fermions.gif" width="95%">|
+:--------------------:|:--------------------:|
 `python 1D_interactive_fermions_HO.py` | `python 1D_non_interactive_fermions_HO.py` |
 [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_interactive_fermions_HO.py)| [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/eigenstate%20solver%20examples/1D_non_interactive_fermions_HO.py)|
 
@@ -121,7 +121,6 @@ Once the `TimeSimulation` is set up, you need to use `TimeSimulation.run` method
 
 By default in the examples, `initial_wavefunction` initializes a Gaussian wave-packet with a spatial standard deviation equal to `σ` and initial momentum `p_x0` and `p_y0`.
 
----
 
 ![animation](https://github.com/quantum-visualizations/qmsolve/blob/main/images/2D_double-slit.gif)|
 :-----------------------:|
