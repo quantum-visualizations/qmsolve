@@ -40,16 +40,8 @@ class TwoParticles(ParticleSystem):
 
         if H.spatial_ndim == 1:
 
-            p1 = np.linspace(
-                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                H.N,
-            )
-            p2 = np.linspace(
-                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                H.N,
-            )
+            self.p1 = np.fft.fftshift(np.fft.fftfreq(H.N, d = H.dx)) * hbar  * 2*np.pi
+            self.p2 = np.fft.fftshift(np.fft.fftfreq(H.N, d = H.dx)) * hbar  * 2*np.pi
             p1, p2 = np.meshgrid(p1, p2)
 
 

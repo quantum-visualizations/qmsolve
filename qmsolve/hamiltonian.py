@@ -15,6 +15,7 @@ class Hamiltonian:
         self.extent = extent
         self.dx = extent / N
         self.particle_system = particles
+        self.particle_system.H = self
         self.spatial_ndim = spatial_ndim
         self.ndim = 0  # total number of observables
 
@@ -50,8 +51,8 @@ class Hamiltonian:
 
         elif self.potential_type == "matrix":
              V =  self.potential(self.particle_system)
-
              self.Vgrid = np.real((V).diagonal().reshape(*([self.N] *self.ndim )) + self.E_min)
+
              # Note: Vgrid when potential_type == "matrix" is only used for visualization. 
              # It represents the potential without the effect of momentum terms
              return V

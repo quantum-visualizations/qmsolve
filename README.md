@@ -142,6 +142,18 @@ This script shows an example where Crank Nicolson method is required. It present
 
 ---
 
+
+![animation](https://github.com/quantum-visualizations/qmsolve/blob/main/images/2D_quantum_resonant_tunneling.gif)|
+:-----------------------:|
+`python 2D_quantum_resonant_tunneling.py`|
+[Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/time%20dependent%20solver%20examples/2D_quantum_resonant_tunneling.py)|
+
+Finally, we present a demonstration of quantum resonant tunneling. In this script, two wavepackets are incident on a double potential well, representing two independent electrons. Despite having less energy than the lower, the upper electron has a higher chance of passing through the barriers. This is because its mean energy has been tuned to excite the quasi-ground state of the double potential well. 
+For electrons with energy corresponding approximately to the resonant energy level of the double potential well, the transmittance is close to unity. Furthemore, we can get the energy transmittance spectrum by taking the Fourier transform of the simulated wavepackets at a specific output position, yielding the following plot:
+
+![N|Solid](https://github.com/quantum-visualizations/qmsolve/blob/main/images/quantum_resonant_tunneling.png)
+---
+
 Generally, the Split Step method is preferred over Crank Nicolson both because of the computational cost of the time step and its associated error. Split Step has a time step error of cubic order `O(Δt^3)` while Crank Nicolson time step error is quadratic `O(Δt^2)`. Thus Crank Nicolson requires more time steps to achieve the Split Step accuracy. However, Split Step can only be used for potentials of the form `V(x,y,z)` and Crank Nicolson use is necessary when the potential is also dependent of the particles momentum, like in the cyclotron orbit example.
 
 Both methods are also implemented to be GPU-accelerated with cupy. Specifically, the speed boost of the cupy split-step is tested to be one and two orders of magnitudes faster than the CPU implementation, depending of the GPU and the grid size used. To use GPU acceleration in your simulations, use the arguments `method ='split-step-cupy'` and `method ='crank-nicolson-cupy'` in the `TimeSimulation` constructor.

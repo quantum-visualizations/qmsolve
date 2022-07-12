@@ -17,7 +17,6 @@ class SingleParticle(ParticleSystem):
 
 
     def get_observables(self, H):
-
         if H.spatial_ndim ==1:
             self.x = np.linspace(-H.extent/2, H.extent/2, H.N)
             H.ndim = 1
@@ -40,26 +39,15 @@ class SingleParticle(ParticleSystem):
 
         if H.spatial_ndim == 1:
 
-            self.px = np.linspace(
-                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                H.N,
-            )
+            self.px = np.fft.fftshift(np.fft.fftfreq(H.N, d = H.dx)) * hbar  * 2*np.pi
+            self.py = np.fft.fftshift(np.fft.fftfreq(H.N, d = H.dx)) * hbar  * 2*np.pi
             self.p2 = self.px**2
 
 
         elif H.spatial_ndim ==2:
 
-            px = np.linspace(
-                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                H.N,
-            )
-            py = np.linspace(
-                -np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                np.pi * H.N // 2 / (H.extent / 2) * hbar,
-                H.N,
-            )
+            px = np.fft.fftshift(np.fft.fftfreq(H.N, d = H.dx)) * hbar  * 2*np.pi
+            py = np.fft.fftshift(np.fft.fftfreq(H.N, d = H.dx)) * hbar  * 2*np.pi
             px, py = np.meshgrid(px, py)
 
 

@@ -2,7 +2,7 @@ import numpy as np
 from qmsolve import Hamiltonian, SingleParticle, TimeSimulation, init_visualization, femtoseconds, m_e, Å
 
 #=========================================================================================================#
-#First, we define the Hamiltonian of a single particle confined in an harmonic oscillator potential. 
+#First, we define the Hamiltonian of a single particle
 #=========================================================================================================#
 
 #interaction potential
