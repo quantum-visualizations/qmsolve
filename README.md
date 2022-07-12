@@ -149,6 +149,7 @@ This script shows an example where Crank Nicolson method is required. It present
 [Link to the example](https://github.com/quantum-visualizations/qmsolve/blob/main/examples/time%20dependent%20solver%20examples/2D_quantum_resonant_tunneling.py)|
 
 Finally, we present a demonstration of quantum resonant tunneling. In this script, two wavepackets are incident on a double potential well, representing two independent electrons. Despite having less energy than the lower, the upper electron has a higher chance of passing through the barriers. This is because its mean energy has been tuned to excite the quasi-ground state of the double potential well. 
+
 For electrons with energy corresponding approximately to the resonant energy level of the double potential well, the transmittance is close to unity. Furthemore, we can get the energy transmittance spectrum by taking the Fourier transform of the simulated wavepackets at a specific output position, yielding the following plot:
 
 ![N|Solid](https://github.com/quantum-visualizations/qmsolve/blob/main/images/quantum_resonant_tunneling.png)
