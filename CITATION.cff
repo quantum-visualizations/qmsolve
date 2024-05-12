@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: De la Fuente
+    given-names: Rafael
+    orcid: https://orcid.org/0000-0002-7126-448X
+  - family-names: Lamorena
+    given-names: Mark
+    orcid: https://orcid.org/0009-0006-5690-4019
+title: "QMsolve: A module for solving and visualizing the Schrödinger equation"
+doi: 10.5281/zenodo.11181977
+url: https://github.com/quantum-visualizations/qmsolve
+license: BSD 3-Clause License

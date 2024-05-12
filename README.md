@@ -1,4 +1,5 @@
 # QMsolve: A module for solving and visualizing the Schrödinger equation
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11181978.svg)](https://doi.org/10.5281/zenodo.11181978)
 [![PyPi Python Versions](https://img.shields.io/badge/python-3-1abc9c.svg)](https://pypi.python.org/pypi/qmsolve/)
 [![PyPI Version](https://img.shields.io/pypi/v/qmsolve.svg)](https://pypi.python.org/pypi/qmsolve)
 [![Conda Version](https://img.shields.io/conda/v/conda-forge/qmsolve)](https://anaconda.org/conda-forge/qmsolve)
