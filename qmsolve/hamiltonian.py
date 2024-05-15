@@ -85,7 +85,7 @@ class Hamiltonian:
         t0 = time.time()
 
         if method == 'eigsh':
-            from scipy.sparse.linalg import eigsh
+            from cupyx.scipy.sparse.linalg import eigsh
 
             # Note: uses shift-invert trick for stability finding low-lying states
             # Ref: https://docs.scipy.org/doc/scipy/reference/tutorial/arpack.html#shift-invert-mode
